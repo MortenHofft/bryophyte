@@ -1,0 +1,9 @@
+{
+  "name": "tecala",
+  "private": true,
+  "author": "GBIF Secretariat <informatics@gbif.org>",
+  "devDependencies": {
+    "lerna": "^3.19.0"
+  },
+  "license": "Apache 2.0"
+}
