@@ -8,7 +8,7 @@ import gbifTheme from './theme';
 
 // Setup Addons
 addDecorator(withKnobs);
-addDecorator(withA11y)
+addDecorator(withA11y);
 
 // // Setup Storybook options
 addParameters({ options: { theme: gbifTheme } });

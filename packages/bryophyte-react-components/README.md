@@ -1,4 +1,4 @@
-# Tecala react components
+# React components
 A React component library for GBIF, powered by Storybook.
 
 ## Development
