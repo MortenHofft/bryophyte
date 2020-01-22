@@ -1,5 +1,5 @@
 import React from 'react'
-import {ThemeProvider} from 'emotion-theming'
+import { ThemeProvider } from 'emotion-theming'
 import { configure, addParameters, addDecorator } from '@storybook/react';
 // Storybook Addon Dependencies
 import { withKnobs, select } from '@storybook/addon-knobs';
@@ -8,9 +8,10 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 import gbifTheme from './theme';
 
-import darkTheme from '../src/styles/themes/dark'
-import lightTheme from '../src/styles/themes/light'
-import a11yTheme from '../src/styles/themes/a11y'
+import Root from '../src/styles/Root';
+import darkTheme from '../src/styles/themes/dark';
+import lightTheme from '../src/styles/themes/light';
+import a11yTheme from '../src/styles/themes/a11y';
 import themeBuilder from '../src/themeBuilder/index';
 const dark = themeBuilder(darkTheme);
 const light = themeBuilder(lightTheme);
@@ -25,12 +26,19 @@ addDecorator(story => {
     a11y: a11y,
   }
 
+  // const themeObjects = {
+  //   dark: dark,
+  //   light: light,
+  //   a11y: a11y,
+  // }
+
   const chooseTheme = choice => {
     const _theme = themeObjects[choice.toLowerCase()]
-    if (_theme) {
-      return _theme
-    }
     return _theme
+  }
+
+  const chooseRtl = choice => {
+    return choice
   }
 
   return (
@@ -44,7 +52,15 @@ addDecorator(story => {
           ),
         )}
       >
-        {story()}
+        <Root style={{padding: 20}} dir={chooseRtl(
+          select(
+            'Choose Direction',
+            ['ltr', 'rtl'],
+            'ltr',
+          ),
+        )}>
+          {story()}
+        </Root>
       </ThemeProvider>
     </div>
   )
@@ -62,6 +78,5 @@ addParameters({
 });
 
 configure([
-  require.context('../src/stories', true, /\.stories\.js$/),
-  require.context('../src/components', true, /\.stories\.js$/),
+  require.context('../src', true, /\.stories\.js$/),
 ], module);

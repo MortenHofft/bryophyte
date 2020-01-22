@@ -66,14 +66,10 @@ const Button = ({
         border-radius: 4px;
         box-shadow: none;
         display: inline-flex;
-        font-size: 1rem;
-        height: 2.5em;
+        font-size: 1em;
+        height: ${theme.dense ? 1.5 : 2.5}1m;
         justify-content: flex-start;
-        line-height: 1.5;
-        padding-bottom: calc(0.5em - 1px);
-        padding-left: calc(0.75em - 1px);
-        padding-right: calc(0.75em - 1px);
-        padding-top: calc(0.5em - 1px);
+        line-height: ${theme.dense ? 1.2 : 1.5};
         position: relative;
         vertical-align: top;
         margin: 0;

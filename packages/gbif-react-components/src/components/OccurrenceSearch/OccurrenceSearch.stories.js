@@ -4,7 +4,7 @@ import React from 'react';
 import OccurrenceSearch from './OccurrenceSearch';
 
 export default {
-  title: 'Components|OccurrenceSearch',
+  title: 'Components/OccurrenceSearch',
   component: OccurrenceSearch,
 };
 
