@@ -4,5 +4,6 @@ export default {
   },
   fontSize: '16px',
   background: '#efefef',
+  paperBackground: '#ffffff',
   color: '#4a4a4a'
 }

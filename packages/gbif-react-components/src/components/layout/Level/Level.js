@@ -14,6 +14,7 @@ const Level = ({
   return <Lvl css={css`
         align-items: center;
         justify-content: space-between;
+        background: ${theme.paperBackground};
         img {
           display: inline-block;
           vertical-align: top;

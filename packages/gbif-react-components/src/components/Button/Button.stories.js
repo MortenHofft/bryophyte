@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { text, boolean } from '@storybook/addon-knobs';
+import { text, boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 import Button from './Button';
 
@@ -8,9 +8,18 @@ export default {
   component: Button,
 };
 
+const options = {
+  primary: 'primary',
+  primaryOutline: 'primaryOutline',
+  outline: 'outline',
+  danger: 'danger',
+};
+
 export const Example = () => <Button 
-  isLoading={boolean("isLoading", false)}
-  isSuccess={boolean("isSuccess", true)}>
+  loading={boolean("loading", false)}
+  block={boolean("block", false)}
+  type={select('Type', options, options.primary)}
+  >
   {text('Text', 'Button text')}
   </Button>;
 

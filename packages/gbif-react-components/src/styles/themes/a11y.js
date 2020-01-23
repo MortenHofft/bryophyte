@@ -3,6 +3,7 @@ export default {
     primary: '#333333'
   },
   fontSize: '17px',
-  background: '#fff',
+  background: '#eeeeee',
+  paperBackground: '#ffffff',
   color: '#000'
 }
