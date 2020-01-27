@@ -8,7 +8,7 @@ export default {
   component: OccurrenceSearch,
 };
 
-export const Example = () => <OccurrenceSearch></OccurrenceSearch>;
+export const Example = () => <OccurrenceSearch style={{height: 'calc(100vh - 20px)'}}></OccurrenceSearch>;
 
 Example.story = {
   name: 'OccurrenceSearch',

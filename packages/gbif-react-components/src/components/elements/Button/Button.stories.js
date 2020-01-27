@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { text, boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 import Button from './Button';

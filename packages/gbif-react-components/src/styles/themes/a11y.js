@@ -5,5 +5,5 @@ export default {
   fontSize: '17px',
   background: '#eeeeee',
   paperBackground: '#ffffff',
-  color: '#000'
+  color: '#000000'
 }

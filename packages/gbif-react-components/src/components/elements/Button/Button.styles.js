@@ -1,8 +1,8 @@
 import { css, keyframes } from '@emotion/core';
+import { helper } from '../../../styles/helper';
 
 export const button = theme => css`
-  -webkit-touch-callout: none;
-  user-select: none;
+  ${helper.noUserSelect}
   appearance: none;
 
   display: inline-flex;
@@ -12,7 +12,7 @@ export const button = theme => css`
   text-align: center;
   white-space: nowrap;
 
-  border: 2px solid transparent;
+  border: 1px solid transparent;
   border-radius: 4px;
   box-shadow: none;
 
@@ -22,7 +22,7 @@ export const button = theme => css`
   position: relative;
   margin: 0;
   background-color: white;
-  color: #363636;
+  color: ${theme.color};
   cursor: pointer;
   justify-content: center;
   padding-left: ${theme.dense ? 0.5 : 1}em;
@@ -37,7 +37,7 @@ export const primary = theme => css`
   background-color: ${theme.colors.primary500};
   color: white;
   &:hover {
-    background-color: ${theme.colors.primary700};
+    background-color: ${theme.colors.primary600};
   }
 `;
 
@@ -48,7 +48,13 @@ export const primaryOutline = (theme) => css`
 `;
 
 export const outline = (theme) => css`
-  border-color: #333333;
+  border-color: ${theme.transparentInk40};
+  background: none;
+`;
+
+export const ghost = (theme) => css`
+  border-color: #808080;
+  color: #808080;
   background: none;
 `;
 
@@ -103,6 +109,7 @@ export default {
   primary,
   primaryOutline,
   outline,
+  ghost,
   danger,
   link,
   loading,

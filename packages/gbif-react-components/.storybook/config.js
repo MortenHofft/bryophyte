@@ -26,12 +26,6 @@ addDecorator(story => {
     a11y: a11y,
   }
 
-  // const themeObjects = {
-  //   dark: dark,
-  //   light: light,
-  //   a11y: a11y,
-  // }
-
   const chooseTheme = choice => {
     const _theme = themeObjects[choice.toLowerCase()]
     return _theme
@@ -52,7 +46,7 @@ addDecorator(story => {
           ),
         )}
       >
-        <Root style={{padding: 20}} dir={chooseRtl(
+        <Root style={{padding: 0}} dir={chooseRtl(
           select(
             'Choose Direction',
             ['ltr', 'rtl'],

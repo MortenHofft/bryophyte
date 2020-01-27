@@ -1,30 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { OccurrenceSearch } from './components';
+import Root from './styles/Root';
+import { Level, Button } from './components';
 import { ThemeProvider } from 'emotion-theming'
-import theme from './styles/themes/Dark';
+import dark from './styles/themes/dark';
+import themeBuilder from './themeBuilder';
+const theme = themeBuilder(dark);
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-        </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-        </a>
-          <OccurrenceSearch>Click here</OccurrenceSearch>
-        </header>
-      </div>
+      <Root>
+        <Button type='primary'>test</Button>
+        <Level style={{ padding: 20 }}>
+          <Level.Item>item 1</Level.Item>
+          <Level.Item>Item 2</Level.Item>
+        </Level>
+      </Root>
     </ThemeProvider>
   );
 }

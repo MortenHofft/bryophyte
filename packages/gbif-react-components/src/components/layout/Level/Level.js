@@ -3,7 +3,6 @@ import { css, jsx } from '@emotion/core';
 import { useTheme } from 'emotion-theming';
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from '@emotion/styled'
 import { LevelItem, LevelLeft, LevelRight } from './LevelChildren';
 
 const Level = ({

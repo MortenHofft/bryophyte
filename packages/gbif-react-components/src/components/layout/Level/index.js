@@ -1,1 +1,1 @@
-export * from './Level';
+export { default as Level } from './Level';
