@@ -1,5 +1,4 @@
 import React from 'react'
-import { ThemeProvider } from 'emotion-theming'
 import { configure, addParameters, addDecorator } from '@storybook/react';
 // Storybook Addon Dependencies
 import { withKnobs, select } from '@storybook/addon-knobs';
@@ -8,22 +7,16 @@ import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
 
 import gbifTheme from './theme';
 
-import Root from '../src/styles/Root';
-import darkTheme from '../src/styles/themes/dark';
-import lightTheme from '../src/styles/themes/light';
-import a11yTheme from '../src/styles/themes/a11y';
-import themeBuilder from '../src/themeBuilder/index';
-const dark = themeBuilder(darkTheme);
-const light = themeBuilder(lightTheme);
-const a11y = themeBuilder(a11yTheme);
+import Root from '../src/Root';
+import ThemeContext, { darkTheme, lightTheme, a11yTheme } from '../src/style/themes';
 
 // Setup Addons
 //custom for changing emotion theme
 addDecorator(story => {
   const themeObjects = {
-    dark: dark,
-    light: light,
-    a11y: a11y,
+    dark: darkTheme,
+    light: lightTheme,
+    a11y: a11yTheme,
   }
 
   const chooseTheme = choice => {
@@ -37,8 +30,8 @@ addDecorator(story => {
 
   return (
     <div>
-      <ThemeProvider
-        theme={chooseTheme(
+      <ThemeContext.Provider
+        value={chooseTheme(
           select(
             'Choose Theme',
             ['Dark', 'Light', 'A11y'],
@@ -46,7 +39,7 @@ addDecorator(story => {
           ),
         )}
       >
-        <Root style={{padding: 0}} dir={chooseRtl(
+        <Root style={{ padding: 0 }} dir={chooseRtl(
           select(
             'Choose Direction',
             ['ltr', 'rtl'],
@@ -55,7 +48,7 @@ addDecorator(story => {
         )}>
           {story()}
         </Root>
-      </ThemeProvider>
+      </ThemeContext.Provider>
     </div>
   )
 })

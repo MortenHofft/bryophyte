@@ -1,0 +1,86 @@
+{
+  "name": "gbif-react-components",
+  "version": "0.1.0",
+  "private": true,
+  "main": "lib/index.js",
+  "dependencies": {
+    "@emotion/core": "^10.0.27",
+    "@emotion/styled": "^10.0.27",
+    "emotion-theming": "^10.0.27",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-icons": "^3.8.0",
+    "react-intl": "^3.11.0",
+    "react-router": "^5.1.2",
+    "react-scripts": "3.3.0",
+    "uncontrollable": "^7.1.1",
+    "my-button": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "build-lib": "rollup -c",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public",
+    "generate": "npx plop --plopfile ./tools/plopfile.js",
+    "add-component": "npm run generate component"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-react": "^7.8.3",
+    "@storybook/addon-a11y": "^5.2.8",
+    "@storybook/addon-actions": "^5.3.6",
+    "@storybook/addon-docs": "^5.3.6",
+    "@storybook/addon-knobs": "^5.2.8",
+    "@storybook/addon-links": "^5.3.6",
+    "@storybook/addon-notes": "^5.2.8",
+    "@storybook/addon-storysource": "^5.2.8",
+    "@storybook/addon-viewport": "^5.2.8",
+    "@storybook/addons": "^5.3.6",
+    "@storybook/preset-create-react-app": "^1.5.1",
+    "@storybook/react": "^5.3.6",
+    "@storybook/source-loader": "^5.2.8",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.4.0",
+    "@testing-library/user-event": "^7.2.1",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-emotion": "^10.0.27",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "plop": "^2.5.3",
+    "prop-types": "^15.7.2",
+    "rollup": "^1.31.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-peer-deps-external": "^2.2.2",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.2.0"
+  },
+  "peerDependencies": {
+    "@emotion/core": "10.x",
+    "@emotion/styled": "10.x",
+    "react": "^16.x",
+    "react-dom": "^16.x",
+    "history": "^4.10.1",
+    "querystringify": "^2.1.1"
+  }
+}
