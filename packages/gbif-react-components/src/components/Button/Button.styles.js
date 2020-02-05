@@ -31,13 +31,27 @@ export const button = theme => css`
     outline: none;
     box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
   }
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: auto;
+  }
 `;
 
 export const primary = theme => css`
   background-color: ${theme.colors.primary500};
   color: white;
-  &:hover {
-    background-color: ${theme.colors.primary600};
+  &:not([aria-disabled="true"]) {
+    &:hover {
+      color: white;
+      border-color: ${theme.colors.primary500};
+      background-color: ${theme.colors.primary600};
+    }
+    &:active,
+    &[aria-expanded="true"] {
+      color: white;
+      border-color: ${theme.colors.primary600};
+      background-color: ${theme.colors.primary700};
+    }
   }
 `;
 

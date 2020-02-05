@@ -40,13 +40,14 @@ class StateProvider extends React.Component {
       // filter,//{year: [2018, {gte: 1928, lt:1929}]}, // current filter
       stateApi: {
         // updateView: this.updateView, // update the active view
-        updateFilter: this.updateFilter, // updates a single field
+        setField: this.setField, // updates a single field
+        setFilter: this.setFilter, // updates the filter as a whole
         // updateQuery, // sets the full query
       },
       // components,
       // api
       test: 10,
-      filter: {must: {datasetKey: ['1234-1234-1234-1234']}} // current filter
+      filter: { must: { datasetKey: ['1234-1234-1234-1234'] } } // current filter
     }
   }
 
@@ -55,10 +56,25 @@ class StateProvider extends React.Component {
   //   this.setState({ activeView: selected });
   // }
 
-  updateFilter = options => {
-    this.setState({filter: options});
-    // const filter = getUpdatedFilter(this.state.filter, options);
-    // pushStateToUrl(filter);
+  setFilter = async filter => {
+    if (typeof filter === 'object') {
+      Object.keys(filter).forEach(key => {
+        if (typeof filter[key] === 'undefined') delete filter[key];
+      })
+      if (Object.keys(filter).length === 0) filter = undefined;
+    }
+    this.setState({ filter });
+  }
+
+  setField = async (field, value, should = true) => {
+    const type = should ? 'should' : 'should_not';
+    this.setFilter({
+      ...this.state.filter,
+      [type]: {
+        ...this.state.filter[type],
+        [field]: value
+      }
+    });
   }
 
   // updateStateFilter = filter => {

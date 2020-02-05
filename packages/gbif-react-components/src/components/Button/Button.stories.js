@@ -1,6 +1,8 @@
 import { text, boolean, select } from '@storybook/addon-knobs';
 import React from 'react';
 import Button from './Button';
+import { Button as ButtonA11y } from "reakit/Button";
+
 
 export default {
   title: 'Components/Button',
@@ -21,6 +23,8 @@ export const Example = () => <Button
   >
   {text('Text', 'Button text')}
   </Button>;
+
+export const example2 = () => <ButtonA11y>ButtonA11y</ButtonA11y>
 
 Example.story = {
   name: 'Button',

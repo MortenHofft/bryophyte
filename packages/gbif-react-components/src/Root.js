@@ -14,7 +14,6 @@ const Root = ({
           color: ${theme.color || '#4a4a4a'};
           font-size: ${theme.fontSize || '1em'};
           font-weight: 400;
-          line-height: 1.5;
           box-sizing: border-box;
           background: ${theme.background || 'white'};
           *, *::before, *::after, strong {
