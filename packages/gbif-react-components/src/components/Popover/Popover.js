@@ -8,7 +8,7 @@ import {
 } from "reakit/Popover";
 
 function Popover({ trigger, modal, placement, visible, className, ...props }) {
-  const popover = usePopoverState({ placement: placement || "bottom", visible: visible });
+  const popover = usePopoverState({ placement: placement || "bottom-start", visible: visible, modal: false });
   return (
     <>
       <PopoverDisclosure {...popover} {...trigger.props}>
@@ -29,9 +29,8 @@ function Popover({ trigger, modal, placement, visible, className, ...props }) {
 }
 
 const dialogContent = css`
-  padding: 1em;
   max-height: calc(100vh - 56px);
-  overflow: auto;
+  /* overflow: auto; */
 `;
 
 const dialog = css`
@@ -50,7 +49,8 @@ const dialog = css`
   border-image: initial;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1000px 1000px;
   &:focus {
-    box-shadow: 0 0 0 0.2em blue;
+    outline: none;
+    box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
   }
   & > .arrow {
     background-color: transparent;

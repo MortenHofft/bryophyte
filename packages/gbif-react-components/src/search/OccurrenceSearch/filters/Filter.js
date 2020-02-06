@@ -1,5 +1,6 @@
 import React from "react";
 import { css, cx } from 'emotion';
+import styled from '@emotion/styled'
 import Popover from '/components/Popover/Popover';
 import { Button } from 'components/Button';
 
@@ -32,45 +33,42 @@ function Filter({ stateApi, ...props }) {
         selectedItem,
         getRootProps,
       }) => (
-          <div>
+          <div style={{position: 'relative'}}>
             {/* <label {...getLabelProps()}>Enter a fruit</label> */}
             <div {...getRootProps({}, { suppressRefError: true })}>
               <input className={input} placeholder="Search for species" aria-label="Search for species" aria-placeholder="Puma concolor" {...getInputProps()} />
             </div>
-            <ul {...getMenuProps()}>
-              {isOpen
+            <Menu {...getMenuProps({ isOpen })}>
+              {isOpen || true
                 ? items
                   .filter(item => !inputValue || item.value.includes(inputValue))
                   .map((item, index) => (
-                    <li
+                    <Item
+                      key={item.id}
                       {...getItemProps({
-                        key: item.value,
-                        index,
                         item,
-                        style: {
-                          backgroundColor:
-                            highlightedIndex === index ? 'lightgray' : 'white',
-                          fontWeight: selectedItem === item ? 'bold' : 'normal',
-                        },
+                        index,
+                        isActive: highlightedIndex === index,
+                        isSelected: selectedItem === item,
                       })}
                     >
-                      {item.value}
-                    </li>
+                      {itemToString(item)}
+                    </Item>
                   ))
                 : null}
-            </ul>
+            </Menu>
           </div>
         )}
     </Downshift>
     <div className={helpText}>
       Please enter a scienitific name. Only latin names are applicable. Searching for higher groups will return all species and sub-groups.
     </div>
-    <Button onClick={e => {stateApi.setField('update', 'fromFilter', false); props.hide()}}>Apply</Button>
+    <Button onClick={e => { stateApi.setField('update', 'fromFilter', false); props.hide() }}>Apply</Button>
   </div>
 
   return (
     <Popover
-      style={{maxWidth: 400}}
+      style={{ maxWidth: 400 }}
       visible
       aria-label="Location filter"
       modal={popupContent}
@@ -78,6 +76,8 @@ function Filter({ stateApi, ...props }) {
     />
   );
 }
+
+const itemToString = i => (i ? i.value : '')
 
 const helpText = css`
   color: #697b8c;
@@ -105,5 +105,73 @@ const input = css`
     }
   }
 `;
+
+const BaseMenu = styled('ul')(
+  {
+    padding: 0,
+    marginTop: 0,
+    position: 'absolute',
+    backgroundColor: 'white',
+    width: '100%',
+    maxHeight: '20rem',
+    overflowY: 'auto',
+    overflowX: 'hidden',
+    outline: '0',
+    zIndex: 1000,
+    transition: 'opacity .1s ease',
+    borderRadius: '0 0 .28571429rem .28571429rem',
+    boxShadow: '0 2px 3px 0 rgba(34,36,38,.15)',
+    borderColor: '#96c8da',
+    borderTopWidth: '0',
+    borderRightWidth: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderStyle: 'solid',
+  },
+  ({ isOpen }) => ({
+    border: isOpen ? null : 'none',
+  }),
+)
+
+const Menu = React.forwardRef((props, ref) => (
+  <BaseMenu innerRef={ref} {...props} />
+))
+
+const Item = styled('li')(
+  {
+    position: 'relative',
+    cursor: 'pointer',
+    display: 'block',
+    border: 'none',
+    height: 'auto',
+    textAlign: 'left',
+    borderTop: 'none',
+    lineHeight: '1em',
+    color: 'rgba(0,0,0,.87)',
+    fontSize: '1rem',
+    textTransform: 'none',
+    fontWeight: '400',
+    boxShadow: 'none',
+    padding: '.8rem 1.1rem',
+    whiteSpace: 'normal',
+    wordWrap: 'normal',
+  },
+  ({ isActive, isSelected }) => {
+    const styles = []
+    if (isActive) {
+      styles.push({
+        color: 'rgba(0,0,0,.95)',
+        background: 'rgba(0,0,0,.03)',
+      })
+    }
+    if (isSelected) {
+      styles.push({
+        color: 'rgba(0,0,0,.95)',
+        fontWeight: '700',
+      })
+    }
+    return styles
+  },
+)
 
 export default Filter;

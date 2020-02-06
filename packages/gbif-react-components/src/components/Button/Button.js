@@ -3,6 +3,7 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
+import Box from '../Box/Box';
 import { Button as ButtonA11y } from "reakit/Button";
 import styles from './Button.styles';
 import { getClasses, isEmpty } from '../../utils/util';
@@ -18,7 +19,7 @@ const Button = React.forwardRef(({
   const theme = useContext(ThemeContext);
   const appliedTheme = isEmpty(theme) ? standardTheme : theme;
   const { classesToApply, humanClasses } = getClasses(appliedTheme, 'button', classes);
-  return <ButtonA11y ref={ref} className={`${humanClasses} ${className}`} css={css`
+  return <Box as={ButtonA11y} ref={ref} className={`${humanClasses} ${className}`} css={css`
         ${styles.button(appliedTheme)}
         ${classesToApply.map(x => styles[x](appliedTheme))};
       `} {...props} />

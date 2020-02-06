@@ -4,6 +4,7 @@ import withContext from '../state/withContext';
 import React, { useContext } from 'react';
 import ThemeContext from 'style/themes/ThemeContext';
 import Filter from '../filters/Filter';
+import BasisOfRecord from '../filters/BasisOfRecord';
 
 // import PropTypes from 'prop-types';
 
@@ -22,7 +23,7 @@ const FilterBar = ({
     css={css`${style(theme)}`} {...props}>
     <Button css={css`margin-right: 4px;`}>Species or group</Button>
     <Button type="outline" css={css`margin-right: 4px;`} onClick={e => stateApi.setFilter({ update: 'fromFilter' })}>Button</Button>
-    <Filter {...filterProps} />
+    <BasisOfRecord {...filterProps} />
     {JSON.stringify(filter, null, 2)}
   </div>
 }
