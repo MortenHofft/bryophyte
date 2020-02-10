@@ -32,6 +32,7 @@
     "downshift": "^4.0.8",
     "emotion": "^10.0.27",
     "lodash": "^4.17.15",
+    "nanoid": "^2.1.11",
     "react-aria-modal": "^4.0.0",
     "react-icons": "^3.9.0",
     "react-intl": "^3.12.0",

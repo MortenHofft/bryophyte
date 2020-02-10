@@ -4,15 +4,15 @@ import { css, jsx } from '@emotion/core';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Layout from './Layout';
-import StateProvider from "./state/StateProvider";
+import FilterState from "./filters/state/FilterState";
 // import history from './history';
 // import qs from 'querystringify';
 
 function OccurrenceSearch(props) {
   return (
-    <StateProvider>
+    <FilterState defaultFilter={{dataset: 'EOD'}}>
       <Layout {...props}></Layout>
-    </StateProvider>
+    </FilterState>
   );
 }
 

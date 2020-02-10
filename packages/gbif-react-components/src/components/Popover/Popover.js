@@ -4,7 +4,8 @@ import {
   usePopoverState,
   Popover as BasePopover,
   PopoverDisclosure,
-  PopoverArrow
+  PopoverArrow,
+  PopoverBackdrop
 } from "reakit/Popover";
 
 function Popover({ trigger, modal, placement, visible, className, ...props }) {
@@ -14,19 +15,31 @@ function Popover({ trigger, modal, placement, visible, className, ...props }) {
       <PopoverDisclosure {...popover} {...trigger.props}>
         {disclosureProps => React.cloneElement(trigger, disclosureProps)}
       </PopoverDisclosure>
-      <BasePopover {...popover} {...props}>
-        {props => popover.visible &&
-          <div {...props} className={cx(dialog, className)}>
-            <PopoverArrow className="arrow" {...popover} />
-            <div className={dialogContent}>
-              {React.cloneElement(modal(popover))}
+      <PopoverBackdrop {...popover} className={backdrop}>
+        <BasePopover {...popover} {...props}>
+          {props => popover.visible &&
+            <div {...props} className={cx(dialog, className)}>
+              <PopoverArrow className="arrow" {...popover} />
+              <div className={dialogContent}>
+                {React.cloneElement(modal(popover))}
+              </div>
             </div>
-          </div>
-        }
-      </BasePopover>
+          }
+        </BasePopover>
+      </PopoverBackdrop>
     </>
   );
 }
+
+const backdrop = css`
+  background-color: rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 999;
+`;
 
 const dialogContent = css`
   max-height: calc(100vh - 56px);
@@ -47,7 +60,7 @@ const dialog = css`
   border-style: solid;
   border-color: rgba(33, 33, 33, 0.25);
   border-image: initial;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1000px 1000px;
+  /* box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1000px 1000px; */
   &:focus {
     outline: none;
     box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);

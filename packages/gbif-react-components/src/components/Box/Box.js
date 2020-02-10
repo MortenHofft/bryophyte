@@ -23,8 +23,4 @@ Box.defaultProps = {
   as: 'div'
 }
 
-Box.propTypes = {
-  as: PropTypes.node
-}
-
 export default Box;
