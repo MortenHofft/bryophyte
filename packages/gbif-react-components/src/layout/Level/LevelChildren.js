@@ -2,9 +2,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled'
 
 const shared = css`
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 0;
+  flex: 1 1 auto;
   align-items: center;
   @media screen and (min-width: 769px), print {
     display: flex;
@@ -25,10 +23,7 @@ export const LevelRight = styled.div`
 export const LevelItem = styled.div`
   align-items: center;
   display: flex;
-  flex-basis: auto;
-  flex-grow: 0;
-  flex-shrink: 0;
+  flex: 0 1 auto;
   justify-content: center;
-  flex-grow: 1;
   margin: 0 0.35em;
 `;

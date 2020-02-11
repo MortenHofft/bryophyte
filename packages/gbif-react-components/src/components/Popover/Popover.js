@@ -8,25 +8,36 @@ import {
   PopoverBackdrop
 } from "reakit/Popover";
 
-function Popover({ trigger, modal, placement, visible, className, ...props }) {
+function Popover({ trigger, modal, placement, visible, className, onClose, ...props }) {
   const popover = usePopoverState({ placement: placement || "bottom-start", visible: visible, modal: false });
+  const ref = React.useRef();
+
+  React.useEffect(() => {
+    if (popover.visible) {
+      if (ref && ref.current) {
+        ref.current.focus();
+      }
+    } else if (onClose){
+      onClose(popover);
+    }
+  }, [popover.visible]);
+
   return (
     <>
       <PopoverDisclosure {...popover} {...trigger.props}>
         {disclosureProps => React.cloneElement(trigger, disclosureProps)}
       </PopoverDisclosure>
-      <PopoverBackdrop {...popover} className={backdrop}>
-        <BasePopover {...popover} {...props}>
-          {props => popover.visible &&
-            <div {...props} className={cx(dialog, className)}>
-              <PopoverArrow className="arrow" {...popover} />
-              <div className={dialogContent}>
-                {React.cloneElement(modal(popover))}
-              </div>
+      <PopoverBackdrop {...popover} className={backdrop} onClick={e => onClose ? onClose(popover) : undefined}></PopoverBackdrop>
+      <BasePopover {...popover} {...props}>
+        {props => popover.visible &&
+          <div {...props} className={cx(dialog, className)}>
+            <PopoverArrow className="arrow" {...popover} />
+            <div className={dialogContent}>
+              {React.cloneElement(modal(popover, ref))}
             </div>
-          }
-        </BasePopover>
-      </PopoverBackdrop>
+          </div>
+        }
+      </BasePopover>
     </>
   );
 }
@@ -48,11 +59,10 @@ const dialogContent = css`
 
 const dialog = css`
   background-color: rgb(255, 255, 255);
-  position: fixed;
+  /* position: fixed; */
   top: 28px;
   left: 50%;
   transform: translateX(-50%);
-  color: rgb(33, 33, 33);
   z-index: 999;
   border-radius: 0.25rem;
   outline: 0px;

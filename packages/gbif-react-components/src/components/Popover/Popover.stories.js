@@ -30,7 +30,7 @@ const popupContent = props => <div>
   The button should recieve focus <Button onClick={props.hide}>Close</Button>
 </div>
 
-export const Example = () => <div style={{padding: 50}}>
+export const Example = () => <div style={{position: 'relative', padding: 50, height: 1000}}>
   <Popover
     aria-label="Location filter"
     modal={popupContent}

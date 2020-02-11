@@ -3,7 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Context from './FilterContext';
 import { uncontrollable } from 'uncontrollable';
-import _ from 'lodash';
+import { get, uniqWith, cloneDeep } from 'lodash';
+import isEqual from 'react-fast-compare';
+import hash from 'object-hash';
 
 class FilterState extends React.Component {
   static propTypes = {
@@ -13,6 +15,7 @@ class FilterState extends React.Component {
 
   setFilter = async filter => {
     if (typeof filter === 'object') {
+      filter = cloneDeep(filter);
       Object.keys(filter).forEach(key => {
         if (typeof filter[key] === 'undefined') delete filter[key];
       })
@@ -35,23 +38,23 @@ class FilterState extends React.Component {
 
   add = async (field, value, should = true) => {
     const type = should ? 'should' : 'should_not';
-    let values = _.get(this.props.filter, `${type}.${field}`, []);
+    let values = get(this.props.filter, `${type}.${field}`, []);
     values.push(value);
-    values = _.uniq(values);
+    values = uniqWith(values, isEqual);
     this.setField(field, values, should);
   };
 
   remove = async (field, value, should = true) => {
     const type = should ? 'should' : 'should_not';
-    let values = _.get(this.props.filter, `${type}.${field}`, []);
-    values = values.filter(e => e !== value);
+    let values = get(this.props.filter, `${type}.${field}`, []);
+    values = values.filter(e => !isEqual(e, value));
     this.setField(field, values, should);
   };
 
   toggle = async (field, value, should = true) => {
     const type = should ? 'should' : 'should_not';
-    let values = _.get(this.props.filter, `${type}.${field}`, []);
-    if (values.includes(value)) {
+    let values = get(this.props.filter, `${type}.${field}`, []);
+    if (values.some(e => isEqual(e, value))) {
       this.remove(field, value, should);
     } else {
       this.add(field, value, should);
@@ -65,10 +68,12 @@ class FilterState extends React.Component {
       add: this.add,
       remove: this.remove,
       toggle: this.toggle,
-      filter: this.props.filter
+      filter: this.props.filter,
+      filterHash: hash(this.props.filter)
     };
     return (
       <Context.Provider value={contextValue}>
+        {/* <pre>{JSON.stringify(this.props.filter, null, 2)}</pre> */}
         {this.props.children}
       </Context.Provider>
     );

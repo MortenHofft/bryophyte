@@ -83,7 +83,6 @@ const Tabs = (props) => {
     activeKey: 'onSelect',
   });
 
-  console.log(activeKey);
   const [key, setKey] = useState(activeKey);
   // console.log(children);
   // children.forEach(x => console.log(x.props.eventKey));

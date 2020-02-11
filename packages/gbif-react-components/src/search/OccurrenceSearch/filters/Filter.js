@@ -1,6 +1,6 @@
 import React from "react";
 import { css, cx } from 'emotion';
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import Popover from '/components/Popover/Popover';
 import { Button } from 'components/Button';
 

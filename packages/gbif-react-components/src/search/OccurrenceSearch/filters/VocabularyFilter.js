@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { css, cx } from 'emotion';
 import styled from '@emotion/styled'
 import Popover from '/components/Popover/Popover';
@@ -8,26 +8,29 @@ import { MdMoreVert } from "react-icons/md";
 import nanoid from 'nanoid';
 import FilterState from './state/FilterState';
 import FilterContext from './state/FilterContext';
-import _, { keyBy, cloneDeep } from 'lodash';
+import { get, keyBy, cloneDeep } from 'lodash';
 // import update from 'immutability-helper';
 import formatters from '../displayNames/formatters';
 
 import { getVocabulary } from './getVocabulary';
 
-const Title = formatters('BasisOfRecord').component;
-
-function BasisOfRecord({ stateApi, ...props }) {
+function VocabularyFilter({ vocabularyName, ...props }) {
   const [id] = React.useState(nanoid);
   const currentFilterContext = useContext(FilterContext);
-  const [filter, setFilter] = useState(filter);
+  const [filter, setFilter] = useState(cloneDeep(currentFilterContext.filter));
   const [vocabulary, setVocabulary] = useState(false);
+  
+  useEffect(() => {
+    setFilter(cloneDeep(currentFilterContext.filter));
+  }, [currentFilterContext]);
 
-  getVocabulary('BasisOfRecord').then(v => setVocabulary(v)).catch(err => console.error(err));
+  const Title = formatters(vocabularyName).component;
+  getVocabulary(vocabularyName, 'eng').then(v => setVocabulary(v)).catch(err => console.error(err));
 
   const popupContent = (popover, ref) => <FilterState filter={filter} onChange={updatedFilter => setFilter(updatedFilter)}>
     <FilterContext.Consumer>
       {({ setField, toggle, filter }) => {
-        const checkedMap = new Set(_.get(filter, 'should.BasisOfRecord', []));
+        const checkedMap = new Set(get(filter, `should.${vocabularyName}`, []));
         return <div className={filterClass}>
           <Level as="section" className={header}>
             <Level.Left>
@@ -47,11 +50,13 @@ function BasisOfRecord({ stateApi, ...props }) {
                 {checkedMap.size} selected
               </Level.Item>
             </Level.Left>
+            {checkedMap.size > 0 &&
             <Level.Right>
               <Level.Item onClick={e => setField(vocabulary.name, [])}>
                 <TextButton>Clear</TextButton>
               </Level.Item>
             </Level.Right>
+            }
           </Level>
           <form className={cx(body, scrollBox)} id={id} onSubmit={e => e.preventDefault()}>
             {vocabulary && vocabulary.concepts.map((concept, index) => {
@@ -67,10 +72,10 @@ function BasisOfRecord({ stateApi, ...props }) {
                   </Level.Item>
                   <Level.Item>
                     <div>
-                      <label htmlFor={`${id}_${concept.name}`}>{<Title id={concept.name} />}</label>
-                      <div style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
-                        {concept.definition || 'Some text enumeration with same examples on what this means and then a new line please.'}
-                      </div>
+                      <label htmlFor={`${id}_${concept.name}`}>{concept.label}</label>
+                      { concept.definition && <div onClick={e => toggle(vocabulary.name, concept.name)} style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
+                        {concept.definition }
+                      </div>}
                     </div>
                   </Level.Item>
                 </Level.Left>
@@ -99,21 +104,21 @@ function BasisOfRecord({ stateApi, ...props }) {
     <Popover
       style={{ width: 400, maxWidth: '100%' }}
       onClose={e => currentFilterContext.setFilter(filter)}
-      aria-label="Filter on basis of record"
+      aria-label={`Filter on ${vocabularyName}`}
       modal={popupContent}
-      trigger={<FilterButton vocabulary={vocabulary} filter={currentFilterContext.filter}></FilterButton>}
+      trigger={<FilterButton {...props} vocabulary={vocabulary} filter={currentFilterContext.filter}></FilterButton>}
     />
   );
 }
 
 const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) => {
-  const appliedFiltersSet = new Set(_.get(filter, 'should.BasisOfRecord', []));
+  const appliedFiltersSet = new Set(get(filter, `should.${vocabulary.name}`, []));
   if (appliedFiltersSet.size === 1) {
-    const selected = keyBy(vocabulary.concepts, 'name')[filter.should.BasisOfRecord[0]].label;
+    const selected = keyBy(vocabulary.concepts, 'name')[filter.should[vocabulary.name][0]].label;
     return <Button {...props} ref={ref}>{ selected }</Button>
   }
   if (appliedFiltersSet.size > 1) {
-    return <Button {...props} ref={ref}>{appliedFiltersSet.size} basis of records</Button>
+    return <Button {...props} ref={ref}>{appliedFiltersSet.size} { vocabulary.label }s</Button>
   }
   return <Button appearance="primaryOutline" {...props} ref={ref}>{vocabulary.label}</Button>
 });
@@ -269,4 +274,4 @@ const scrollBox = css`
   background-attachment: local, local, scroll, scroll;
 `;
 
-export default BasisOfRecord;
+export default VocabularyFilter;

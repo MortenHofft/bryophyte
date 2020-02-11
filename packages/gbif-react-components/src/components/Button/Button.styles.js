@@ -35,6 +35,9 @@ export const button = theme => css`
     opacity: 0.5;
     cursor: auto;
   }
+  ::-moz-focus-inner {
+    border-style: none;
+  }
 `;
 
 export const primary = theme => css`

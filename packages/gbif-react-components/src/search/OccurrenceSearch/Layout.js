@@ -7,6 +7,8 @@ import { MdClose } from "react-icons/md";
 import withContext from './state/withContext';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 
+import Map from './views/Map';
+
 import { Tabs } from "../../layout/Tabs";
 
 import { FilterBar } from './FilterBar';
@@ -27,7 +29,7 @@ const Layout = ({
         <FilterBar></FilterBar>
       </div>
       <div className={`${prefix}-${elementName}-views`}>
-      <Tabs activeKey={key} onSelect={k => setKey(k)}>
+        {/* <Tabs activeKey={key} onSelect={k => setKey(k)}>
         <Tab eventKey="home">
           Species or Group
         </Tab>
@@ -37,10 +39,12 @@ const Layout = ({
         <Tab eventKey="contact" disabled>
           third
         </Tab>
-      </Tabs>
+      </Tabs> */}
+        <Map />
+        
       </div>
     </div>
-    <div className={`${prefix}-${elementName}-body`}>
+    {/* <div className={`${prefix}-${elementName}-body`}>
       <div className={`${prefix}-${elementName}-main`}>content {props.test}<br />
       <FormattedMessage
                 id='pagination.pageXofY'
@@ -48,8 +52,8 @@ const Layout = ({
                 values={{ current: <FormattedNumber value={10}/>, total: <FormattedNumber value={20000}/> }}
               />
       </div>
-      {/* <aside className={`${prefix}-${elementName}-drawer`}>right drawer</aside> */}
-    </div>
+      <aside className={`${prefix}-${elementName}-drawer`}>right drawer</aside>
+    </div> */}
     <div className={`${prefix}-${elementName}-footer`}>
       <div>Footer content</div>
     </div>
@@ -68,13 +72,15 @@ export const layout = (theme, prefix, elementName) => css`
     flex: 0 0 auto;
     flex-direction: column;
     display: flex;
+    flex: 1 1 auto;
   }
   .${prefix}-${elementName}-filters {
-    border-bottom: 1px solid #2a2a38;
+    border-bottom: 1px solid #eee;
     padding: 8px;
+    flex: 0 0 auto;
   }
   .${prefix}-${elementName}-views {
-    
+    flex: 1 1 auto;
   }
   .${prefix}-${elementName}-body {
     flex: 1 1 auto;
