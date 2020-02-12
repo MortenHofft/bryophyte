@@ -3,6 +3,7 @@ import { css, cx } from 'emotion';
 import styled from '@emotion/styled'
 import Popover from '/components/Popover/Popover';
 import { Button, TextButton } from 'components/Button';
+import { Checkbox } from 'components/Checkbox';
 import Level from 'layout/Level';
 import { MdMoreVert } from "react-icons/md";
 import nanoid from 'nanoid';
@@ -14,20 +15,36 @@ import formatters from '../displayNames/formatters';
 
 import { getVocabulary } from './getVocabulary';
 
+
+
+import {
+  useMenuState,
+  Menu,
+  MenuItem,
+  MenuButton,
+  MenuSeparator
+} from "reakit/Menu";
+
+
+
 function VocabularyFilter({ vocabularyName, ...props }) {
+  const menu = useMenuState({ placement: 'bottom-end' });
+
+
+
   const [id] = React.useState(nanoid);
   const currentFilterContext = useContext(FilterContext);
-  const [filter, setFilter] = useState(cloneDeep(currentFilterContext.filter));
+  const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
   const [vocabulary, setVocabulary] = useState(false);
-  
+
   useEffect(() => {
-    setFilter(cloneDeep(currentFilterContext.filter));
-  }, [currentFilterContext]);
+    setFilter(currentFilterContext.filter);
+  }, [currentFilterContext.filter]);
 
   const Title = formatters(vocabularyName).component;
   getVocabulary(vocabularyName, 'eng').then(v => setVocabulary(v)).catch(err => console.error(err));
 
-  const popupContent = (popover, ref) => <FilterState filter={filter} onChange={updatedFilter => setFilter(updatedFilter)}>
+  const popupContent = (popover, ref) => <FilterState filter={tmpFilter} onChange={updatedFilter => setFilter(updatedFilter)}>
     <FilterContext.Consumer>
       {({ setField, toggle, filter }) => {
         const checkedMap = new Set(get(filter, `should.${vocabularyName}`, []));
@@ -51,11 +68,11 @@ function VocabularyFilter({ vocabularyName, ...props }) {
               </Level.Item>
             </Level.Left>
             {checkedMap.size > 0 &&
-            <Level.Right>
-              <Level.Item onClick={e => setField(vocabulary.name, [])}>
-                <TextButton>Clear</TextButton>
-              </Level.Item>
-            </Level.Right>
+              <Level.Right>
+                <Level.Item onClick={e => setField(vocabulary.name, [])}>
+                  <TextButton>Clear</TextButton>
+                </Level.Item>
+              </Level.Right>
             }
           </Level>
           <form className={cx(body, scrollBox)} id={id} onSubmit={e => e.preventDefault()}>
@@ -64,17 +81,14 @@ function VocabularyFilter({ vocabularyName, ...props }) {
                 <Level.Left style={{ alignItems: 'flex-start' }}>
                   <Level.Item>
                     <div>
-                      <span className={checkbox}>
-                        <input type="checkbox" ref={index === 0 ? ref : null} id={`${id}_${concept.name}`} checked={checkedMap.has(concept.name)} onChange={e => toggle(vocabulary.name, concept.name)}></input>
-                        <span></span>
-                      </span>
+                      <Checkbox ref={index === 0 ? ref : null} id={`${id}_${concept.name}`} checked={checkedMap.has(concept.name)} onChange={e => toggle(vocabulary.name, concept.name)} />
                     </div>
                   </Level.Item>
                   <Level.Item>
                     <div>
                       <label htmlFor={`${id}_${concept.name}`}>{concept.label}</label>
-                      { concept.definition && <div onClick={e => toggle(vocabulary.name, concept.name)} style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
-                        {concept.definition }
+                      {concept.definition && <div onClick={e => toggle(vocabulary.name, concept.name)} style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
+                        {concept.definition}
                       </div>}
                     </div>
                   </Level.Item>
@@ -103,7 +117,7 @@ function VocabularyFilter({ vocabularyName, ...props }) {
   return (
     <Popover
       style={{ width: 400, maxWidth: '100%' }}
-      onClose={e => currentFilterContext.setFilter(filter)}
+      onClose={e => currentFilterContext.setFilter(tmpFilter)}
       aria-label={`Filter on ${vocabularyName}`}
       modal={popupContent}
       trigger={<FilterButton {...props} vocabulary={vocabulary} filter={currentFilterContext.filter}></FilterButton>}
@@ -115,10 +129,10 @@ const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) =>
   const appliedFiltersSet = new Set(get(filter, `should.${vocabulary.name}`, []));
   if (appliedFiltersSet.size === 1) {
     const selected = keyBy(vocabulary.concepts, 'name')[filter.should[vocabulary.name][0]].label;
-    return <Button {...props} ref={ref}>{ selected }</Button>
+    return <Button {...props} ref={ref}>{selected}</Button>
   }
   if (appliedFiltersSet.size > 1) {
-    return <Button {...props} ref={ref}>{appliedFiltersSet.size} { vocabulary.label }s</Button>
+    return <Button {...props} ref={ref}>{appliedFiltersSet.size} {vocabulary.label}s</Button>
   }
   return <Button appearance="primaryOutline" {...props} ref={ref}>{vocabulary.label}</Button>
 });
@@ -127,83 +141,6 @@ const optionClass = css`
   margin-bottom: 12px;
   &:last-child {
     margin-bottom: 0;
-  }
-`;
-
-const checkbox = css`
-  position: relative;
-  top: -0.09em;
-  display: inline-block;
-  line-height: 1;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: none;
-  cursor: pointer;
-  input {
-    margin: 0;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    opacity: 0;
-  }
-  & input + span {
-    position: relative;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 1em;
-    height: 1em;
-    background-color: #fff;
-    border: 1px solid #d9d9d9;
-    border-radius: 2px;
-    border-collapse: separate;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
-    &:after {
-      position: absolute;
-      top: 50%;
-      left: 22%;
-      display: table;
-      width: 5.71428571px;
-      height: 9.14285714px;
-      border: 2px solid #fff;
-      border-top: 0;
-      border-left: 0;
-      -webkit-transform: rotate(45deg) scale(0) translate(-50%, -50%);
-      -ms-transform: rotate(45deg) scale(0) translate(-50%, -50%);
-      transform: rotate(45deg) scale(0) translate(-50%, -50%);
-      opacity: 0;
-      -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
-      transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
-      content: ' ';
-    }
-  }
-  & input:checked + span {
-    background-color: #1890ff;
-    border-color: #1890ff;
-    &:after {
-      position: absolute;
-      display: table;
-      border: 2px solid #fff;
-      border-top: 0;
-      border-left: 0;
-      -webkit-transform: rotate(45deg) scale(1) translate(-50%, -50%);
-      -ms-transform: rotate(45deg) scale(1) translate(-50%, -50%);
-      transform: rotate(45deg) scale(1) translate(-50%, -50%);
-      opacity: 1;
-      -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
-      content: ' ';
-    }
-  }
-  & input:focus + span {
-    box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
   }
 `;
 

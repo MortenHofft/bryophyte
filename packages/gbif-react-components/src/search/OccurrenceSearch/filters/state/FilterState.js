@@ -25,7 +25,7 @@ class FilterState extends React.Component {
   }
 
   setField = async (field, value, should = true) => {
-    const filter = this.props.filter || {};
+    const filter = this.props.filter ? cloneDeep(this.props.filter) : {};
     const type = should ? 'should' : 'should_not';
     this.setFilter({
       ...filter,
@@ -39,7 +39,7 @@ class FilterState extends React.Component {
   add = async (field, value, should = true) => {
     const type = should ? 'should' : 'should_not';
     let values = get(this.props.filter, `${type}.${field}`, []);
-    values.push(value);
+    values = values.concat(value);
     values = uniqWith(values, isEqual);
     this.setField(field, values, should);
   };
@@ -69,7 +69,7 @@ class FilterState extends React.Component {
       remove: this.remove,
       toggle: this.toggle,
       filter: this.props.filter,
-      filterHash: hash(this.props.filter)
+      // filterHash: hash(this.props.filter)
     };
     return (
       <Context.Provider value={contextValue}>

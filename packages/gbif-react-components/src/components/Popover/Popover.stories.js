@@ -3,7 +3,6 @@ import React from 'react';
 import { Button } from '/components/Button';
 import Popover from './Popover';
 
-
 export default {
   title: 'Components/Popover',
   component: Popover,
@@ -37,7 +36,6 @@ export const Example = () => <div style={{position: 'relative', padding: 50, hei
     trigger={<Button>{text('Text', 'Choose a location')}</Button>}
   />
 </div>;
-
 
 Example.story = {
   name: 'Popover',

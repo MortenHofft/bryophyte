@@ -1,3 +1,6 @@
+// For now we use Reakit as the functional components that handles focus and aria attributes, but https://reacttraining.com/reach-ui/ could also be an option. 
+// Reakit seems nicer, but is in Beta and have poor support for RTL. Reach on the other hand seem to skimp on ARIA despite it being their primary focus. At least the implementations are not clearly inline with recommendations. But in general A11y seems an area with little tru/false but mostly just opinions. Surprisingly so.
+
 import React from "react";
 import { css, cx } from 'emotion';
 import {
@@ -64,12 +67,9 @@ const dialog = css`
   left: 50%;
   transform: translateX(-50%);
   z-index: 999;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   outline: 0px;
-  border-width: 1px;
-  border-style: solid;
-  border-color: rgba(33, 33, 33, 0.25);
-  border-image: initial;
+  border: 1px solid rgba(33, 33, 33, 0.25);
   /* box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 1000px 1000px; */
   &:focus {
     outline: none;
