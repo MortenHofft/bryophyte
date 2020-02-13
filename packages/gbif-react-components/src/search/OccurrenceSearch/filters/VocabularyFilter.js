@@ -1,41 +1,29 @@
 import React, { useState, useContext, useEffect } from "react";
 import { css, cx } from 'emotion';
-import styled from '@emotion/styled'
-import Popover from '/components/Popover/Popover';
-import { Button, TextButton } from 'components/Button';
-import { Checkbox } from 'components/Checkbox';
-import Level from 'layout/Level';
+import Popover from '../../../components/Popover/Popover';
+import { Button } from '../../../components/Button';
+import { Checkbox } from '../../../components/Checkbox';
+import { Prose } from '../../../typography/Prose';
+import Level from '../../../layout/Level';
 import { MdMoreVert } from "react-icons/md";
 import nanoid from 'nanoid';
 import FilterState from './state/FilterState';
 import FilterContext from './state/FilterContext';
-import { get, keyBy, cloneDeep } from 'lodash';
-// import update from 'immutability-helper';
+import { get, keyBy } from 'lodash';
+import { Menu, MenuAction, MenuToggle } from '../../../components/Menu';
 import formatters from '../displayNames/formatters';
-
+import { Rover, useRoverState } from '../../../components/Rover'
 import { getVocabulary } from './getVocabulary';
 
 
-
-import {
-  useMenuState,
-  Menu,
-  MenuItem,
-  MenuButton,
-  MenuSeparator
-} from "reakit/Menu";
-
-
-
 function VocabularyFilter({ vocabularyName, ...props }) {
-  const menu = useMenuState({ placement: 'bottom-end' });
-
-
-
   const [id] = React.useState(nanoid);
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
   const [vocabulary, setVocabulary] = useState(false);
+  const [isAboutVisible, showAbout] = useState(false);
+  const [help, showHelp] = useState(false);
+  const rover = useRoverState();
 
   useEffect(() => {
     setFilter(currentFilterContext.filter);
@@ -47,7 +35,7 @@ function VocabularyFilter({ vocabularyName, ...props }) {
   const popupContent = (popover, ref) => <FilterState filter={tmpFilter} onChange={updatedFilter => setFilter(updatedFilter)}>
     <FilterContext.Consumer>
       {({ setField, toggle, filter }) => {
-        const checkedMap = new Set(get(filter, `should.${vocabularyName}`, []));
+        const checkedMap = new Set(get(filter, `must.${vocabularyName}`, []));
         return <div className={filterClass}>
           <Level as="section" className={header}>
             <Level.Left>
@@ -57,55 +45,74 @@ function VocabularyFilter({ vocabularyName, ...props }) {
             </Level.Left>
             <Level.Right>
               <Level.Item>
-                <MdMoreVert style={{ fontSize: 24 }} />
+                <Menu
+                  aria-label="Custom menu"
+                  // trigger={<Button>Custom menu</Button>}
+                  trigger={<Button appearance="text"><MdMoreVert style={{ fontSize: 24 }} /></Button>}
+                  items={menuState => [
+                    <MenuAction onClick={e => { showAbout(true); menuState.hide() }}>About this filter</MenuAction>,
+                    <MenuToggle disabled={isAboutVisible} style={{ opacity: isAboutVisible ? .5 : 1 }} checked={help} onChange={e => showHelp(!help)}>Show help texts</MenuToggle>
+                  ]}
+                />
               </Level.Item>
             </Level.Right>
           </Level>
-          <Level as="div" className={infoHeader}>
-            <Level.Left>
-              <Level.Item>
-                {checkedMap.size} selected
+          {!isAboutVisible && vocabulary &&
+            <>
+              <Level as="div" className={infoHeader}>
+                <Level.Left>
+                  <Level.Item>
+                    {checkedMap.size} selected
               </Level.Item>
-            </Level.Left>
-            {checkedMap.size > 0 &&
-              <Level.Right>
-                <Level.Item onClick={e => setField(vocabulary.name, [])}>
-                  <TextButton>Clear</TextButton>
-                </Level.Item>
-              </Level.Right>
-            }
-          </Level>
-          <form className={cx(body, scrollBox)} id={id} onSubmit={e => e.preventDefault()}>
-            {vocabulary && vocabulary.concepts.map((concept, index) => {
-              return <Level key={concept.name} as="div" className={optionClass}>
-                <Level.Left style={{ alignItems: 'flex-start' }}>
-                  <Level.Item>
-                    <div>
-                      <Checkbox ref={index === 0 ? ref : null} id={`${id}_${concept.name}`} checked={checkedMap.has(concept.name)} onChange={e => toggle(vocabulary.name, concept.name)} />
-                    </div>
-                  </Level.Item>
-                  <Level.Item>
-                    <div>
-                      <label htmlFor={`${id}_${concept.name}`}>{concept.label}</label>
-                      {concept.definition && <div onClick={e => toggle(vocabulary.name, concept.name)} style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
-                        {concept.definition}
-                      </div>}
-                    </div>
-                  </Level.Item>
                 </Level.Left>
+                {checkedMap.size > 0 &&
+                  <Level.Right>
+                    <Level.Item>
+                      {/* <TextButton onClick={e => setField(vocabulary.name, [])}>Clear</TextButton> */}
+                      <Button appearance="text" onClick={e => setField(vocabulary.name, [])}>Clear</Button>
+                    </Level.Item>
+                  </Level.Right>
+                }
               </Level>
-            })}
-
-          </form>
+              <form className={cx(body, scrollBox)} id={id} onSubmit={e => e.preventDefault()} >
+                {vocabulary && vocabulary.concepts.map((concept, index) => {
+                  return <Level as={'li'} key={concept.name} className={optionClass}>
+                    <Level.Left style={{ alignItems: 'flex-start' }}>
+                      <Level.Item>
+                        <div>
+                          <Rover as={Checkbox} {...rover} ref={index === 0 ? ref : null} id={`${id}_${concept.name}`} checked={checkedMap.has(concept.name)} onChange={e => toggle(vocabulary.name, concept.name)} >
+                          </Rover>
+                        </div>
+                      </Level.Item>
+                      <Level.Item>
+                        <div>
+                          <label htmlFor={`${id}_${concept.name}`}>{concept.label}</label>
+                          {help && concept.definition && <div onClick={e => toggle(vocabulary.name, concept.name)} style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
+                            {concept.definition}
+                          </div>}
+                        </div>
+                      </Level.Item>
+                    </Level.Left>
+                  </Level>
+                })}
+              </form>
+            </>
+          }
+          {isAboutVisible &&
+            <Prose className={cx(body, scrollBox, description)}>
+              {vocabulary.definition} some description goes here
+            </Prose>
+          }
           <Level className={footer}>
             <Level.Left>
               <Level.Item>
-                <Button appearance="ghost" onClick={e => { setFilter(currentFilterContext.filter); popover.hide(); }}>Cancel</Button>
+                {isAboutVisible && <Button appearance="ghost" onClick={e => showAbout(false)}>Back</Button>}
+                {!isAboutVisible && <Button appearance="ghost" onClick={e => { setFilter(currentFilterContext.filter); popover.hide(); }}>Cancel</Button>}
               </Level.Item>
             </Level.Left>
             <Level.Right>
               <Level.Item>
-                <Button type="submit" form={id} onClick={e => { currentFilterContext.setFilter(filter); popover.hide(); }}>Apply</Button>
+                {!isAboutVisible && <Button type="submit" form={id} onClick={e => { currentFilterContext.setFilter(filter); popover.hide(); }}>Apply</Button>}
               </Level.Item>
             </Level.Right>
           </Level>
@@ -126,15 +133,17 @@ function VocabularyFilter({ vocabularyName, ...props }) {
 }
 
 const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) => {
-  const appliedFiltersSet = new Set(get(filter, `should.${vocabulary.name}`, []));
+  if (!vocabulary) return <Button appearance="primaryOutline" ref={ref} loading={true}>Loading</Button>
+
+  const appliedFiltersSet = new Set(get(filter, `must.${vocabulary.name}`, []));
   if (appliedFiltersSet.size === 1) {
-    const selected = keyBy(vocabulary.concepts, 'name')[filter.should[vocabulary.name][0]].label;
+    const selected = keyBy(vocabulary.concepts, 'name')[filter.must[vocabulary.name][0]].label;
     return <Button {...props} ref={ref}>{selected}</Button>
   }
   if (appliedFiltersSet.size > 1) {
-    return <Button {...props} ref={ref}>{appliedFiltersSet.size} {vocabulary.label}s</Button>
+    return <Button {...props} ref={ref} loading={!vocabulary}>{appliedFiltersSet.size} {vocabulary.label}s</Button>
   }
-  return <Button appearance="primaryOutline" {...props} ref={ref}>{vocabulary.label}</Button>
+  return <Button appearance="primaryOutline" {...props} ref={ref} loading={!vocabulary}>{vocabulary.label}</Button>
 });
 
 const optionClass = css`
@@ -142,6 +151,15 @@ const optionClass = css`
   &:last-child {
     margin-bottom: 0;
   }
+  /* & *::selection {
+    color: none;
+    background: none;
+  } */
+`;
+
+const description = css`
+  padding-top: 20px;
+  padding-bottom: 20px;
 `;
 
 const infoHeader = css`

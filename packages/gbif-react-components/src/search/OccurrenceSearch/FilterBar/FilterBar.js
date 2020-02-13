@@ -24,7 +24,7 @@ const FilterBar = ({
     <Button type="outline" css={css`margin-right: 4px;`} onClick={e => stateApi.setFilter({ update: 'fromFilter' })}>Button</Button> */}
     <VocabularyFilter vocabularyName="BasisOfRecord" css={css`margin-right: 4px;`}/>
     <VocabularyFilter vocabularyName="Rank" css={css`margin-right: 4px;`}/>
-    <VocabularyFilter vocabularyName="LifeStage" css={css`margin-right: 4px;`}/>
+    <VocabularyFilter vocabularyName="MediaType" css={css`margin-right: 4px;`}/>
     {JSON.stringify(filter, null, 2)}
   </div>
 }

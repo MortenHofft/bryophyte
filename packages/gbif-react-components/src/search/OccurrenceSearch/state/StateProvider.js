@@ -66,8 +66,8 @@ class StateProvider extends React.Component {
     this.setState({ filter });
   }
 
-  setField = async (field, value, should = true) => {
-    const type = should ? 'should' : 'should_not';
+  setField = async (field, value, must = true) => {
+    const type = must ? 'must' : 'must_not';
     this.setFilter({
       ...this.state.filter,
       [type]: {

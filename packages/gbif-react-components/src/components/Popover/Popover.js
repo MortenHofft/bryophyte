@@ -56,7 +56,7 @@ const backdrop = css`
 `;
 
 const dialogContent = css`
-  max-height: calc(100vh - 56px);
+  max-height: calc(100vh - 100px);
   /* overflow: auto; */
 `;
 

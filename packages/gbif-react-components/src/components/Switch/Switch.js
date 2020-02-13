@@ -11,7 +11,7 @@ const Switch = React.forwardRef(({
   ...props
 }, ref) => {
   return <Box as={Span} style={style} className={cx(switchClass, className)}>
-    <input type="checkbox" ref={ref} {...props}></input>
+    <input type="checkbox" ref={ref} {...props} ></input>
     <span></span>
   </Box>
 });
@@ -53,7 +53,7 @@ const switchClass = css`
     display: block;
     width: 2em;
     height: 1em;
-    background-color: #ccc;
+    background-color: #d4d5e3;
     transition: .4s;
     border-radius: 34px;
     &:before {

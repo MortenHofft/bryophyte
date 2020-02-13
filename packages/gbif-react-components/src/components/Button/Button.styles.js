@@ -17,7 +17,7 @@ export const button = theme => css`
   box-shadow: none;
 
   font-size: 1em;
-  height: ${theme.dense ? 1.5 : 2.5}em;
+  height: ${theme.dense ? 1.5 : 2.2}em;
   line-height: calc(1.5em - 6px);
   position: relative;
   margin: 0;
@@ -38,6 +38,15 @@ export const button = theme => css`
   ::-moz-focus-inner {
     border-style: none;
   }
+`;
+
+export const text = theme => css`
+  padding: 0;
+  border: none;
+  height: auto;
+  color: inherit;
+  line-height: inherit;
+  font-weight: inherit;
 `;
 
 export const primary = theme => css`
@@ -109,10 +118,7 @@ export const loading = (theme) => css`
     content: "";
     display: block;
     height: 1em;
-    position: relative;
     width: 1em;
-
-    position: absolute;
     left: calc(50% - (1em / 2));
     top: calc(50% - (1em / 2));
     position: absolute !important;
@@ -130,5 +136,6 @@ export default {
   danger,
   link,
   loading,
-  block
+  block,
+  text
 };

@@ -8,7 +8,7 @@ const TextButton = React.forwardRef(({
   ...props
 }, ref) => {
   const theme = useContext(ThemeContext);
-  return <Box as={'button'} css={css`
+  return <Box as={'button'} {...props} css={css`
     border: none;
     background: none;
     outline: none;
@@ -16,13 +16,11 @@ const TextButton = React.forwardRef(({
     color: inherit;
     font-weight: inherit;
     cursor: pointer;
-    padding: 0;
-    margin: 0;
     &:focus {
       outline: none;
       box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
     }
-  `} ref={ref} {...props} />
+  `} ref={ref} />
 });
 
 TextButton.displayName = 'TextButton'

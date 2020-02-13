@@ -3,7 +3,7 @@ import withFilter from '../../filters/state/withFilter';
 import MapPresentation from './MapPresentation';
 
 const Map = props => {
-  return <MapPresentation props />
+  return <MapPresentation {...props} />
   // return <h1>test</h1>
 }
 

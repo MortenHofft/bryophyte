@@ -8,11 +8,6 @@ import isEqual from 'react-fast-compare';
 import hash from 'object-hash';
 
 class FilterState extends React.Component {
-  static propTypes = {
-    filter: PropTypes.object,
-    onChange: PropTypes.func
-  }
-
   setFilter = async filter => {
     if (typeof filter === 'object') {
       filter = cloneDeep(filter);
@@ -24,9 +19,9 @@ class FilterState extends React.Component {
     this.props.onChange(filter);
   }
 
-  setField = async (field, value, should = true) => {
-    const filter = this.props.filter ? cloneDeep(this.props.filter) : {};
-    const type = should ? 'should' : 'should_not';
+  setField = async (field, value, must = true) => {
+    const filter = this.props.filter ? cloneDeep(this.props.filter) : {};
+    const type = must ? 'must' : 'must_not';
     this.setFilter({
       ...filter,
       [type]: {
@@ -36,28 +31,28 @@ class FilterState extends React.Component {
     });
   }
 
-  add = async (field, value, should = true) => {
-    const type = should ? 'should' : 'should_not';
+  add = async (field, value, must = true) => {
+    const type = must ? 'must' : 'must_not';
     let values = get(this.props.filter, `${type}.${field}`, []);
     values = values.concat(value);
     values = uniqWith(values, isEqual);
-    this.setField(field, values, should);
+    this.setField(field, values, must);
   };
 
-  remove = async (field, value, should = true) => {
-    const type = should ? 'should' : 'should_not';
+  remove = async (field, value, must = true) => {
+    const type = must ? 'must' : 'must_not';
     let values = get(this.props.filter, `${type}.${field}`, []);
     values = values.filter(e => !isEqual(e, value));
-    this.setField(field, values, should);
+    this.setField(field, values, must);
   };
 
-  toggle = async (field, value, should = true) => {
-    const type = should ? 'should' : 'should_not';
+  toggle = async (field, value, must = true) => {
+    const type = must ? 'must' : 'must_not';
     let values = get(this.props.filter, `${type}.${field}`, []);
     if (values.some(e => isEqual(e, value))) {
-      this.remove(field, value, should);
+      this.remove(field, value, must);
     } else {
-      this.add(field, value, should);
+      this.add(field, value, must);
     }
   };
 
@@ -69,11 +64,12 @@ class FilterState extends React.Component {
       remove: this.remove,
       toggle: this.toggle,
       filter: this.props.filter,
-      // filterHash: hash(this.props.filter)
+      filterHash: hash(this.props.filter)
     };
     return (
       <Context.Provider value={contextValue}>
-        {/* <pre>{JSON.stringify(this.props.filter, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(this.props.filter, null, 2)}</pre>
+        <pre>{JSON.stringify(esQuery, null, 2)}</pre> */}
         {this.props.children}
       </Context.Provider>
     );
@@ -85,5 +81,10 @@ class FilterState extends React.Component {
 const UncontrollableFilterState = uncontrollable(FilterState, {
   filter: 'onChange'
 });
+
+FilterState.propTypes = {
+  filter: PropTypes.object,
+  onChange: PropTypes.func
+}
 
 export default UncontrollableFilterState;

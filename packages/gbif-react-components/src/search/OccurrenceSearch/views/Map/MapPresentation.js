@@ -1,11 +1,17 @@
 import React, { Component } from "react";
-// import _ from "lodash";
+import { get, snakeCase } from "lodash";
 import styled from '@emotion/styled';
 import mapboxgl from "mapbox-gl";
+import { compose } from '../../api';
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaG9mZnQiLCJhIjoiY2llaGNtaGRiMDAxeHNxbThnNDV6MG95OSJ9.p6Dj5S7iN-Mmxic6Z03BEA";
 
+  /*
+  field: coordinates
+  url: http://labs.gbif.org:7011/_search?
+  filter: {"bool":{"filter":{"term":{"datasetKey":"4fa7b334-ce0d-4e88-aaae-2e0c138d049e"}}}}
+  */
 
 const MapAreaComponent = styled('div')(
   {
@@ -72,13 +78,17 @@ class Map extends Component {
   addLayer() {
     // let filter = this.props.filter;
     // filter = this.props.api.compose(filter).build();
+    // let borArray = get(this.props.filter, 'must.BasisOfRecord', []).map(e => snakeCase(e).toUpperCase());
+    // let filter = {"bool":{"filter":{"terms":{"basisOfRecord":borArray}}}};
+    // let filter = {"bool":{"filter":{"terms":{"gbifClassification.usage.rank":borArray}}}};
+    let esQuery = compose(this.props.filter).build();;
     var tileString =
       //"https://esmap.gbif-dev.org/api/tile/{x}/{y}/{z}.mvt?field=coordinates&url=" +
       "http://labs.gbif.org:7012/api/tile/point/{x}/{y}/{z}.mvt?resolution=medium&field=coordinates&url=" +
       // "http://localhost:3000/api/tile/significant/{x}/{y}/{z}.mvt?field=coordinate_point&significantField=backbone.speciesKey&url=" +
       //"http://localhost:3001/api/tile/point/{x}/{y}/{z}.mvt?resolution=high&field=coordinates&url=" +
       encodeURIComponent(`http://c6n1.gbif.org:9200/occurrence/_search?`) +
-      "&filter=";
+      "&filter=" + encodeURIComponent(JSON.stringify(esQuery.query));
     this.map.addLayer(
       {
         id: "occurrences",
