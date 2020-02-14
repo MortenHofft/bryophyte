@@ -6,13 +6,11 @@
  */
 import bodybuilder from 'bodybuilder';
 import { termFilter, termOrRangeFilter, hasTerms } from './converters/util';
-import { map } from '../../../utils/elementChildren';
-import { snakeCase, camelCase } from 'lodash';
+import { snakeCase } from 'lodash';
 // when translating the individual filters, the queried, field as well as the value might change. We can asume a sensible default, but other than that we need converters for all fields.
 // enums for example varies between the APIs. field names vary etc.
 
 const filters = {
-  taxon: 'backbone.taxonKey',
   year: termOrRangeFilter('year'),
   BasisOfRecord: {
     type: 'TERMS',
@@ -26,8 +24,13 @@ const filters = {
   },
   MediaType: {
     type: 'TERMS',
-    getValues: values => values.map(e => e),
+    getValues: values => values,
     fieldName: 'mediaTypes'
+  },
+  TaxonKey: {
+    type: 'TERMS',
+    getValues: values => values,
+    fieldName: 'gbifClassification.taxonKey'
   }
   // not here, and it will be assumed to be a 1 to 1 mapping to a terms filter
 }

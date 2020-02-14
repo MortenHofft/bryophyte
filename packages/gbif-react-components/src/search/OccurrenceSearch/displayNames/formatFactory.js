@@ -7,7 +7,6 @@ export default getData =>
       super(props);
       this.getTitle = this.getTitle.bind(this);
       this.state = {
-        title: ""
       };
     }
 

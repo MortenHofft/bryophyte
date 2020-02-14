@@ -68,8 +68,7 @@ class FilterState extends React.Component {
     };
     return (
       <Context.Provider value={contextValue}>
-        {/* <pre>{JSON.stringify(this.props.filter, null, 2)}</pre>
-        <pre>{JSON.stringify(esQuery, null, 2)}</pre> */}
+        {/* <pre>{JSON.stringify(this.props.filter, null, 2)}</pre> */}
         {this.props.children}
       </Context.Provider>
     );

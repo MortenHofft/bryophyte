@@ -42,7 +42,8 @@
     "react-icons": "^3.9.0",
     "react-intl": "^3.12.0",
     "reakit": "^1.0.0-beta.16",
-    "uncontrollable": "^7.1.1"
+    "uncontrollable": "^7.1.1",
+    "use-debounce": "^3.3.0"
   },
   "peerDependencies": {
     "react": "16.x"

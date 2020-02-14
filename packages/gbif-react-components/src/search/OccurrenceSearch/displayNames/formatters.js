@@ -30,7 +30,7 @@ let displayName = [
         .then(result => ({title: result.data.title}))
   },
   {
-    name: 'taxonKey',
+    name: 'TaxonKey',
     format: id => axios
         .get(endpoints.species + '/' + id)
         .then(result => ({ title: result.data.scientificName }))

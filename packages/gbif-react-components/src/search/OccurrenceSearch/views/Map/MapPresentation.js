@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { get, snakeCase } from "lodash";
 import styled from '@emotion/styled';
 import mapboxgl from "mapbox-gl";
-import { compose } from '../../api';
+import { compose } from '../../api/queryAdapter';
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiaG9mZnQiLCJhIjoiY2llaGNtaGRiMDAxeHNxbThnNDV6MG95OSJ9.p6Dj5S7iN-Mmxic6Z03BEA";

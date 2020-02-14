@@ -12,7 +12,7 @@ const Checkbox = React.forwardRef(({
   ...props
 }, ref) => {
   return <Box as={Span} style={style} className={className} css={checkbox}>
-    <input type="checkbox" ref={ref} {...props}></input>
+    <input type="checkbox" ref={ref} {...props} />
     <span></span>
   </Box>
 });
@@ -58,8 +58,7 @@ const checkbox = css`
     border: 1px solid #d9d9d9;
     border-radius: 2px;
     border-collapse: separate;
-    -webkit-transition: all 0.3s;
-    transition: all 0.3s;
+    transition: all 0.15s;
     &:after {
       position: absolute;
       top: 50%;
@@ -70,11 +69,8 @@ const checkbox = css`
       border: 2px solid #fff;
       border-top: 0;
       border-left: 0;
-      -webkit-transform: rotate(45deg) scale(0) translate(-50%, -50%);
-      -ms-transform: rotate(45deg) scale(0) translate(-50%, -50%);
       transform: rotate(45deg) scale(0) translate(-50%, -50%);
       opacity: 0;
-      -webkit-transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
       transition: all 0.1s cubic-bezier(0.71, -0.46, 0.88, 0.6), opacity 0.1s;
       content: ' ';
     }
@@ -88,11 +84,8 @@ const checkbox = css`
       border: 2px solid #fff;
       border-top: 0;
       border-left: 0;
-      -webkit-transform: rotate(45deg) scale(1) translate(-50%, -50%);
-      -ms-transform: rotate(45deg) scale(1) translate(-50%, -50%);
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
       opacity: 1;
-      -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
       transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
       content: ' ';
     }

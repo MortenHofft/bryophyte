@@ -44,7 +44,7 @@ function Filter({ stateApi, ...props }) {
                   .filter(item => !inputValue || item.value.includes(inputValue))
                   .map((item, index) => (
                     <Item
-                      key={item.id}
+                      key={index}
                       {...getItemProps({
                         item,
                         index,
@@ -110,7 +110,7 @@ const BaseMenu = styled('ul')(
   {
     padding: 0,
     marginTop: 0,
-    position: 'absolute',
+    // position: 'absolute',
     backgroundColor: 'white',
     width: '100%',
     maxHeight: '20rem',
@@ -134,7 +134,7 @@ const BaseMenu = styled('ul')(
 )
 
 const Menu = React.forwardRef((props, ref) => (
-  <BaseMenu innerRef={ref} {...props} />
+  <BaseMenu ref={ref} {...props} />
 ))
 
 const Item = styled('li')(

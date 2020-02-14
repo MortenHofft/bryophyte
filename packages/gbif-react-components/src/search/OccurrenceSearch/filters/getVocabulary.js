@@ -21,11 +21,14 @@ const fetchVocabulary = async (name, language) => {
   const vocab = (await axios.get(`http://api.gbif-dev.org/v1/vocabularies/${name}`)).data;
   const concepts = (await axios.get(`http://api.gbif-dev.org/v1/vocabularies/${name}/concepts?limit=1000`)).data;
 
+  const trimmedConcepts = concepts.results.map(c => {
+    return {...getCoreFields(c, language),}
+  });
+
   return {
     ...getCoreFields(vocab, language),
-    concepts: concepts.results.map(c => {
-      return {...getCoreFields(c, language),}
-    })
+    concepts: trimmedConcepts,
+    hasConceptDefinitions: trimmedConcepts.some(e => e.definition)
   };
 }
 

@@ -7,7 +7,7 @@ import Layout from './Layout';
 import FilterState from "./filters/state/FilterState";
 // import history from './history';
 // import qs from 'querystringify';
-import { compose } from './api';
+import { compose } from './api/queryAdapter';
 
 function OccurrenceSearch(props) {
   const [filter, setFilter] = useState({ must: { BasisOfRecord: [] } });

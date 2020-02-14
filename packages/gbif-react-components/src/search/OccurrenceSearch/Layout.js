@@ -40,7 +40,9 @@ const Layout = ({
           third
         </Tab>
       </Tabs> */}
-        <Map />
+
+
+        {/* <Map /> */}
         
       </div>
     </div>

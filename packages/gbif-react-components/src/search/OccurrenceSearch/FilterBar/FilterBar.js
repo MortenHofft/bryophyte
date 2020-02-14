@@ -4,10 +4,9 @@ import withContext from '../state/withContext';
 import React, { useContext } from 'react';
 import ThemeContext from 'style/themes/ThemeContext';
 import VocabularyFilter from '../filters/VocabularyFilter';
+import TaxonFilter from '../filters/TaxonFilter';
+import TestFilter from '../filters/Filter';
 
-// import PropTypes from 'prop-types';
-
-import { Button } from '../../../components/Button';
 const FilterBar = ({
   className = '',
   stateApi,
@@ -22,9 +21,11 @@ const FilterBar = ({
     css={css`${style(theme)}`} {...props}>
     {/* <Button css={css`margin-right: 4px;`}>Species or group</Button>
     <Button type="outline" css={css`margin-right: 4px;`} onClick={e => stateApi.setFilter({ update: 'fromFilter' })}>Button</Button> */}
-    <VocabularyFilter vocabularyName="BasisOfRecord" css={css`margin-right: 4px;`}/>
-    <VocabularyFilter vocabularyName="Rank" css={css`margin-right: 4px;`}/>
-    <VocabularyFilter vocabularyName="MediaType" css={css`margin-right: 4px;`}/>
+    <div><VocabularyFilter vocabularyName="BasisOfRecord" css={css`margin-right: 4px;`} /></div>
+    <div><VocabularyFilter vocabularyName="Rank" css={css`margin-right: 4px;`} /></div>
+    <div><VocabularyFilter vocabularyName="MediaType" css={css`margin-right: 4px;`} /></div>
+    <div><TaxonFilter css={css`margin-right: 4px;`} /></div>
+    {/* <div><TestFilter css={css`margin-right: 4px;`} /></div> */}
     {JSON.stringify(filter, null, 2)}
   </div>
 }
@@ -33,7 +34,8 @@ FilterBar.propTypes = {
 }
 
 export const style = (theme) => css`
-  
+  display: flex;
+  flex-direction: row;
 `;
 
 const mapContextToProps = ({ filter, stateApi }) => ({ filter, stateApi });
