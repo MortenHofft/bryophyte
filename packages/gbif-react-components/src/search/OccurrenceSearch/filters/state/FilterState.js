@@ -9,6 +9,9 @@ import hash from 'object-hash';
 
 class FilterState extends React.Component {
   setFilter = async filter => {
+    if (isEqual(filter, this.props.filter)) {
+      return;
+    }
     if (typeof filter === 'object') {
       filter = cloneDeep(filter);
       Object.keys(filter).forEach(key => {
@@ -64,7 +67,7 @@ class FilterState extends React.Component {
       remove: this.remove,
       toggle: this.toggle,
       filter: this.props.filter,
-      filterHash: hash(this.props.filter)
+      filterHash: hash(this.props.filter || {})
     };
     return (
       <Context.Provider value={contextValue}>

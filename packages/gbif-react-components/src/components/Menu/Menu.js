@@ -19,7 +19,7 @@ export const Menu = ({ trigger, placement, items, ...props }) => {
       </MenuButton>
       <BaseMenu {...menu} {...props} className={focus} style={{zIndex: 999}}>
         <div className={menuContainer}>
-          {items(menu).map((item, i) => (
+          {(typeof items === 'function' ? items(menu) : items).map((item, i) => (
             <MenuItem {...menu} {...item.props} key={i}>
               {itemProps => React.cloneElement(item, itemProps)}
             </MenuItem>
@@ -40,7 +40,7 @@ export const MenuToggle = React.forwardRef(({
   return (
     <label className={cx(menuOption, className)} ref={ref} style={style}>
       <div>{children}</div>
-      {onChange && <div><Switch className="gb-menuOption-inner-switch" onChange={onChange} {...props} /></div> }
+      <div><Switch className="gb-menuOption-inner-switch" onChange={onChange ? onChange : null} {...props} /></div>
     </label>
   )
 });

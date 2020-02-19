@@ -25,16 +25,23 @@ export default {
 //   leftEnd: 'left-end',
 // };
 
-const popupContent = props => <div>
-  The button should recieve focus <Button onClick={props.hide}>Close</Button>
+const TaxonFilter = ({innerRef, onClose, ...props}) => <div>
+  <h1>Taxon filter</h1>
+  <Button onClick={onClose}>Close</Button>
+  <Button ref={innerRef}>init focus</Button>
+  <Button>test 3</Button>
+  <Button>test 4</Button>
 </div>
 
-export const Example = () => <div style={{position: 'relative', padding: 50, height: 1000}}>
+export const Example = () => <div style={{ position: 'relative', padding: 50, height: 1000 }}>
   <Popover
     aria-label="Location filter"
-    modal={popupContent}
     trigger={<Button>{text('Text', 'Choose a location')}</Button>}
-  />
+  >
+    {({popover, focusRef}) =>
+      <TaxonFilter innerRef={focusRef} onClickOutside={e => popover.hide()}/>
+    }
+  </Popover>
 </div>;
 
 Example.story = {

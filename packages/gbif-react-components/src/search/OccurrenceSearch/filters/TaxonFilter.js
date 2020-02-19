@@ -1,43 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
-import { css, cx } from 'emotion';
-import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
 import Popover from '../../../components/Popover/Popover';
 import { Button } from '../../../components/Button';
-import { Checkbox } from '../../../components/Checkbox';
 import { Prose } from '../../../typography/Prose';
-import Level from '../../../layout/Level';
-import { MdMoreVert } from "react-icons/md";
 import nanoid from 'nanoid';
 import FilterState from './state/FilterState';
 import FilterContext from './state/FilterContext';
-import { get, keyBy } from 'lodash';
-import { Menu, MenuAction, MenuToggle } from '../../../components/Menu';
-import formatters from '../displayNames/formatters';
-import { Rover, useRoverState } from '../../../components/Rover'
+import { get, union } from 'lodash';
+import { MenuAction } from '../../../components/Menu';
+// import formatters from '../displayNames/formatters';
 import Downshift from 'downshift';
-
-const TaxonTitle = formatters('TaxonKey').component;
-
-const FilterHeader = ({ title, showMenu, items }) => {
-  return (
-    <Level as="section" className={header}>
-      <Level.Left>
-        <Level.Item>
-          {title}
-        </Level.Item>
-      </Level.Left>
-      {showMenu && <Level.Right>
-        <Level.Item>
-          <Menu
-            aria-label="Settings"
-            trigger={<Button appearance="text"><MdMoreVert style={{ fontSize: 24 }} /></Button>}
-            items={items}
-          />
-        </Level.Item>
-      </Level.Right>}
-    </Level>
-  );
-}
+import { css } from 'emotion';
+import styled from '@emotion/styled';
+import { Header, Footer, Option, SummaryBar, FilterBody, FilterBodyDescription, FilterBox } from '../../../widgets/Filter';
 
 const searchField = css`
   font-size: 14px;
@@ -58,186 +33,160 @@ const items = [
 ];
 const itemToString = i => (i ? i.value : '');
 
-function TaxonFilter({ placement, ...props }) {
+const PopupContent = ({ filterName, tmpFilter, setFilter, onCancel, onApply, focusRef }) => {
   const [id] = React.useState(nanoid);
+  const [isAboutVisible, showAbout] = useState(false);
+  const [initialOptions] = useState(get(tmpFilter, `must.${filterName}`, []));
+
+  return <FilterState filter={tmpFilter} onChange={updatedFilter => setFilter(updatedFilter)}>
+    <FilterContext.Consumer>
+      {({ setField, toggle, filter }) => {
+        const selected = get(filter, `must.${filterName}`, []);
+        const checkedMap = new Set(selected);
+        const options = union(initialOptions, selected);
+        return <FilterBox>
+          <Header menuItems={menuState => [<MenuAction key="about" onClick={() => { showAbout(true); menuState.hide() }}>About this filter</MenuAction>]} >
+            Scientific name
+          </Header>
+          {!isAboutVisible &&
+            <>
+              <Downshift
+                onChange={selection =>
+                  alert(selection ? `You selected ${selection.value}` : 'Selection Cleared')
+                }
+                itemToString={item => (item ? item.value : '')}
+              >
+                {({
+                  getInputProps,
+                  getItemProps,
+                  getLabelProps,
+                  getMenuProps,
+                  isOpen,
+                  inputValue,
+                  highlightedIndex,
+                  selectedItem,
+                  getRootProps,
+                }) => (
+                    <>
+                      <div>
+                        {/* <label {...getLabelProps()}>Enter a fruit</label> */}
+                        <div {...getRootProps({}, { suppressRefError: true })}>
+                        <input ref={focusRef} className={searchField} placeholder="Search for species" aria-label="Search for species" aria-placeholder="Puma concolor" {...getInputProps()} />
+                        </div>
+                      </div>
+                      <FilterBody>
+                        <ul {...getMenuProps({ isOpen })} style={{ margin: 0, padding: 0 }}>
+                          {isOpen
+                            ? items
+                              .filter(item => !inputValue || item.value.includes(inputValue))
+                              .map((item, index) => (
+                                <Item
+                                  key={index}
+                                  {...getItemProps({
+                                    item,
+                                    index,
+                                    isActive: highlightedIndex === index,
+                                    isSelected: selectedItem === item,
+                                  })}
+                                >
+                                  {itemToString(item)}
+                                </Item>
+                              ))
+                            : null}
+                        </ul>
+                      </FilterBody>
+                    </>
+                  )}
+              </Downshift>
+              <SummaryBar count={checkedMap.size} onClear={() => setField(filterName, [])} />
+              <FilterBody>
+                <form id={id} onSubmit={e => e.preventDefault()} >
+                  {options.map((taxonKey) => {
+                    return <Option
+                      key={taxonKey}
+                      helpVisible={true}
+                      helpText="needs writing"
+                      label={taxonKey}
+                      checked={checkedMap.has(taxonKey)}
+                      onChange={() => toggle(filterName, taxonKey)}
+                    />
+                  })}
+                </form>
+              </FilterBody>
+            </>
+          }
+          {isAboutVisible &&
+            <Prose as={FilterBodyDescription}>
+              Some prose describing this filter
+            </Prose>
+          }
+          <Footer
+            formId={id}
+            onApply={() => onApply(filter)}
+            onCancel={onCancel}
+            onBack={() => showAbout(false)}
+            showBack={isAboutVisible}
+          />
+        </FilterBox>
+      }}
+    </FilterContext.Consumer>
+  </FilterState>
+}
+
+PopupContent.propTypes = {
+  vocabularyName: PropTypes.string,
+  filterName: PropTypes.string,
+  tmpFilter: PropTypes.object,
+  vocabulary: PropTypes.object,
+  setFilter: PropTypes.func,
+  onCancel: PropTypes.func,
+  onApply: PropTypes.func,
+  focusRef: PropTypes.any
+};
+
+function TaxonFilter({ placement, ...props }) {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
-  const [isAboutVisible, showAbout] = useState(false);
-  const rover = useRoverState();
-  const fieldName = 'taxonKey';
 
   useEffect(() => {
     setFilter(currentFilterContext.filter);
   }, [currentFilterContext.filter]);
 
-  const popupContent = (popover, ref) => <FilterState filter={tmpFilter} onChange={updatedFilter => setFilter(updatedFilter)}>
-    <FilterContext.Consumer>
-      {({ setField, toggle, filter }) => {
-        const checkedMap = new Set(get(filter, `must.${fieldName}`, []));
-        return <div className={filterClass}>
-          <FilterHeader title="Species or group" showMenu items={menuState => [
-            <MenuAction onClick={e => { showAbout(true); menuState.hide() }}>About this filter</MenuAction>
-          ]} />
-          {!isAboutVisible && <Downshift
-            onChange={selection =>
-              alert(selection ? `You selected ${selection.value}` : 'Selection Cleared')
-            }
-            itemToString={item => (item ? item.value : '')}
-          >
-            {({
-              getInputProps,
-              getItemProps,
-              getLabelProps,
-              getMenuProps,
-              isOpen,
-              inputValue,
-              highlightedIndex,
-              selectedItem,
-              getRootProps,
-            }) => (
-                <>
-                  <div>
-                    {/* <label {...getLabelProps()}>Enter a fruit</label> */}
-                    <div {...getRootProps({}, { suppressRefError: true })}>
-                      <input className={searchField} placeholder="Search for species" aria-label="Search for species" aria-placeholder="Puma concolor" {...getInputProps()} />
-                    </div>
-                  </div>
-                  <div className={cx(body, scrollBox)}>
-                    <ul {...getMenuProps({ isOpen })} style={{margin: 0, padding: 0}}>
-                      {isOpen || true
-                        ? items
-                          .filter(item => !inputValue || item.value.includes(inputValue))
-                          .map((item, index) => (
-                            <Item
-                              key={index}
-                              {...getItemProps({
-                                item,
-                                index,
-                                isActive: highlightedIndex === index,
-                                isSelected: selectedItem === item,
-                              })}
-                            >
-                              {itemToString(item)}
-                            </Item>
-                          ))
-                        : null}
-                    </ul>
-                  </div>
-                </>
-              )}
-          </Downshift>
-          }
-        </div>
-      }
-      }
-    </FilterContext.Consumer>
-  </FilterState >
-
-  return (<Popover
-    style={{ width: 400, maxWidth: '100%' }}
-    onClose={e => currentFilterContext.setFilter(tmpFilter)}
-    aria-label={`Filter on ${fieldName}`}
-    modal={popupContent}
-    placement={placement}
-    visible
-    trigger={<FilterButton {...props} fieldName={fieldName} filter={currentFilterContext.filter}></FilterButton>}
-  />);
+  return (
+    <Popover
+      style={{ width: '22em', maxWidth: '100%' }}
+      onClickOutside={popover => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
+      aria-label={`Filter on scienitific name`}
+      placement={placement}
+      trigger={<FilterButton {...props} filterName="TaxonKey" filter={currentFilterContext.filter}></FilterButton>}
+    >
+      {({ popover, focusRef }) => {
+        return (<PopupContent
+          filterName="TaxonKey"
+          tmpFilter={tmpFilter}
+          setFilter={setFilter}
+          onApply={() => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
+          onCancel={() => { setFilter(currentFilterContext.filter); popover.hide(); }}
+          focusRef={focusRef}
+        />)
+      }}
+    </Popover>
+  );
 }
 
-const FilterButton = React.forwardRef(({ filter, fieldName, ...props }, ref) => {
-  const appliedFiltersSet = new Set(get(filter, `must.${fieldName}`, []));
+const FilterButton = React.forwardRef(({ filter, filterName, ...props }, ref) => {
+  const selected = get(filter, `must.${filterName}`, []);
+  const appliedFiltersSet = new Set(get(filter, `must.${filterName}`, []));
   if (appliedFiltersSet.size === 1) {
-    const selected = filter.must[fieldName][0];
-    return <Button {...props} ref={ref}>key: {selected}</Button>
+    return <Button {...props} ref={ref}>{selected[0]}</Button>
   }
   if (appliedFiltersSet.size > 1) {
-    return <Button {...props} ref={ref}>{appliedFiltersSet.size} {fieldName}s</Button>
+    return <Button {...props} ref={ref}>{appliedFiltersSet.size} {filterName}s</Button>
   }
-  return <Button appearance="primaryOutline" {...props} ref={ref}>{fieldName}</Button>
+  return <Button appearance="primaryOutline" {...props} ref={ref}>{filterName}</Button>
 });
 
-const optionClass = css`
-  padding: 6px 0;
-  &:last-child {
-    margin-bottom: 0;
-  }
-  /* & *::selection {
-                  color: none;
-                background: none;
-              } */
-            `;
-
-const description = css`
-              padding-top: 20px;
-              padding-bottom: 20px;
-            `;
-
-const infoHeader = css`
-              font-size: .85em;
-              color: #999;
-              padding: .5em 1.5em;
-              font-weight: 200;
-            `;
-
-const filterClass = css`
-              display: flex;
-              flex-direction: column;
-              overflow: hidden;
-              max-height: inherit;
-            `;
-
-const header = css`
-              border-bottom: 1px solid #eee;
-              padding: 1.2em 1.5em;
-              flex: 0 0 auto;
-            `;
-
-const body = css`
-              /* border-bottom: 1px solid #eee; */
-              padding: .5em 1.5em;
-              flex: 1 1 auto;
-              overflow: auto;
-              scrollbar-width: thin;
-  &::-webkit-scrollbar {
-                  width: 6px;
-            }
-  &::-webkit-scrollbar-thumb {
-                  background - color: #686868;
-              }
-            `;
-
-const footer = css`
-              padding: .8em 1em;
-              flex: 0 0 auto;
-            `;
-
-// https://stackoverflow.com/questions/9333379/check-if-an-elements-content-is-overflowing
-// I would never have thought of this myself.
-const scrollBox = css`
-              /* background: */
-                /* Shadow covers */
-                /* linear-gradient(white 30%, rgba(255,255,255,0)),
-                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%, */
-                
-                /* Shadows */
-                /* radial-gradient(50% 0, farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)),
-                radial-gradient(50% 100%,farthest-side, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%; */
-              background:
-                /* Shadow covers */
-                linear-gradient(white 30%, rgba(255,255,255,0)),
-                linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-                
-                /* Shadows */
-                linear-gradient(to bottom, #eee 1px, transparent 1px 100%),
-                /* linear-gradient(to bottom, #eee 1px, transparent 6px 100%), */
-                linear-gradient(to bottom, transparent calc(100% - 1px), #eee calc(100% - 1px) 100%);
-              background-repeat: no-repeat;
-              background-color: white;
-              background-size: 100% 10px, 100% 10px, 100% 20px, 100% calc(100% - 1px);
-              
-              /* Opera doesn't support this in the shorthand */
-              background-attachment: local, local, scroll, scroll;
-            `;
+FilterButton.displayName = 'FilterButton';
 
 const Item = styled('li')(
   {
