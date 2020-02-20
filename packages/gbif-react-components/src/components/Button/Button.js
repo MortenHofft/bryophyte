@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Box from '../Box/Box';
 import { Button as ButtonA11y } from "reakit/Button";
 import styles from './Button.styles';
-import { getClasses, isEmpty } from '../../utils/util';
+import { getClasses } from '../../utils/util';
 
 const Button = React.forwardRef(({
   className = '',
@@ -17,7 +17,8 @@ const Button = React.forwardRef(({
 }, ref) => {
   const classes = {appearance, loading, block};
   const theme = useContext(ThemeContext);
-  const appliedTheme = isEmpty(theme) ? standardTheme : theme;
+  // const appliedTheme = isEmpty(theme) ? standardTheme : theme;
+  const appliedTheme = theme;
   const { classesToApply, humanClasses } = getClasses(appliedTheme, 'button', classes);
   return <Box as={ButtonA11y} ref={ref} className={`${humanClasses} ${className}`} css={css`
         ${styles.button(appliedTheme)}

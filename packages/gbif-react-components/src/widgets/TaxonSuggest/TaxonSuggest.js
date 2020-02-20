@@ -4,16 +4,9 @@ import formatters from '../../search/OccurrenceSearch/displayNames/formatters';
 import { useCombobox } from "downshift"; // example usage here https://codesandbox.io/s/usecombobox-usage-evufg
 import { useDebounce } from "use-debounce"; // example here https://codesandbox.io/s/rr40wnropq
 import axios from '../../search/OccurrenceSearch/api/axios';
-// import axios from 'axios';
 
-// async function getData(q, token) {
-//   return axios.get(`http://api.gbif.org/v1/species/suggest?q=${q}`, {
-//     cancelToken: token
-//   });
-// }
-
-function getData(q) {
-  return axios.get(`http://api.gbif.org/v1/species/suggest?q=${q}`);
+function getData(q, options) {
+  return axios.get(`http://api.gbif.org/v1/species/suggest?q=${q}`, options);
 }
 
 function TaxonSuggest() {
@@ -33,16 +26,6 @@ function TaxonSuggest() {
     inputValue
   } = useCombobox({
     items: inputItems,
-    onInputValueChange: async ({inputValue, selectedItem}) => {
-      // if (inputValue === '' || (selectedItem && inputValue === selectedItem.scientificName)) return;
-      // setLoading(true);
-      // const results = await getData(inputValue);
-      // setInputItems(results);
-      // setLoading(false);
-      if (debouncedText) {
-        console.log('inside debounce ', debouncedText);
-      }
-    },
     onSelectedItemChange: () => {
       setInputValue('');
     },
@@ -51,38 +34,22 @@ function TaxonSuggest() {
 
   const [debouncedText] = useDebounce(inputValue, 500);
   useEffect(
-    // () => {
-    //   const source = axios.CancelToken.source();
-    //   if (debouncedText) {
-    //     getData(debouncedText, source.token)
-    //       .then(response => setInputItems(response.data))
-    //       .catch(() => {
-    //         if (axios.isCancel(source)) {
-    //           return;
-    //         }
-    //         setInputItems([]);
-    //       });
-    //   }
-    //   return () => {
-    //     console.log('cancel on change and unmount');
-    //     source.cancel(
-    //       "Canceled because of component unmounted or debounce Text changed"
-    //     );
-    //   };
-    // },
     () => {
       let request;
       if (debouncedText) {
+        setLoading(true);
         request = getData(debouncedText);
-        request.then(response => setInputItems(response.data))
+        request.then(response => { setInputItems(response.data); })
           .catch(e => {
-            if (e.__CANCEL__) return;
+            if (axios.isCancel(e)) {
+              return;
+            }
             setInputItems([]);
-          });
+          })
+          .finally(() => setLoading(false));
       }
       return () => {
-        console.log('cancel on change and unmount');
-        if (request && request.cancel) {
+        if (request) {
           request.cancel(
             "Canceled because of component unmounted or debounce Text changed"
           );

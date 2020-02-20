@@ -4,8 +4,10 @@ import styled from '@emotion/styled';
 const shared = css`
   flex: 1 1 auto;
   align-items: center;
-  display: flex;
-  margin: 0 -0.35em;
+  @media screen and (min-width: 769px), print {
+    display: flex;
+    margin: 0 -0.35em;
+  }
 `;
 
 export const LevelLeft = styled.div`

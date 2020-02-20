@@ -17,7 +17,9 @@ const Level = ({
           display: inline-block;
           vertical-align: top;
         }
-        display: flex;
+        @media screen and (min-width: 769px), print {
+          display: flex;
+        }
       `} {...props}>
       </Lvl>
 }

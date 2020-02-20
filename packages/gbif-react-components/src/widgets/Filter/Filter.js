@@ -1,78 +1,73 @@
-import React, { useState, useEffect } from "react";
-import { css, cx } from 'emotion';
+import React from "react";
+import PropTypes from 'prop-types';
 import Header from './Header';
 import Footer from './Footer';
 import SummaryBar from './SummaryBar';
-import Option from './Option';
+import { Prose } from '../../typography/Prose';
+import { FilterBody, FilterBodyDescription, FilterBox } from './misc';
 import { MenuAction, MenuToggle } from '../../components/Menu';
+import { uncontrollable } from 'uncontrollable';
+import { get } from 'lodash';
 
-/*
-  How would I like to use it
+import FilterState from '../../search/OccurrenceSearch/filters/state/FilterState';
+import FilterContext from '../../search/OccurrenceSearch/filters/state/FilterContext';
 
-  it just takes whatever filter context it is in - or could take it explicitly
-  
-  in general the filters could be used as
-  <TaxonFilter onApply onCancel innerRef defaultFilter/>
-
-  Those filters could be composed by filter util components. 
-  say header, footer and some general state mngment
-
-  const filter = useFilter();
-
-  <Filter>
-    <Header {...filter} title/>
-    
-    <Suggest onChange={val => filter.dispath('ADD', {field, val})}/>
-    <Summary {...filter} />
-    <Checkbox onChange={e => filter.dispath('TOGGLE', {field, value})}
-
-    <Footer {...filter} />
-  </Filter>
-
-
-  <Filter>
-    <Header options={menuState => []}>
-      title goes here
-    </Header>
-
-    <Body>
-      <Search>
-      <Tools>
-      <Selection>
-    </Body>
-    <Footer onApply onCancel/>
-  </Filter>
-*/
-function Filter() {
-
+function Filter({ children, onApply, onCancel, title, aboutText, hasHelpTexts, filterName, formId, filter: tmpFilter, onFilterChange, aboutVisible, onAboutChange, helpVisible, onHelpChange }) {
+  return <FilterState filter={tmpFilter} onChange={updatedFilter => onFilterChange(updatedFilter)}>
+    <FilterContext.Consumer>
+      {({ setField, toggle, filter }) => {
+        const checkedMap = new Set(get(filter, `must.${filterName}`, []));
+        return <FilterBox>
+          <Header menuItems={menuState => [
+            ...aboutText ? [<MenuAction key="About" onClick={() => { onAboutChange(true); menuState.hide() }}>About this filter</MenuAction>] : [],
+            ...hasHelpTexts ? [<MenuToggle key="Help" disabled={aboutVisible} style={{ opacity: aboutVisible ? .5 : 1 }} checked={!!helpVisible} onChange={() => onHelpChange(!helpVisible)}>Show help texts</MenuToggle>] : []
+          ]}>
+            {title}
+          </Header>
+          {!aboutVisible &&
+            <>
+              <SummaryBar count={checkedMap.size} onClear={() => setField(filterName, [])} />
+              <FilterBody>
+                {children({ helpVisible, setField, toggle, filter, checkedMap })}
+              </FilterBody>
+            </>}
+          {aboutVisible && <Prose as={FilterBodyDescription}>
+            {aboutText}
+          </Prose>}
+          <Footer
+            formId={formId}
+            showBack={aboutVisible}
+            onApply={() => onApply(filter)}
+            onCancel={() => onCancel(filter)}
+            onBack={() => onAboutChange(false)}
+          />
+        </FilterBox>
+      }}
+    </FilterContext.Consumer>
+  </FilterState>
 }
 
-const log = console.log;
-
-const Example = props => {
-  const [count, setCount] = useState(0);
-
-  return <div>
-    <Header menuItems={menuState => [
-      ...count > 3 ? [<MenuAction onClick={e => menuState.hide()}>Only show if count above 3</MenuAction>] : [],
-      <MenuToggle>Show help texts</MenuToggle>
-    ]}>
-      Title goes here
-    </Header>
-    <SummaryBar count={count} onClear={e => setCount(0)} />
-    <div>
-      <Option helpVisible={true} helpText="some help text" label="Human observation" />
-      <Option helpVisible={true} helpText="some help text" label="Human observation" />
-      <Option helpVisible={true} helpText="some help text" label="Human observation" />
-
-    </div>
-    <Footer
-      onApply={e => setCount(count + 1)}
-      onCancel={e => log('cancel')}
-      onBack={e => log('goBack')}
-    />
-  </div>
+Filter.propTypes = {
+  children: PropTypes.func,
+  onApply: PropTypes.func,
+  onCancel: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  onAboutChange: PropTypes.func,
+  onHelpChange: PropTypes.func,
+  title: PropTypes.node,
+  aboutText: PropTypes.node,
+  hasHelpTexts: PropTypes.bool,
+  aboutVisible: PropTypes.bool,
+  helpVisible: PropTypes.bool,
+  filterName: PropTypes.string,
+  filter: PropTypes.object,
+  formId: PropTypes.string,
 }
 
+export const UncontrollableFilter = uncontrollable(Filter, {
+  aboutVisible: 'onAboutChange',
+  helpVisible: 'onHelpChange',
+  filter: 'onFilterChange'
+});
 
-export default Example;
+export default UncontrollableFilter;

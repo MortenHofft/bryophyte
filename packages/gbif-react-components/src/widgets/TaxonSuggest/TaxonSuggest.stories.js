@@ -1,7 +1,6 @@
 import React from 'react';
 import TaxonSuggest from './TaxonSuggest';
-import TaxonSuggest2 from './TaxonSuggest2';
-
+import FilterSuggest from './FilterSuggest';
 
 export default {
   title: 'Widgets/TaxonSuggest',
@@ -9,7 +8,7 @@ export default {
 };
 
 export const Example = () => <TaxonSuggest />
-export const Example2 = () => <TaxonSuggest2 />
+export const suggest = () => <FilterSuggest />
 
 Example.story = {
   name: 'Taxon suggest',

@@ -3,7 +3,7 @@ import { css, jsx } from '@emotion/core';
 import withContext from '../state/withContext';
 import React, { useContext } from 'react';
 import ThemeContext from 'style/themes/ThemeContext';
-import VocabularyFilter from '../filters/VocabularyFilter';
+import { VocabularyFilter } from '../filters/VocabularyFilter';
 import TaxonFilter from '../filters/TaxonFilter';
 
 const FilterBar = ({

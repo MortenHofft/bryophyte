@@ -63,7 +63,6 @@ function TaxonFilter({ placement, ...props }) {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
   const [isAboutVisible, showAbout] = useState(false);
-  const rover = useRoverState();
   const fieldName = 'taxonKey';
 
   useEffect(() => {
@@ -76,7 +75,7 @@ function TaxonFilter({ placement, ...props }) {
         const checkedMap = new Set(get(filter, `must.${fieldName}`, []));
         return <div className={filterClass}>
           <FilterHeader title="Species or group" showMenu items={menuState => [
-            <MenuAction onClick={e => { showAbout(true); menuState.hide() }}>About this filter</MenuAction>
+            <MenuAction key="about" onClick={() => { showAbout(true); menuState.hide() }}>About this filter</MenuAction>
           ]} />
           {!isAboutVisible && <Downshift
             onChange={selection =>

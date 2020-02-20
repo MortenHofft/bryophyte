@@ -5,7 +5,7 @@ let CancelToken = axios.CancelToken;
 function get(url, options) {
   let cancel;
   options = options || {};
-  options.cancelToken = new CancelToken(function executor(c) {
+  options.cancelToken = options.cancelToken || new CancelToken(function executor(c) {
     cancel = c;
   });
   let p = axios.get(url, options);
@@ -16,7 +16,7 @@ function get(url, options) {
 function post(url, body, options) {
   let cancel;
   options = options || {};
-  options.cancelToken = new CancelToken(function executor(c) {
+  options.cancelToken = options.cancelToken || new CancelToken(function executor(c) {
     cancel = c;
   });
   let p = axios.post(url, body, options);
@@ -25,6 +25,7 @@ function post(url, body, options) {
 }
 
 export default {
+  ...axios,
   get,
   post
 };

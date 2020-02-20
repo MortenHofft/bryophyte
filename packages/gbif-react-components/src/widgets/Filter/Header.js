@@ -1,5 +1,6 @@
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import React from "react";
-import { css, cx } from 'emotion';
 
 import { Menu } from '../../components/Menu';
 import Level from '../../layout/Level';
@@ -7,7 +8,7 @@ import { MdMoreVert } from "react-icons/md";
 import { Button } from '../../components/Button';
 
 const Header = ({ children, menuItems, ...props }) => {
-  return <Level as="section" className={header}>
+  return <Level as="section" {...props} css={header}>
     <Level.Left>
       <Level.Item>
         {children}
