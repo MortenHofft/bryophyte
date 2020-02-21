@@ -1,16 +1,16 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import PropTypes from 'prop-types';
 import Popover from '../../../components/Popover/Popover';
 import { Button } from '../../../components/Button';
-import { Prose } from '../../../typography/Prose';
 import nanoid from 'nanoid';
 import FilterContext from './state/FilterContext';
-import { get, keyBy } from 'lodash';
+import keyBy from 'lodash/keyBy';
+import get from 'lodash/get';
 // import formatters from '../displayNames/formatters';
 import { getVocabulary } from './getVocabulary';
 import { Option, Filter } from '../../../widgets/Filter';
 
-function PopupContent({ onApply, onCancel, focusRef, vocabulary, filterName, initFilter }) {
+function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary, filterName, initFilter }) {
   const [id] = React.useState(nanoid);
 
   return <Filter
@@ -19,7 +19,7 @@ function PopupContent({ onApply, onCancel, focusRef, vocabulary, filterName, ini
     title={vocabulary.label}
     aboutText={vocabulary.definition}
     hasHelpTexts={vocabulary.hasConceptDefinitions}
-    // onFilterChange={onFilterChange}
+    onFilterChange={onFilterChange}
     filterName={filterName}
     formId={id}
     defaultFilter={initFilter}
@@ -42,9 +42,19 @@ function PopupContent({ onApply, onCancel, focusRef, vocabulary, filterName, ini
   </Filter>
 }
 
+PopupContent.propTypes = {
+  onApply: PropTypes.func,
+  onCancel: PropTypes.func,
+  onFilterChange: PropTypes.func,
+  focusRef: PropTypes.any,
+  vocabulary: PropTypes.object,
+  initFilter: PropTypes.object,
+  filterName: PropTypes.string
+};
+
 export const VocabularyFilter = ({ vocabularyName = 'BasisOfRecord', placement, ...props }) => {
   const currentFilterContext = useContext(FilterContext);
-  const [vocabulary, setVocabulary] = useState(false);
+  const [vocabulary, setVocabulary] = useState();
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
 
   getVocabulary(vocabularyName, 'eng').then(v => setVocabulary(v)).catch(err => console.error(err));
@@ -71,6 +81,10 @@ export const VocabularyFilter = ({ vocabularyName = 'BasisOfRecord', placement, 
     </Popover>
   );
 }
+VocabularyFilter.propTypes = {
+  vocabularyName: PropTypes.string,
+  placement: PropTypes.string
+};
 
 const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) => {
   if (!vocabulary) return <Button appearance="primaryOutline" ref={ref} loading={true}>Loading</Button>
@@ -87,3 +101,7 @@ const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) =>
 });
 
 FilterButton.displayName = 'FilterButton';
+FilterButton.propTypes = {
+  filter: PropTypes.object,
+  vocabulary: PropTypes.object
+};

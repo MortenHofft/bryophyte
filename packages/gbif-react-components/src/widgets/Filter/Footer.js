@@ -1,11 +1,14 @@
-import React from "react";
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import ThemeContext from '../../style/themes/ThemeContext';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { css } from 'emotion';
 import Level from '../../layout/Level';
 import { Button } from '../../components/Button';
 
-const Footer = ({ onApply, onCancel, onBack, showBack = false, formId }) => {
-  return <Level className={footer}>
+const Footer = ({ onApply, onCancel, onBack, showBack = false, formId, ...props }) => {
+  const theme = useContext(ThemeContext);
+  return <Level {...props} css={footer(theme)}>
   <Level.Left>
     <Level.Item>
       {showBack && <Button appearance="ghost" onClick={onBack}>Back</Button>}
@@ -28,7 +31,7 @@ Footer.propTypes = {
   formId: PropTypes.string
 };
 
-const footer = css`
+const footer = theme => css`
   padding: .8em 1em;
   flex: 0 0 auto;
 `;

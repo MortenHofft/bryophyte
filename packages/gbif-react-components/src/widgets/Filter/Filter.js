@@ -7,7 +7,7 @@ import { Prose } from '../../typography/Prose';
 import { FilterBody, FilterBodyDescription, FilterBox } from './misc';
 import { MenuAction, MenuToggle } from '../../components/Menu';
 import { uncontrollable } from 'uncontrollable';
-import { get } from 'lodash';
+import get from 'lodash/get';
 
 import FilterState from '../../search/OccurrenceSearch/filters/state/FilterState';
 import FilterContext from '../../search/OccurrenceSearch/filters/state/FilterContext';

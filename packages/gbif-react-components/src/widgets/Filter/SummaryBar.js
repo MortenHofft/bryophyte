@@ -1,10 +1,13 @@
-import React from "react";
-import { css, cx } from 'emotion';
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import ThemeContext from '../../style/themes/ThemeContext';
+import React, { useContext } from 'react';
 import Level from '../../layout/Level';
 import { Button } from '../../components/Button';
 
 const SummaryBar = ({ count, onClear, ...props }) => {
-  return <Level as="div" className={summary}>
+  const theme = useContext(ThemeContext);
+  return <Level as="div" {...props} css={summary(theme)}>
     <Level.Left>
       <Level.Item>
         {count} selected
@@ -20,7 +23,7 @@ const SummaryBar = ({ count, onClear, ...props }) => {
   </Level>
 }
 
-const summary = css`
+const summary = theme => css`
   font-size: .85em;
   color: #999;
   padding: .5em 1.5em;

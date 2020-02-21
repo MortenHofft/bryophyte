@@ -15,6 +15,7 @@ const Root = ({
           font-size: ${theme.fontSize || '1em'};
           font-weight: 400;
           box-sizing: border-box;
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
           background: ${theme.background || 'white'};
           *, *::before, *::after, strong {
             box-sizing: inherit;

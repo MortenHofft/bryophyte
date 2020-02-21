@@ -10,9 +10,15 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
+    "gbif-react-components": "1.0.0",
     "handlebars": "^4.7.2",
+    "my-button": "1.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "my-button": "1.0.0"
+    "reakit": "^1.0.0-beta.16",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }

@@ -1,11 +1,14 @@
-import React from "react";
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import ThemeContext from '../../style/themes/ThemeContext';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { css } from 'emotion';
 import Level from '../../layout/Level';
 import { Checkbox } from '../../components/Checkbox';
 
-const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible}, ref) => {
-  return <Level as={'label'} className={optionClass} >
+const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible, ...props}, ref) => {
+  const theme = useContext(ThemeContext);
+  return <Level as={'label'} {...props} css={optionClass(theme)} >
     <Level.Left style={{ alignItems: 'flex-start' }}>
       <Level.Item>
         <div>
@@ -35,7 +38,7 @@ Option.propTypes = {
 
 Option.displayName = 'FilterOption';
 
-const optionClass = css`
+const optionClass = theme => css`
   padding: 6px 0;
   &:last-child {
     margin-bottom: 0;

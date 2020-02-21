@@ -1,9 +1,11 @@
 // For now we use Reakit as the functional components that handles focus and aria attributes, but https://reacttraining.com/reach-ui/ could also be an option. 
 // Reakit seems nicer, but is in Beta and have poor support for RTL. Reach on the other hand seem to skimp on ARIA despite it being their primary focus. At least the implementations are not clearly inline with recommendations. But in general A11y seems an area with little tru/false but mostly just opinions. Surprisingly so.
 
-import React from "react";
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
+import ThemeContext from '../../style/themes/ThemeContext';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { css, cx } from 'emotion';
 import {
   usePopoverState,
   Popover as BasePopover,
@@ -12,7 +14,8 @@ import {
   PopoverBackdrop
 } from "reakit/Popover";
 
-function Popover({ trigger, placement, visible, className, onClickOutside, children, ...props }) {
+function Popover({ trigger, placement, visible, onClickOutside, children, ...props }) {
+  const theme = useContext(ThemeContext);
   const popover = usePopoverState({ placement: placement || "bottom-start", visible: visible });
   const ref = React.useRef();
 
@@ -29,12 +32,12 @@ function Popover({ trigger, placement, visible, className, onClickOutside, child
       <PopoverDisclosure {...popover} {...trigger.props}>
         {disclosureProps => React.cloneElement(trigger, disclosureProps)}
       </PopoverDisclosure>
-      <PopoverBackdrop {...popover} className={backdrop} onClick={() => onClickOutside ? onClickOutside(popover) : undefined}></PopoverBackdrop>
+      <PopoverBackdrop {...popover} css={backdrop(theme)} onClick={() => onClickOutside ? onClickOutside(popover) : undefined}></PopoverBackdrop>
       <BasePopover {...popover} {...props} hideOnClickOutside={false}>
         {props => popover.visible &&
-          <div {...props} className={cx(dialog, className)}>
+          <div {...props} css={dialog(theme)}>
             <PopoverArrow className="arrow" {...popover} />
-            <div className={dialogContent}>
+            <div css={dialogContent(theme)}>
               {typeof children === 'function' ? 
                 children({popover, focusRef: ref }) : 
                 React.cloneElement(children, {popover, focusRef: ref})}
@@ -55,7 +58,7 @@ Popover.propTypes = {
   children: PropTypes.any,
 };
 
-const backdrop = css`
+const backdrop = theme => css`
   background-color: rgba(0, 0, 0, 0.15);
   position: fixed;
   top: 0px;
@@ -65,12 +68,12 @@ const backdrop = css`
   z-index: 999;
 `;
 
-const dialogContent = css`
+const dialogContent = theme => css`
   max-height: calc(100vh - 100px);
   /* overflow: auto; */
 `;
 
-const dialog = css`
+const dialog = theme => css`
   background-color: rgb(255, 255, 255);
   /* position: fixed; */
   top: 28px;

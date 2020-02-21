@@ -1,5 +1,4 @@
 import compose from "./compose";
-//import _ from 'lodash';
 import axios from '../axios';
 
 // const esEndpoint = '//es1.gbif-dev.org/some_fungi'

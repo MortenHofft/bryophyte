@@ -6,10 +6,10 @@ import { Prose } from '../../../typography/Prose';
 import nanoid from 'nanoid';
 import FilterState from './state/FilterState';
 import FilterContext from './state/FilterContext';
-import { get, union } from 'lodash';
+import union from 'lodash/union';
+import get from 'lodash/get';
 import { MenuAction } from '../../../components/Menu';
 // import formatters from '../displayNames/formatters';
-import Downshift from 'downshift';
 import { css } from 'emotion';
 import styled from '@emotion/styled';
 import { Header, Footer, Option, SummaryBar, FilterBody, FilterBodyDescription, FilterBox } from '../../../widgets/Filter';
@@ -50,54 +50,7 @@ const PopupContent = ({ filterName, tmpFilter, setFilter, onCancel, onApply, foc
           </Header>
           {!isAboutVisible &&
             <>
-              <Downshift
-                onChange={selection =>
-                  alert(selection ? `You selected ${selection.value}` : 'Selection Cleared')
-                }
-                itemToString={item => (item ? item.value : '')}
-              >
-                {({
-                  getInputProps,
-                  getItemProps,
-                  getLabelProps,
-                  getMenuProps,
-                  isOpen,
-                  inputValue,
-                  highlightedIndex,
-                  selectedItem,
-                  getRootProps,
-                }) => (
-                    <>
-                      <div>
-                        {/* <label {...getLabelProps()}>Enter a fruit</label> */}
-                        <div {...getRootProps({}, { suppressRefError: true })}>
-                        <input ref={focusRef} className={searchField} placeholder="Search for species" aria-label="Search for species" aria-placeholder="Puma concolor" {...getInputProps()} />
-                        </div>
-                      </div>
-                      <FilterBody>
-                        <ul {...getMenuProps({ isOpen })} style={{ margin: 0, padding: 0 }}>
-                          {isOpen
-                            ? items
-                              .filter(item => !inputValue || item.value.includes(inputValue))
-                              .map((item, index) => (
-                                <Item
-                                  key={index}
-                                  {...getItemProps({
-                                    item,
-                                    index,
-                                    isActive: highlightedIndex === index,
-                                    isSelected: selectedItem === item,
-                                  })}
-                                >
-                                  {itemToString(item)}
-                                </Item>
-                              ))
-                            : null}
-                        </ul>
-                      </FilterBody>
-                    </>
-                  )}
-              </Downshift>
+              <h1>TEST</h1>
               <SummaryBar count={checkedMap.size} onClear={() => setField(filterName, [])} />
               <FilterBody>
                 <form id={id} onSubmit={e => e.preventDefault()} >

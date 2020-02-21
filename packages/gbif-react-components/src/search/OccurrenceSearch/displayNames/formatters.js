@@ -1,6 +1,6 @@
 import axios from '../api/axios';
 import formatFactory from './formatFactory';
-import { startCase } from 'lodash';
+import startCase from 'lodash/startCase';
 
 // TODO move endpoints to config
 

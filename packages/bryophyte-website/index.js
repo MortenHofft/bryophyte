@@ -1,5 +1,8 @@
 const express = require("express");
-const MyButton = require("my-button");
+const regeneratorRuntime = require("regenerator-runtime");
+// const MyButton = require("my-button");
+const { Switch, Button, Checkbox, Root, OccurrenceSearch, Filter } = require("gbif-react-components");
+// const Button = require("reakit").Button;
 const React = require("react");
 const renderToString = require("react-dom/server").renderToString;
 const hbs = require("handlebars");
@@ -21,7 +24,13 @@ app.get('/', (req, res) => {
   `;
 
   const hbsTemplate = hbs.compile(theHtml);
-  const reactComp = renderToString(React.createElement(MyButton,{},'My Button'));
+  // const reactComp = renderToString(React.createElement(MyButton,{},'My Button'));
+  // const reactComp = renderToString(React.createElement(Root,{}, React.createElement(Checkbox,{})));
+  // const reactComp = renderToString(React.createElement(Switch,{style:{padding: 20}}));
+
+  const reactComp = renderToString(React.createElement(Root,{}, React.createElement(Filter,{style:{padding: 20}})));
+  // const reactComp = renderToString(React.createElement(OccurrenceSearch,{style:{height: 'calc(100vh - 20px)'}}));
+  // const reactComp = renderToString(React.createElement(Button,{}, 'GBIF test button'));
   const htmlToSend = hbsTemplate({ reactele: reactComp });
   res.send(htmlToSend);
 });

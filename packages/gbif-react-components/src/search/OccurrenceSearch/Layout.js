@@ -3,16 +3,15 @@ import { css, jsx } from '@emotion/core';
 import React, { useState, useContext } from 'react';
 import ThemeContext from 'style/themes/ThemeContext';
 // import PropTypes from 'prop-types';
-import { MdClose } from "react-icons/md";
 import withContext from './state/withContext';
-import { FormattedMessage, FormattedNumber } from 'react-intl';
+// import { FormattedMessage, FormattedNumber } from 'react-intl';
 
-import Map from './views/Map';
+// import Map from './views/Map';
 
-import { Tabs } from "../../layout/Tabs";
+// import { Tabs } from "../../layout/Tabs";
 
 import { FilterBar } from './FilterBar';
-const Tab = Tabs.Tab;
+// const Tab = Tabs.Tab;
 
 const Layout = ({
   className = '',

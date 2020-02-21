@@ -5,8 +5,8 @@
  * This is a subset of what is possible in ES and only generates search queries, not aggregations and similar.
  */
 import bodybuilder from 'bodybuilder';
-import { termFilter, termOrRangeFilter, hasTerms } from './converters/util';
-import { snakeCase } from 'lodash';
+import { termFilter, termOrRangeFilter } from './converters/util';
+import snakeCase from 'lodash/snakeCase';
 // when translating the individual filters, the queried, field as well as the value might change. We can asume a sensible default, but other than that we need converters for all fields.
 // enums for example varies between the APIs. field names vary etc.
 

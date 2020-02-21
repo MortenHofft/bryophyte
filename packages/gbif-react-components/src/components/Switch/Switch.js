@@ -1,4 +1,5 @@
-import { css, cx } from 'emotion';
+/** @jsx jsx */
+import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
@@ -10,7 +11,8 @@ const Switch = React.forwardRef(({
   style = {},
   ...props
 }, ref) => {
-  return <Box as={Span} style={style} className={cx(switchClass, className)}>
+  const theme = useContext(ThemeContext);
+  return <Box as={Span} style={style} className={className} css={switchClass(theme)}>
     <input type="checkbox" ref={ref} {...props} ></input>
     <span></span>
   </Box>
@@ -24,7 +26,7 @@ Switch.propTypes = {
 
 export default Switch;
 
-const switchClass = css`
+const switchClass = theme => css`
   position: relative;
   top: -0.09em;
   display: inline-block;

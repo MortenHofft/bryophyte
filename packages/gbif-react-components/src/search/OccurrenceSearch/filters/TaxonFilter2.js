@@ -3,17 +3,14 @@ import { css, cx } from 'emotion';
 import styled from '@emotion/styled';
 import Popover from '../../../components/Popover/Popover';
 import { Button } from '../../../components/Button';
-import { Checkbox } from '../../../components/Checkbox';
-import { Prose } from '../../../typography/Prose';
 import Level from '../../../layout/Level';
 import { MdMoreVert } from "react-icons/md";
 import nanoid from 'nanoid';
 import FilterState from './state/FilterState';
 import FilterContext from './state/FilterContext';
-import { get, keyBy } from 'lodash';
-import { Menu, MenuAction, MenuToggle } from '../../../components/Menu';
+import get from 'lodash/get';
+import { Menu, MenuAction } from '../../../components/Menu';
 import formatters from '../displayNames/formatters';
-import { Rover, useRoverState } from '../../../components/Rover'
 import Downshift from 'downshift';
 
 const TaxonTitle = formatters('TaxonKey').component;

@@ -14,7 +14,7 @@ function OccurrenceSearch(props) {
   // const esQuery = compose(filter).build();
   return (
     <FilterState filter={filter} onChange={setFilter}>
-      <pre>{JSON.stringify(filter, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(filter, null, 2)}</pre> */}
       {/* <pre>{JSON.stringify(esQuery, null, 2)}</pre> */}
       <Layout {...props}></Layout>
     </FilterState>

@@ -1,5 +1,5 @@
 import React from 'react';
-import themeVariables from './dark';
+import themeVariables from './light';
 import themeBuilder from '../themeBuilder';
 
 const theme = themeBuilder(themeVariables);

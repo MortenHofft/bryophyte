@@ -3,7 +3,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Context from './FilterContext';
 import { uncontrollable } from 'uncontrollable';
-import { get, uniqWith, cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
+import uniqWith from 'lodash/uniqWith';
+import get from 'lodash/get';
 import isEqual from 'react-fast-compare';
 import hash from 'object-hash';
 
