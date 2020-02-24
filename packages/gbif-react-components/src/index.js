@@ -2,6 +2,7 @@ export * from './components';
 export { default as Root } from './Root';
 export * from './search/OccurrenceSearch';
 export  { Example as Filter } from './widgets/Filter/Filter.stories';
+export  { GlobalNavLaptop, Example } from './components/Navigation/GlobalNav/GlobalNav';
 
 // import React from 'react';
 // export const Button = props => <button style={{background: 'pink', fontSize: 30}}>{props.children}</button>

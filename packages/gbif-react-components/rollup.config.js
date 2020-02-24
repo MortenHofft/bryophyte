@@ -6,6 +6,7 @@ import external from "rollup-plugin-peer-deps-external";
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
+import regeneratorRuntime from 'regenerator-runtime';
 import pkg from './package.json';
 
 const GLOBALS = {
@@ -28,7 +29,7 @@ export default [
 		external: [
 			'react',
 			'react-dom',
-			'prop-types'
+			'prop-types',
 		],
 		plugins: [
 			resolve({
@@ -43,7 +44,10 @@ export default [
 			}),
 			commonjs({
 				// extensions: ['.esm.js', '.mjs', '.js', '.ts'],
-				include: 'node_modules/**'
+				include: 'node_modules/**',
+				// 	namedExports: {
+				// 	"body-scroll-lock": ["enableBodyScroll", "disableBodyScroll"]
+				// }
 			}),
 			// commonjs({
 			// 	include: "node_modules/**",
@@ -68,33 +72,35 @@ export default [
 	// builds from a single configuration where possible, using
 	// an array for the `output` option, where we can specify
 	// `file` and `format` for each target)
-	// {
-	// 	input: 'src/index.js',
-	// 	external: [
-	// 		'react',
-	// 		'react-dom',
-	// 		'prop-types'
-	// 	],
-	// 	plugins: [
-	// 		external({
-	// 			includeDependencies: true,
-	// 		}),
-	// 		babel({
-	// 			exclude: 'node_modules/**',
-	// 		}),
-	// 		localResolve(),
-	// 		resolve(), // so Rollup can find `dependencies`
-	// 		commonjs({
-	// 			include: "node_modules/**",
-	// 			// namedExports: {
-	// 			// 	"body-scroll-lock": ["enableBodyScroll", "disableBodyScroll"]
-	// 			// }
-	// 		}), // so Rollup can convert `packages` to ES modules
-	// 		replace({ 'process.env.NODE_ENV': JSON.stringify(env) }),
-	// 	],
-	// 	output: [
-	// 		{ file: pkg.main, format: 'cjs' },
-	// 		{ file: pkg.module, format: 'es' }
-	// 	]
-	// }
+	{
+		input: 'src/index.js',
+		external: [
+			'react',
+			'react-dom',
+			'prop-types'
+		],
+		plugins: [
+			external({
+				includeDependencies: true,
+			}),
+			babel({
+				exclude: 'node_modules/**',
+				plugins: ['@babel/plugin-transform-runtime'],
+				runtimeHelpers: true,
+			}),
+			localResolve(),
+			resolve(), // so Rollup can find `dependencies`
+			commonjs({
+				include: "node_modules/**",
+				// namedExports: {
+				// 	"body-scroll-lock": ["enableBodyScroll", "disableBodyScroll"]
+				// }
+			}), // so Rollup can convert `packages` to ES modules
+			replace({ 'process.env.NODE_ENV': JSON.stringify(env) }),
+		],
+		output: [
+			{ file: pkg.main, format: 'cjs' },
+			{ file: pkg.module, format: 'es' }
+		]
+	}
 ];

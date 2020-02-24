@@ -2,7 +2,6 @@
 import { css, jsx, keyframes } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
-import styled from '@emotion/styled';
 
 export const loading = keyframes`
   from {

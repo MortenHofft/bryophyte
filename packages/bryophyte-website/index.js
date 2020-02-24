@@ -1,13 +1,15 @@
 const express = require("express");
+var compression = require('compression')
 const regeneratorRuntime = require("regenerator-runtime");
 // const MyButton = require("my-button");
-const { Switch, Button, Checkbox, Root, OccurrenceSearch, Filter } = require("gbif-react-components");
+const { Switch, Button, Checkbox, Root, OccurrenceSearch, Filter, GlobalNavLaptop } = require("gbif-react-components");
 // const Button = require("reakit").Button;
 const React = require("react");
 const renderToString = require("react-dom/server").renderToString;
 const hbs = require("handlebars");
 
 const app = express();
+app.use(compression())
 const port = 3000;
 
 app.get('/', (req, res) => {
@@ -28,7 +30,7 @@ app.get('/', (req, res) => {
   // const reactComp = renderToString(React.createElement(Root,{}, React.createElement(Checkbox,{})));
   // const reactComp = renderToString(React.createElement(Switch,{style:{padding: 20}}));
 
-  const reactComp = renderToString(React.createElement(Root,{}, React.createElement(Filter,{style:{padding: 20}})));
+  const reactComp = renderToString(React.createElement(Root,{}, React.createElement(GlobalNavLaptop,{style:{padding: 20}})));
   // const reactComp = renderToString(React.createElement(OccurrenceSearch,{style:{height: 'calc(100vh - 20px)'}}));
   // const reactComp = renderToString(React.createElement(Button,{}, 'GBIF test button'));
   const htmlToSend = hbsTemplate({ reactele: reactComp });
