@@ -1,7 +1,9 @@
 import React from 'react';
-import { Example as GlobalNav } from './GlobalNav';
+import { GlobalNav } from './GlobalNav';
 import { StyledProse } from '../../../typography/StyledProse';
 import readme from './README.md';
+
+import Router from 'react-router-dom/BrowserRouter';
 
 export default {
   title: 'Components/GlobalNav',
@@ -9,7 +11,10 @@ export default {
 };
 
 export const Example = () => <div style={{ height: '200vh' }}>
-  <GlobalNav />
+  <Router>
+        <GlobalNav breakToLaptop={2000} />
+        <GlobalNav breakToLaptop={10} />
+  </Router>
   <StyledProse source={readme}></StyledProse>
 </div>
 

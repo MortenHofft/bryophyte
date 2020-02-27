@@ -9,11 +9,13 @@ export const drawerHeader = css`
     display: flex;
     align-items: center;
     padding: 0 20px;
+    flex: 0 0 auto;
 `;
 
 export const globalNavBar = css`
     padding: 20px;
     background: white;
+    z-index: 1;
     border-bottom: 1px solid #eee;
     a {
       color: currentColor;
@@ -29,30 +31,41 @@ export const logo = css`
     align-items: center;
     font-size: 24px;
     font-weight: bold;
-    z-index: 10;
+    z-index: 1;
     svg {
       font-size: 45px;
     }
 `;
 
-export const mobileLayout = css`
-    @media (min-width: 1001px) {
+export const mobileLayout = ({breakpoint}) => css`
+    @media (min-width: ${breakpoint + 1}px) {
         display: none;
     }
 `;
 
-export const laptopLayout = css`
-    @media (max-width: 1000px) {
+export const laptopLayout = ({breakpoint}) => css`
+    @media (max-width: ${breakpoint}px) {
         display: none;
     }
 `;
 
 export const globalNavMobileToggle_expand = css`
     ${srOnly};
-    &+div {
+    &+div .gbif-toggleExpandLess {
         display: none;
     }
     &:checked+div {
+        .gbif-toggleExpandMore {
+            display: none;
+        }
+        .gbif-toggleExpandLess {
+            display: inline-block;
+        }
+    }
+    &+div+div {
+        display: none;
+    }
+    &:checked+div+div {
         display: block;
     }
 `;
@@ -75,6 +88,8 @@ export const globalNavMobile__subToggle = props => css`
         opacity: 0;
         ${slideIn(props)}
         top: 0;
+        display: flex;
+        flex-direction: column;
     }
     &:checked+div {
         opacity: 1;
@@ -86,6 +101,8 @@ export const globalNavDropdown__mobileMenu = css`
     list-style: none;
     padding: 0;
     margin: 0;
+    overflow: auto;
+    flex: 1 1 auto;
 `;
 
 export const globalNavPrimary__mobileItem = css`
@@ -105,12 +122,10 @@ export const mobileItem_action = props => css`
 
 export const globalNavMobileToggle = props => css`
     z-index: 10;
-    background: deepskyblue;
     padding: 10px;
     &+div {
-        background: tomato;
         position: absolute;
-        ${mobileLayout};
+        ${mobileLayout(props)};
         &:after {
             content: '';
             display: block;
@@ -174,9 +189,6 @@ export const globalNavPrimary__item = props => css`
     & >ul {
         visibility: ${props.expanded ? 'visible' : 'hidden'};
     }
-    &:hover {
-        &>span
-    }
     &:hover > ul {
         visibility: visible;
     }
@@ -186,18 +198,16 @@ export const globalNavDropdown__item = css`
 `;
 
 export const globalNavDropdown = css`
-    backface-visibility: hidden;
+    background: white;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     left: 0;
-    padding: 3.75rem 6.25rem 5rem;
+    padding: 50px 100px;
     position: absolute;
-    transition: visibility 0s linear 0s;
     width: 100%;
     z-index: 0;
     list-style: none;
-    background: white;
 `;
 
 export const globalNavDropdown__menu = props => css`

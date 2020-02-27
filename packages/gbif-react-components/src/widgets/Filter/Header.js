@@ -3,27 +3,23 @@ import { css, jsx } from '@emotion/core';
 import React from "react";
 
 import { Menu } from '../../components/Menu';
-import Level from '../../layout/Level';
+import { Row, Col } from '../../layout/Row';
 import { MdMoreVert } from "react-icons/md";
 import { Button } from '../../components/Button';
 
 const Header = ({ children, menuItems, ...props }) => {
-  return <Level as="section" {...props} css={header}>
-    <Level.Left>
-      <Level.Item>
-        {children}
-      </Level.Item>
-    </Level.Left>
-    {menuItems && <Level.Right>
-      <Level.Item>
-        <Menu
-          aria-label="Custom menu"
-          trigger={<Button appearance="text"><MdMoreVert style={{ fontSize: 24 }} /></Button>}
-          items={menuItems}
-        />
-      </Level.Item>
-    </Level.Right>}
-  </Level>
+  return <Row as="section" {...props} css={header} alignItems="center">
+    <Col>
+      {children}
+    </Col>
+    {menuItems && <Col grow={false}>
+      <Menu
+        aria-label="Custom menu"
+        trigger={<Button appearance="text"><MdMoreVert style={{ fontSize: 24 }} /></Button>}
+        items={menuItems}
+      />
+    </Col>}
+  </Row >
 }
 
 const header = css`

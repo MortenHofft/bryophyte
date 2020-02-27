@@ -2,9 +2,8 @@
 import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../../style/themes/ThemeContext';
 import React, { useState, useContext } from 'react';
-import Router from 'react-router-dom/BrowserRouter';
 import Link from 'react-router-dom/Link';
-import { MdMenu, MdClose, MdArrowBack } from "react-icons/md";
+import { MdMenu, MdClose, MdExpandMore, MdExpandLess, MdArrowBack, MdChevronRight } from "react-icons/md";
 
 import { srOnly } from '../../../style/shared';
 
@@ -12,12 +11,10 @@ import { mobileLayout, drawerHeader, mobileItem_action, globalNavDropdown, globa
 import { Logo } from './Logo';
 
 
-export const GlobalNavLaptop = ({ drawer, rtl }) => {
+export const GlobalNav = ({ breakToLaptop: breakpoint, rtl }) => {
+    breakpoint = breakpoint || 1000;
     const [drawerVisible, showDrawer] = useState(false);
     const theme = useContext(ThemeContext);
-    const isServer = typeof window === 'undefined';
-    let showHeaderMenu = isServer || !drawer;
-    let showMobileMenu = isServer || drawer;
 
     return (
         <div css={globalNavBar} dir={rtl ? 'rtl' : null}>
@@ -29,7 +26,7 @@ export const GlobalNavLaptop = ({ drawer, rtl }) => {
                     <Logo />
                     GBIF
                 </Link>
-                <ul css={css`${globalNavPrimary__menu} ${laptopLayout}`}>
+                <ul css={css`${globalNavPrimary__menu} ${laptopLayout({breakpoint})}`}>
                     <li css={globalNavPrimary__item({ theme })}>
                         <Link to="/about" className="gbif-menu-title">Get data</Link>
                     </li>
@@ -61,17 +58,17 @@ export const GlobalNavLaptop = ({ drawer, rtl }) => {
                         <a href="" className="gbif-menu-title">About</a>
                     </li> */}
                 </ul>
-                <div style={{ flex: '1 1 auto' }} css={mobileLayout}></div>
+                <div style={{ flex: '1 1 auto' }} css={mobileLayout({breakpoint})}></div>
                 <ul className="globalNavActions">
 
                 </ul>
 
 
-                <label htmlFor="menuToggle" css={mobileLayout} style={{ zIndex: 10 }}>
+                <label htmlFor="menuToggle" css={mobileLayout({breakpoint})} style={{ zIndex: 10 }}>
                     {!drawerVisible && <MdMenu style={{ fontSize: 30 }} />}
                     {drawerVisible && <MdClose style={{ fontSize: 30 }} />}
                 </label>
-                <input id="menuToggle" type="checkbox" css={css`${globalNavMobileToggle({ rtl })} ${mobileLayout} ${srOnly}`} onChange={() => showDrawer(!drawerVisible)} checked={drawerVisible} />
+                <input id="menuToggle" type="checkbox" css={css`${globalNavMobileToggle({ rtl, breakpoint })} ${mobileLayout({breakpoint})} ${srOnly}`} onChange={() => showDrawer(!drawerVisible)} checked={drawerVisible} />
                 <div>
                     <div>
                         <div css={drawerHeader}></div>
@@ -81,7 +78,10 @@ export const GlobalNavLaptop = ({ drawer, rtl }) => {
                                     <a href="" css={mobileItem_action()}>About GBIF</a>
                                 </li>
                                 <li css={globalNavPrimary__mobileItem}>
-                                    <label htmlFor="subToggle" css={mobileItem_action()}>Get data</label>
+                                    <label htmlFor="subToggle" css={mobileItem_action()}>
+                                        <span style={{flex: '1 1 auto'}}>Get data</span>
+                                        <MdChevronRight style={{ fontSize: 30 }} />
+                                    </label>
                                     <input id="subToggle" type="checkbox" css={globalNavMobile__subToggle({ rtl })} />
                                     <div>
                                         <div css={drawerHeader}>
@@ -94,20 +94,31 @@ export const GlobalNavLaptop = ({ drawer, rtl }) => {
                                                 <a href="" css={mobileItem_action()}>Overview</a>
                                             </li>
                                             <li css={globalNavPrimary__mobileItem}>
-                                                <label htmlFor="menuToggle2" css={mobileItem_action()}>Data types</label>
                                                 <input id="menuToggle2" type="checkbox" css={globalNavMobileToggle_expand} />
                                                 <div>
+                                                    <label htmlFor="menuToggle2" css={mobileItem_action()}>
+                                                        <span style={{flex: '1 1 auto'}}>Data types</span>
+                                                        <MdExpandMore style={{ fontSize: 30 }} className="gbif-toggleExpandMore"/>
+                                                        <MdExpandLess style={{ fontSize: 30 }} className="gbif-toggleExpandLess"/>
+                                                    </label>
+                                                </div>
+                                                <div>
                                                     <ul css={globalNavDropdown__mobileMenu}>
-                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Marketing</a></li>
-                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Marketing2</a></li>
-                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Marketing3</a></li>
-                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Marketing4</a></li>
+                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Occurrences</a></li>
+                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Species</a></li>
+                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Treatments</a></li>
+                                                        <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>Collections</a></li>
                                                     </ul>
                                                 </div>
                                             </li>
                                             <li css={globalNavPrimary__mobileItem}>
-                                                <label htmlFor="menuToggle3" css={mobileItem_action()}>Expand below</label>
                                                 <input id="menuToggle3" type="checkbox" css={globalNavMobileToggle_expand} />
+                                                <div>
+                                                    <label htmlFor="menuToggle3" css={mobileItem_action()}>
+                                                        <span style={{flex: '1 1 auto'}}>Expand below</span>
+                                                        <MdExpandMore style={{ fontSize: 30 }} />
+                                                    </label>
+                                                </div>
                                                 <div>
                                                     <ul css={globalNavDropdown__mobileMenu}>
                                                         <li css={globalNavPrimary__mobileItem}><a href="" css={mobileItem_action()}>test</a></li>
@@ -130,6 +141,6 @@ export const GlobalNavLaptop = ({ drawer, rtl }) => {
 
 export const Example = props => {
     return <Router>
-        <GlobalNavLaptop drawer />
+        <GlobalNav drawer />
     </Router>
 }

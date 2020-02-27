@@ -1,6 +1,12 @@
 import { css } from '@emotion/core';
 
-export const focusStyle = theme => css`
+export const placeholder = props => css`
+  &::placeholder {
+    color: #bbb;
+  }
+`;
+
+export const focusStyle = props => css`
   &:focus {
     outline: none;
     box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);

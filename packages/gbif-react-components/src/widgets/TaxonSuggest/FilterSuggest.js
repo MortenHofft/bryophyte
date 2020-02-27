@@ -7,13 +7,18 @@ import { useDebounce } from "use-debounce"; // example here https://codesandbox.
 import axios from '../../search/OccurrenceSearch/api/axios';
 import { focusStyle } from '../../style/shared';
 import { StripeLoader } from '../../components/Loaders';
-// import { Checkbox } from '../../components/Checkbox';
+import { Input } from '../../components/Input';
 import { FilterBody } from '../Filter';
 
-function FilterSuggest({ suggest, keyBy, itemToString, itemRenderer, selectedSet, onSelect }) {
+export const FilterSuggest2 = ({ onSelect }) => {
+  return <button onClick={e => onSelect(e)}>Button</button>
+};
+
+export const FilterSuggest = ({ focusRef, suggest, keyBy, onStateChange, itemToString, itemRenderer, selectedSet, onSelect, ...props }) => {
   const [inputItems, setInputItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const theme = useContext(ThemeContext);
+  itemToString = itemToString || (e => e);
 
   const {
     isOpen,
@@ -35,26 +40,30 @@ function FilterSuggest({ suggest, keyBy, itemToString, itemRenderer, selectedSet
     onSelectedItemChange: ({ selectedItem }) => {
       setInputValue('');
       setLoading(false);
-      if (typeof onSelect === 'function') onSelect(selectedItem);
+      if (typeof onSelect === 'function') {
+        onSelect(selectedItem);
+      }
     },
+    onStateChange: onStateChange,
     itemToString
   });
 
-  const [debouncedText] = useDebounce(inputValue, 200);
+  const [debouncedText] = useDebounce(inputValue, 100);
   useEffect(
     () => {
       let request;
-      if (debouncedText) {
+
+      if (debouncedText && (!selectedItem || debouncedText !== itemToString(selectedItem))) {
         setLoading(true);
         request = suggest(debouncedText);
-        request.then(response => { setInputItems(response.data); })
+        request.then(response => { setInputItems(response.data); setLoading(false); })
           .catch(e => {
             if (axios.isCancel(e)) {
               return;
             }
             setInputItems([]);
-          })
-          .finally(() => setLoading(false));
+            setLoading(false)
+          });
       }
       return () => {
         if (request) {
@@ -62,7 +71,6 @@ function FilterSuggest({ suggest, keyBy, itemToString, itemRenderer, selectedSet
             "Canceled because of component unmounted or debounce Text changed"
           );
         }
-        setLoading(false);
       };
     },
     [debouncedText, suggest]
@@ -71,27 +79,26 @@ function FilterSuggest({ suggest, keyBy, itemToString, itemRenderer, selectedSet
   return (
     <>
       {/* <label {...getLabelProps()}>Choose an element:</label> */}
-      <div css={filterSuggestInput(theme)} className="gbif-input gbif-filter-input" {...getComboboxProps()}>
-        <input {...getInputProps()} />
+      <div className="gbif-input gbif-filter-input" {...getComboboxProps({ ...props })}>
+        <Input {...getInputProps({ ref: focusRef })} />
+        <StripeLoader active={loading} />
       </div>
-      <StripeLoader active={loading} />
-      <FilterBody style={{padding: 0}}>
+      {isOpen && <FilterBody style={{ padding: 0 }}>
         <ul {...getMenuProps()} css={filterSuggestDropdown(theme)}>
-          {isOpen &&
-            inputItems.map((item, index) => (
-              <li
-                key={item[keyBy]}
-                {...getItemProps({ item, index })}
-              >
-                {itemRenderer({
-                  item,
-                  isHighlighted: highlightedIndex === index,
-                  selected: selectedSet && selectedSet.has(item[keyBy])
-                })}
-              </li>
-            ))}
+          {inputItems.map((item, index) => (
+            <li
+              key={keyBy ? item[keyBy] : item}
+              {...getItemProps({ item, index })}
+            >
+              {itemRenderer({
+                item,
+                isHighlighted: highlightedIndex === index,
+                selected: selectedSet && selectedSet.has(keyBy ? item[keyBy] : item)
+              })}
+            </li>
+          ))}
         </ul>
-      </FilterBody>
+      </FilterBody>}
     </>
   );
 }
@@ -105,7 +112,7 @@ export const filterSuggestInput = theme => css`
     padding: 10px 20px;
     border: none;
     border-bottom: 1px solid #eee;
-    /* ${focusStyle(theme)} */
+    /* ${focusStyle({ theme })} */
     outline: none;
   }
 `;
@@ -126,6 +133,7 @@ export const filterSuggestOption = (theme, props = {}) => css`
   cursor: pointer;
   &>.gbif-help-text {
     color: #bbb;
+    font-size: 12px;
   }
   &:before {
     content: '';
@@ -144,20 +152,45 @@ function getData(q, options) {
   return axios.get(`//api.gbif-uat.org/v1/species/suggest?q=${q}`, options);
 }
 
+export const Classification = ({ taxon, ...props }) => {
+  const ranks = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];
+  return <span css={taxClass}>
+    {ranks.map(rank => {
+      return taxon.rank !== rank.toUpperCase() && taxon[rank] ? <span key={rank}>{taxon[rank]}</span> : null;
+    })}
+  </span>
+}
+
+export const taxClass = css`
+  &>span:after {
+    font-style: normal;
+    content: ' ❯ ';
+    font-size: 80%;
+    color: #ccc;
+    display: inline-block;
+    padding: 0 3px;
+  }
+  &>span:last-of-type:after {
+    display: none;
+  }
+`;
+
 const Example = () => {
   const theme = useContext(ThemeContext);
   const selectedSet = new Set([1, 2, 3, 4, 5])
   return <FilterSuggest
     suggest={getData}
     keyBy="key"
-    itemToString={item => item.scientificName}
+    itemToString={item => item ? item.scientificName : ''}
     selectedSet={selectedSet}
+    onStateChange={props => console.log(props)}
     itemRenderer={({ item, isHighlighted, selected }) => <div css={filterSuggestOption(theme, { isHighlighted, selected })}>
       <div>
-        {/* <Checkbox checked={selected} style={{ marginRight: 10 }} onChange={() => {}}/> */}
         {item.scientificName}
       </div>
-      <div className="gbif-help-text">Some help text goes here</div>
+      <div className="gbif-help-text">
+        <Classification taxon={item} />
+      </div>
     </div>
     }
     onSelect={item => console.log(item)}

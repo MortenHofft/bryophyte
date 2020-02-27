@@ -8,7 +8,7 @@ import keyBy from 'lodash/keyBy';
 import get from 'lodash/get';
 // import formatters from '../displayNames/formatters';
 import { getVocabulary } from './getVocabulary';
-import { Option, Filter } from '../../../widgets/Filter';
+import { Option, Filter, FilterBody, SummaryBar, Footer } from '../../../widgets/Filter';
 
 function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary, filterName, initFilter }) {
   const [id] = React.useState(nanoid);
@@ -24,21 +24,28 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary,
     formId={id}
     defaultFilter={initFilter}
   >
-    {({ helpVisible, toggle, checkedMap, formId }) => <div>
-      <form id={formId} onSubmit={e => e.preventDefault()} >
-        {vocabulary && vocabulary.concepts.map((concept, index) => {
-          return <Option
-            ref={index === 0 ? focusRef : null}
-            key={concept.name}
-            helpVisible={helpVisible}
-            helpText={concept.definition}
-            label={concept.label}
-            checked={checkedMap.has(concept.name)}
-            onChange={() => toggle(vocabulary.name, concept.name)}
-          />
-        })}
-      </form>
-    </div>}
+    {({ helpVisible, toggle, filter, checkedMap, formId, summaryProps, footerProps }) => <>
+      <SummaryBar {...summaryProps} />
+      <FilterBody>
+        <form id={formId} onSubmit={e => e.preventDefault()} >
+          {vocabulary && vocabulary.concepts.map((concept, index) => {
+            return <Option
+              ref={index === 0 ? focusRef : null}
+              key={concept.name}
+              helpVisible={helpVisible}
+              helpText={concept.definition}
+              label={concept.label}
+              checked={checkedMap.has(concept.name)}
+              onChange={() => toggle(vocabulary.name, concept.name)}
+            />
+          })}
+        </form>
+      </FilterBody>
+      <Footer {...footerProps} 
+        onApply={() => onApply(filter)}
+        onCancel={() => onCancel(filter)}
+      />
+    </>}
   </Filter>
 }
 

@@ -10,7 +10,7 @@ import FilterState from "./filters/state/FilterState";
 import { compose } from './api/queryAdapter';
 
 function OccurrenceSearch(props) {
-  const [filter, setFilter] = useState({ must: { TaxonKey: [1, 2, 3] } });
+  const [filter, setFilter] = useState({ must: { taxonKey: [1, 2, 3] } });
   // const esQuery = compose(filter).build();
   return (
     <FilterState filter={filter} onChange={setFilter}>

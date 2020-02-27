@@ -20,16 +20,9 @@ Box.defaultProps = {
 }
 
 const box = theme => css`
-  /* box-sizing: border-box;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-  font-family: ${theme.fontFamily}; */
-  
+  box-sizing: border-box;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
   font-family: ${theme.fontFamily};
-  color: ${theme.color || '#4a4a4a'};
-  font-size: ${theme.fontSize || '1em'};
-  font-weight: 400;
-  box-sizing: border-box;
   *, *::before, *::after, strong {
     box-sizing: inherit;
   }

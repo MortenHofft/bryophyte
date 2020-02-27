@@ -2,31 +2,28 @@
 import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
-import Level from '../../layout/Level';
+import { Row, Col } from '../../layout/Row';
 import { Button } from '../../components/Button';
 
 const SummaryBar = ({ count, onClear, ...props }) => {
   const theme = useContext(ThemeContext);
-  return <Level as="div" {...props} css={summary(theme)}>
-    <Level.Left>
-      <Level.Item>
-        {count} selected
-  </Level.Item>
-    </Level.Left>
-    {count > 0 &&
-      <Level.Right>
-        <Level.Item>
+  return <div style={{margin: '.5em 1.5em'}} {...props}>
+    <Row as="div" css={summary(theme)} >
+      <Col>
+          {count} selected
+      </Col>
+      {count > 0 &&
+        <Col grow={false}>
           <Button appearance="text" onClick={onClear}>Clear</Button>
-        </Level.Item>
-      </Level.Right>
-    }
-  </Level>
+        </Col>
+      }
+    </Row>
+  </div>
 }
 
 const summary = theme => css`
   font-size: .85em;
   color: #999;
-  padding: .5em 1.5em;
   font-weight: 200;
 `;
 

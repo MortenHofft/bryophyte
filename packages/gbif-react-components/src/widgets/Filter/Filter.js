@@ -12,12 +12,22 @@ import get from 'lodash/get';
 import FilterState from '../../search/OccurrenceSearch/filters/state/FilterState';
 import FilterContext from '../../search/OccurrenceSearch/filters/state/FilterContext';
 
-function Filter({ children, onApply, onCancel, title, aboutText, hasHelpTexts, filterName, formId, filter: tmpFilter, onFilterChange, aboutVisible, onAboutChange, helpVisible, onHelpChange }) {
+function Filter({ children, onApply, onCancel, title, aboutText, hasHelpTexts, filterName, formId, filter: tmpFilter, onFilterChange, aboutVisible, onAboutChange, helpVisible, onHelpChange, style }) {
   return <FilterState filter={tmpFilter} onChange={updatedFilter => onFilterChange(updatedFilter)}>
     <FilterContext.Consumer>
       {({ setField, toggle, filter }) => {
-        const checkedMap = new Set(get(filter, `must.${filterName}`, []));
-        return <FilterBox>
+        const selectedItems = get(filter, `must.${filterName}`, []);
+        const checkedMap = new Set(selectedItems);
+        const summaryProps = {
+          count: checkedMap.size, 
+          onClear: () => setField(filterName, [])
+        };
+        const footerProps = {
+          formId,
+          showBack: aboutVisible,
+          onBack: () => onAboutChange(false)
+        }
+        return <FilterBox style={style}>
           <Header menuItems={menuState => [
             ...aboutText ? [<MenuAction key="About" onClick={() => { onAboutChange(true); menuState.hide() }}>About this filter</MenuAction>] : [],
             ...hasHelpTexts ? [<MenuToggle key="Help" disabled={aboutVisible} style={{ opacity: aboutVisible ? .5 : 1 }} checked={!!helpVisible} onChange={() => onHelpChange(!helpVisible)}>Show help texts</MenuToggle>] : []
@@ -26,21 +36,22 @@ function Filter({ children, onApply, onCancel, title, aboutText, hasHelpTexts, f
           </Header>
           {!aboutVisible &&
             <>
-              <SummaryBar count={checkedMap.size} onClear={() => setField(filterName, [])} />
-              <FilterBody>
-                {children({ helpVisible, setField, toggle, filter, checkedMap })}
-              </FilterBody>
+              {children({
+                  summaryProps,
+                  footerProps,
+                  helpVisible, 
+                  setField, 
+                  toggle, 
+                  filter, 
+                  selectedItems, 
+                  checkedMap })}
             </>}
-          {aboutVisible && <Prose as={FilterBodyDescription}>
-            {aboutText}
-          </Prose>}
-          <Footer
-            formId={formId}
-            showBack={aboutVisible}
-            onApply={() => onApply(filter)}
-            onCancel={() => onCancel(filter)}
-            onBack={() => onAboutChange(false)}
-          />
+          {aboutVisible && <>
+            <Prose as={FilterBodyDescription}>
+              {aboutText}
+            </Prose>
+            <Footer {...footerProps}/>
+          </>}
         </FilterBox>
       }}
     </FilterContext.Consumer>

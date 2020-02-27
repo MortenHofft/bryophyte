@@ -1,5 +1,5 @@
 import React from 'react';
-import { Filter, Option } from './index';
+import { Filter, FilterBody, Option } from './index';
 
 export default {
   title: 'Widgets/Filter',
@@ -19,20 +19,21 @@ export const Example = () => {
     onAboutChange={e => console.log(e)}
     onHelpChange={e => console.log(e)}
     onFilterChange={e => console.log(e)}
+    style={{height: 300, background: 'white'}}
   >
-    {({ helpVisible, toggle, checkedMap }) => <div>
-      <div>
-      {['HumanObservation', 'MachineObservation', 'LivingSpecimen'].map(e => {
-        return <Option 
-          key={e} 
-          helpVisible={helpVisible} 
-          helpText="some help text" 
-          label={e} 
-          checked={checkedMap.has(e)} onChange={() => toggle(filterName, e)}
-          />})
-      }
-      </div>
-    </div>}
+    {({ helpVisible, toggle, checkedMap }) => <>
+      <FilterBody>
+        {['HumanObservation', 'MachineObservation', 'LivingSpecimen', 'something', 'sdfg', 'absdef', 'defgh', 'ihjk'].map(e => {
+          return <Option 
+            key={e} 
+            helpVisible={helpVisible} 
+            helpText="some help text" 
+            label={e} 
+            checked={checkedMap.has(e)} onChange={() => toggle(filterName, e)}
+            />})
+        }
+      </FilterBody>
+    </>}
   </Filter>;
 }
 
