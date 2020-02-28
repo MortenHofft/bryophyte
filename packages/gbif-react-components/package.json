@@ -19,7 +19,9 @@
     "test:watch": "nwb test-react --server",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "generate": "npx plop --plopfile ./tools/plopfile.js",
+    "add-component": "npm run generate component"
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4",

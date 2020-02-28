@@ -16,6 +16,16 @@ export const focusStyle = props => css`
   }
 `;
 
+export const styledScrollBars = props => css`
+  scrollbar-width: thin;
+  &::-webkit-scrollbar {
+      width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #686868;
+  }
+`;
+
 export const srOnly = css`
   position: absolute;
   width: 1px;
