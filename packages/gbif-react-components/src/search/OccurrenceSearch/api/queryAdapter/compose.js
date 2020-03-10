@@ -27,7 +27,7 @@ const filters = {
     getValues: values => values,
     fieldName: 'mediaTypes'
   },
-  TaxonKey: {
+  taxonKey: {
     type: 'TERMS',
     getValues: values => values,
     fieldName: 'gbifClassification.taxonKey'

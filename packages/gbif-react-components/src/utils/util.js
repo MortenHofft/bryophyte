@@ -20,3 +20,8 @@ const getClassNames = (prefix, elementName, classes) => {
 }
 
 export const isEmpty = obj => Object.entries(obj).length === 0 && obj.constructor === Object;
+
+export const oneOfMany = options => (props, propName, componentName) => {
+  const first = options.find(option => Object.prototype.hasOwnProperty.call(props, option));
+  return !first && new Error(`On of ${options} is required for ${componentName}`)
+}

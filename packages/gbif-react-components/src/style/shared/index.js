@@ -20,6 +20,7 @@ export const styledScrollBars = props => css`
   scrollbar-width: thin;
   &::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
   }
   &::-webkit-scrollbar-thumb {
     background-color: #686868;
@@ -35,4 +36,43 @@ export const srOnly = css`
   overflow: hidden;
   clip: rect(0,0,0,0);
   border: 0;
+`;
+
+export const tooltip = props => css`
+  &:hover {
+    position: relative;
+    &[tip]:before {
+      border-radius: 2px;
+      background-color: #585858;
+      color: #fff;
+      content: attr(tip);
+      font-size: 12px;
+      padding: 5px 7px;
+      position: absolute;
+      white-space: nowrap;
+      z-index: 25;
+      line-height: 1.2em;
+      pointer-events: none;
+    }
+    &[direction="right"]:before {
+      top: 50%;
+      left: 120%;
+      transform: translateY(-50%);
+    }
+    &[direction="left"]:before {
+      top: 50%;
+      right: 120%;
+      transform: translateY(-50%);
+    }
+    &[direction="top"]:before {
+      right: 50%;
+      bottom: 120%;
+      transform: translateX(50%);
+    }
+    &[direction="bottom"]:before {
+      right: 50%;
+      top: 120%;
+      transform: translateX(50%);
+    }
+  }
 `;

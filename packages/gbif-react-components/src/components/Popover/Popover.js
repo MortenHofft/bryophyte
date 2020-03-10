@@ -33,7 +33,7 @@ function Popover({ trigger, placement, visible, onClickOutside, children, ...pro
         {disclosureProps => React.cloneElement(trigger, disclosureProps)}
       </PopoverDisclosure>
       <PopoverBackdrop {...popover} css={backdrop(theme)} onClick={() => onClickOutside ? onClickOutside(popover) : undefined}></PopoverBackdrop>
-      <BasePopover {...popover} {...props} hideOnClickOutside={false} hideOnEsc={false}>
+      <BasePopover {...popover} {...props} hideOnClickOutside={false} hideOnEsc={true}>
         {props => popover.visible &&
           <div {...props} css={dialog(theme)}>
             <PopoverArrow className="arrow" {...popover} />

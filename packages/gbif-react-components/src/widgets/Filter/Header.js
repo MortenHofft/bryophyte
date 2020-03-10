@@ -1,11 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import React from "react";
-
-import { Menu } from '../../components/Menu';
-import { Row, Col } from '../../layout/Row';
+import { Row, Col, Button, Menu } from '../../components';
 import { MdMoreVert } from "react-icons/md";
-import { Button } from '../../components/Button';
 
 const Header = ({ children, menuItems, ...props }) => {
   return <Row as="section" {...props} css={header} alignItems="center">

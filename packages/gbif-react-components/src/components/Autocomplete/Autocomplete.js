@@ -42,7 +42,6 @@ export const Autocomplete = React.forwardRef(({
 
   return <Downshift
     onChange={selection => {
-        console.log(selection);
         onSuggestionSelected({item: selection, value: itemToString(selection)});
       }
     }

@@ -36,6 +36,18 @@ let displayName = [
         .then(result => ({ title: result.data.scientificName }))
   },
   {
+    name: 'scientificName',
+    format: id => axios
+        .get(endpoints.species + '/' + id)
+        .then(result => ({ title: result.data.scientificName }))
+  },
+  {
+    name: 'canonicalName',
+    format: id => axios
+        .get(endpoints.species + '/' + id)
+        .then(result => ({ title: result.data.canonicalName }))
+  },
+  {
     name: 'BasisOfRecord',
     format: id => ({title: startCase(id + '')})
   },

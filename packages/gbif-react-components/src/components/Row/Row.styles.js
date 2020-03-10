@@ -1,8 +1,6 @@
 import { css, keyframes } from '@emotion/core';
 import { helper } from '../../utils/helper';
 
-export const test = ({theme, ...props}) => css``;
-
 export const row = ({theme, ...props}) => css`
   display: flex;
   overflow: auto;

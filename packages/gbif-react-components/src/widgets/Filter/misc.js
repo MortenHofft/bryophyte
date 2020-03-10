@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 export const FilterBox = styled.div`
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   max-height: inherit;
 `;
 

@@ -3,7 +3,7 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from '../../layout/Row';
+import { Row, Col } from '../../components';
 import { Button } from '../../components/Button';
 
 const Footer = ({ onApply, onCancel, onBack, showBack = false, formId, ...props }) => {

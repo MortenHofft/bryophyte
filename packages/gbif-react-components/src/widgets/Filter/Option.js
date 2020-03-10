@@ -3,8 +3,7 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from '../../layout/Row';
-import { Checkbox } from '../../components/Checkbox';
+import { Row, Col, Checkbox } from '../../components';
 
 const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible, ...props }, ref) => {
   const theme = useContext(ThemeContext);

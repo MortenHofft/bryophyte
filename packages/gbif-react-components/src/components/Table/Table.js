@@ -7,15 +7,15 @@ import React, { useContext } from 'react';
 import Box from '../Box/Box';
 import styles from './styles';
 
-export const {{pascalCase name}} = ({
+export const Table = ({
   ...props
 }) => {
   const theme = useContext(ThemeContext);
-  return <Box css={styles.{{camelCase name}}({theme})} {...props} />
+  return <Box css={styles.table({theme})} {...props} />
 };
 
-{{pascalCase name}}.displayName = '{{pascalCase name}}';
+Table.displayName = 'Table';
 
-// {{pascalCase name}}.propTypes = {
+// Table.propTypes = {
   
 // };

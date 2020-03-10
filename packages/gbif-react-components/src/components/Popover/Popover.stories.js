@@ -8,26 +8,9 @@ export default {
   component: Popover,
 };
 
-// placement options - but for some reason the do not update dynamically. the reakit lib only takes it into consideration upon mount
-// const options = {
-//   default: '',
-//   right: 'right',
-//   rightStart: 'right-start',
-//   rightEnd: 'right-end',
-//   top: 'top',
-//   topStart: 'top-start',
-//   topEnd: 'top-end',
-//   bottom: 'bottom',
-//   bottomStart: 'bottom-start',
-//   bottomEnd: 'bottom-end',
-//   left: 'left',
-//   leftStart: 'left-start',
-//   leftEnd: 'left-end',
-// };
-
-const TaxonFilter = ({innerRef, onClose, ...props}) => <div>
+const TaxonFilter = ({innerRef, popover, ...props}) => <div>
   <h1>Taxon filter</h1>
-  <Button onClick={onClose}>Close</Button>
+  <Button onClick={() => popover.hide()}>Close</Button>
   <Button ref={innerRef}>init focus</Button>
   <Button>test 3</Button>
   <Button>test 4</Button>
@@ -36,10 +19,11 @@ const TaxonFilter = ({innerRef, onClose, ...props}) => <div>
 export const Example = () => <div style={{ position: 'relative', padding: 50, height: 1000 }}>
   <Popover
     aria-label="Location filter"
+    onClickOutside={popover => popover.hide()}
     trigger={<Button>{text('Text', 'Choose a location')}</Button>}
   >
     {({popover, focusRef}) =>
-      <TaxonFilter innerRef={focusRef} onClickOutside={e => popover.hide()}/>
+      <TaxonFilter innerRef={focusRef} popover={popover} />
     }
   </Popover>
 </div>;

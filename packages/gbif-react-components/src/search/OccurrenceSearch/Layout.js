@@ -5,46 +5,47 @@ import ThemeContext from 'style/themes/ThemeContext';
 // import PropTypes from 'prop-types';
 import withContext from './state/withContext';
 // import { FormattedMessage, FormattedNumber } from 'react-intl';
-
-// import Map from './views/Map';
-
-// import { Tabs } from "../../layout/Tabs";
+import { cssLayout, cssNavBar, cssViewArea, cssFooter, cssFilter, cssViews } from './Layout.styles';
+import { Tabs } from '../../components'
+import Map from './views/Map';
 
 import { FilterBar } from './FilterBar';
-// const Tab = Tabs.Tab;
+
+const { TabList, Tab, TabPanel } = Tabs;
 
 const Layout = ({
   className = '',
   ...props
 }) => {
-  const [key, setKey] = useState('home');
+  const [activeView, setActiveView] = useState('table');
   const theme = useContext(ThemeContext);
   const prefix = theme.prefix || 'gbif';
   const elementName = 'occurrenceSearchLayout';
   return <div className={`${className} ${prefix}-${elementName}`}
-    css={css`${layout(theme, prefix, elementName)}`} {...props}>
-    <div className={`${prefix}-${elementName}-navBar`}>
-      <div className={`${prefix}-${elementName}-filters`}>
+    css={cssLayout({theme})} {...props}>
+    <div css={cssNavBar({theme})}>
+      <div css={cssFilter({theme})}>
         <FilterBar></FilterBar>
       </div>
-      <div className={`${prefix}-${elementName}-views`}>
-        {/* <Tabs activeKey={key} onSelect={k => setKey(k)}>
-        <Tab eventKey="home">
-          Species or Group
-        </Tab>
-        <Tab eventKey="profile">
-          Second Option<MdClose style={{marginLeft: 8}}/>
-        </Tab>
-        <Tab eventKey="contact" disabled>
-          third
-        </Tab>
-      </Tabs> */}
-
-
-        {/* <Map /> */}
-        
+      <div css={cssViews({theme})}>
+        <Tabs activeId={activeView} onChange={setActiveView} >
+          <TabList aria-labelledby="My tabs">
+            <Tab tabId="table">Table</Tab>
+            <Tab tabId="map">Map</Tab>
+            <Tab tabId="gallery">Gallery</Tab>
+          </TabList>
+        </Tabs>
       </div>
     </div>
+    {activeView === 'map' && <TabPanel tabId="map" className={`${prefix}-${elementName}-views`} css={cssViewArea({theme})}>
+      <Map />
+    </TabPanel>}
+    {activeView === 'table' && <TabPanel tabId="map" className={`${prefix}-${elementName}-views`} css={cssViewArea({theme})}>
+      Table
+    </TabPanel>}
+    {activeView === 'gallery' && <TabPanel tabId="map" className={`${prefix}-${elementName}-views`} css={cssViewArea({theme})}>
+      Gallery
+    </TabPanel>}
     {/* <div className={`${prefix}-${elementName}-body`}>
       <div className={`${prefix}-${elementName}-main`}>content {props.test}<br />
       <FormattedMessage
@@ -55,7 +56,7 @@ const Layout = ({
       </div>
       <aside className={`${prefix}-${elementName}-drawer`}>right drawer</aside>
     </div> */}
-    <div className={`${prefix}-${elementName}-footer`}>
+    <div className={`${prefix}-${elementName}-footer`} css={cssFooter({theme})}>
       <div>Footer content</div>
     </div>
   </div>

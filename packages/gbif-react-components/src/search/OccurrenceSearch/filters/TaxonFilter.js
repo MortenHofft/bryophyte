@@ -50,7 +50,6 @@ const PopupContent = ({ filterName, tmpFilter, setFilter, onCancel, onApply, foc
           </Header>
           {!isAboutVisible &&
             <>
-              <h1>TEST</h1>
               <SummaryBar count={checkedMap.size} onClear={() => setField(filterName, [])} />
               <FilterBody>
                 <form id={id} onSubmit={e => e.preventDefault()} >
