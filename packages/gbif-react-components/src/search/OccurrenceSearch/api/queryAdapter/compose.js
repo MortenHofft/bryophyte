@@ -27,6 +27,11 @@ const filters = {
     getValues: values => values,
     fieldName: 'mediaTypes'
   },
+  gallery_media_type: {
+    type: 'TERMS',
+    getValues: values => values,
+    fieldName: 'mediaTypes'
+  },
   taxonKey: {
     type: 'TERMS',
     getValues: values => values,

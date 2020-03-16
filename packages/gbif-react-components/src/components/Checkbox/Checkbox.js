@@ -58,7 +58,7 @@ const checkbox = css`
     border: 1px solid #d9d9d9;
     border-radius: 2px;
     border-collapse: separate;
-    transition: all 0.15s;
+    transition: all 0.1s;
     &:after {
       position: absolute;
       top: 50%;
@@ -86,7 +86,7 @@ const checkbox = css`
       border-left: 0;
       transform: rotate(45deg) scale(1) translate(-50%, -50%);
       opacity: 1;
-      transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
+      transition: all 0.1s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
       content: ' ';
     }
   }

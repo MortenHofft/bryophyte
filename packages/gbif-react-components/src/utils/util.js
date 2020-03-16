@@ -25,3 +25,8 @@ export const oneOfMany = options => (props, propName, componentName) => {
   const first = options.find(option => Object.prototype.hasOwnProperty.call(props, option));
   return !first && new Error(`On of ${options} is required for ${componentName}`)
 }
+
+export const keyCodes = {
+  LEFT_ARROW: 37,
+  RIGHT_ARROW: 39
+};

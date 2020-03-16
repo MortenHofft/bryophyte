@@ -3,7 +3,6 @@ import { helper } from '../../utils/helper';
 
 export const row = ({theme, ...props}) => css`
   display: flex;
-  overflow: auto;
   flex-direction: ${props.direction || null};
   flex-wrap: ${props.wrap ? props.wrap : 'wrap'};
   align-items: ${props.alignItems ? props.alignItems : null};

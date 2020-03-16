@@ -102,6 +102,33 @@ export const TaxonomySearchBar = ({ checkedMap, filterName, toggle, ...props }) 
   />
 }
 
+export const TaxonFilterPopover = ({ placement, modal, children, ...props }) => {
+  const currentFilterContext = useContext(FilterContext);
+  const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
+
+  return (
+    <Popover
+      onClickOutside={popover => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
+      style={{ width: '22em', maxWidth: '100%' }}
+      aria-label={`Filter on scientific name`}
+      placement={placement}
+      trigger={children}
+      modal={modal}
+    >
+      {({ popover, focusRef }) => {
+        return <PopupContent
+          filterName="taxonKey"
+          onApply={filter => { currentFilterContext.setFilter(filter); popover.hide() }}
+          onCancel={() => { popover.hide(); }}
+          focusRef={focusRef}
+          onFilterChange={filter => setFilter(filter)}
+          initFilter={currentFilterContext.filter}
+        />
+      }}
+    </Popover>
+  );
+}
+
 export const TaxonFilter = ({ placement, ...props }) => {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
@@ -127,6 +154,7 @@ export const TaxonFilter = ({ placement, ...props }) => {
     </Popover>
   );
 }
+
 TaxonFilter.propTypes = {
   placement: PropTypes.string
 };

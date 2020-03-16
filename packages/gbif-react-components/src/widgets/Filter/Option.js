@@ -8,7 +8,7 @@ import { Row, Col, Checkbox } from '../../components';
 const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible, ...props }, ref) => {
   const theme = useContext(ThemeContext);
 
-  return <Row as="label" {...props} css={optionClass(theme)} halfGutter={4}>
+  return <Row as="label" {...props} css={optionClass(theme)} halfGutter={4} wrap="nowrap">
     <Col grow={false} shrink={false}>
       <Checkbox ref={ref} checked={checked} onChange={onChange} />
     </Col>

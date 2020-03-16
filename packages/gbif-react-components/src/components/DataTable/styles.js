@@ -1,10 +1,9 @@
 import { css } from '@emotion/core';
-import { styledScrollBars, tooltip } from '../../style/shared';
+import { tooltip } from '../../style/shared';
 
 const borderRadius = '5px';
 export const wrapper = props => css`
   border: 1px solid #e5ebed;
-  border-radius: ${borderRadius};
   height: 100%;
 `;
 
@@ -14,8 +13,7 @@ export const occurrenceTable = props => css`
   overflow: auto;
   position: relative;
   background: white;
-  border-radius: ${borderRadius} ${borderRadius} 0 0;
-  ${styledScrollBars(props)}
+  /* ${styledScrollBars(props)} */
 `;
 
 export const footer = props => css`
@@ -51,7 +49,7 @@ export const footerItem = props => css`
 `;
 
 export const table = props => css`
-  position: 'relative';
+  position: relative;
   min-width: 100%;
   border-collapse: separate;
   background: white;
@@ -116,19 +114,25 @@ export const footerText = props => css`
   ${footerItemBase(props)};
   width: auto;
   font-size: 12px;
-  font-weight: bold;
   text-align: center;
   flex: 1 1 auto;
 `;
 
 export const cell = props => css`
-  display: block;
+  display: flex;
   word-break: break-word;
 `;
 
 export const wide = props => css`
   width: 20em;
   ${cell(props)};
+`;
+
+export const tbodyLoading = props => css`
+  td > * {
+    background-color: #f3f3f3;
+    color: transparent;
+  }
 `;
 
 export default {
@@ -140,5 +144,6 @@ export default {
   stickyColumn,
   scrolled,
   footerText,
-  wide
+  wide,
+  tbodyLoading
 };

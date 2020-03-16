@@ -56,7 +56,7 @@ const switchClass = theme => css`
     width: 2em;
     height: 1em;
     background-color: #d4d5e3;
-    transition: .4s;
+    transition: .1s;
     border-radius: 34px;
     &:before {
       position: absolute;
@@ -66,7 +66,7 @@ const switchClass = theme => css`
       left: 2px;
       bottom: 2px;
       background-color: white;
-      transition: .4s;
+      transition: .1s;
       border-radius: 50%;
     }
   }

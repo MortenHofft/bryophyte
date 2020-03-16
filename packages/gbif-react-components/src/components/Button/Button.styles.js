@@ -47,7 +47,8 @@ export const text = theme => css`
   color: inherit;
   line-height: inherit;
   font-weight: inherit;
-  background: inherit;
+  background: none;
+  border-radius: 0;
 `;
 
 export const primary = theme => css`

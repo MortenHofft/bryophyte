@@ -71,12 +71,12 @@ export const globalNavMobileToggle_expand = css`
 `;
 
 export const slideIn = props => css`
-    opacity: 0;
     width: 50vw;
     bottom: 0;
     position: fixed;
     ${props.rtl ? 'left: 0;' : 'right: 0'};
     z-index: 5;
+    opacity: 0;
     transform: translateX(${props.rtl ? -100 : 100}%);
     transition: opacity .2s linear, transform .2s ease-in-out;
     background: white;

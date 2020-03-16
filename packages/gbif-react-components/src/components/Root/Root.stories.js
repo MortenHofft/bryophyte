@@ -1,22 +1,23 @@
 import React from 'react';
 // import { text, boolean, select } from '@storybook/addon-knobs';
-import { Table } from './Table';
-import { Example } from './Table1';
+import { Root } from './Root';
 import readme from './README.md';
 import { StyledProse } from '../../typography/StyledProse';
 
 export default {
-  title: 'Components/Table',
-  component: Table,
+  title: 'Components/Root',
+  component: Root,
 };
 
-export const Demo = () => <>
-  <Example />
-  {/* <StyledProse source={readme}></StyledProse> */}
+export const Example = () => <>
+  <Root>
+    Root
+  </Root>
+  <StyledProse source={readme}></StyledProse>
 </>;
 
-Demo.story = {
-  name: 'Table',
+Example.story = {
+  name: 'Root',
 };
 
 
@@ -33,4 +34,4 @@ Demo.story = {
 // boolean("loading", false)
 
 // // TEXT
-// {text('Text', 'Table text')}
+// {text('Text', 'Root text')}

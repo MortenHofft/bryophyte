@@ -13,10 +13,11 @@ import {
   PopoverArrow,
   PopoverBackdrop
 } from "reakit/Popover";
+import { Root } from '../index';
 
-function Popover({ trigger, placement, visible, onClickOutside, children, ...props }) {
+function Popover({ trigger, placement, visible, modal, onClickOutside, children, ...props }) {
   const theme = useContext(ThemeContext);
-  const popover = usePopoverState({placement: placement || "bottom-start", visible: visible });
+  const popover = usePopoverState({modal: modal || false, placement: placement || "bottom-start", visible: visible });
   const ref = React.useRef();
 
   React.useEffect(() => {
@@ -35,14 +36,14 @@ function Popover({ trigger, placement, visible, onClickOutside, children, ...pro
       <PopoverBackdrop {...popover} css={backdrop(theme)} onClick={() => onClickOutside ? onClickOutside(popover) : undefined}></PopoverBackdrop>
       <BasePopover {...popover} {...props} hideOnClickOutside={false} hideOnEsc={true}>
         {props => popover.visible &&
-          <div {...props} css={dialog(theme)}>
+          <Root {...props} css={dialog(theme)}>
             <PopoverArrow className="arrow" {...popover} />
             <div css={dialogContent(theme)}>
               {typeof children === 'function' ? 
                 children({popover, focusRef: ref }) : 
                 React.cloneElement(children, {popover, focusRef: ref})}
             </div>
-          </div>
+          </Root>
         }
       </BasePopover>
     </>
@@ -53,6 +54,7 @@ Popover.propTypes = {
   trigger: PropTypes.object,
   placement: PropTypes.string,
   visible: PropTypes.bool,
+  modal: PropTypes.bool,
   className: PropTypes.string,
   onClickOutside: PropTypes.func,
   children: PropTypes.any,

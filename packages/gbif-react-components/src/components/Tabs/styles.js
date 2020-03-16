@@ -1,11 +1,22 @@
 import { css } from '@emotion/core';
+import camelCase from 'lodash/camelCase';
 // import { focusStyle } from '../../style/shared';
 
-export const tab = ({theme, isActive}) => css`
-  border-bottom: 3px solid ${isActive ? theme.colors.primary500 : 'transparent'};
-  border-width: 3px 0;
-  border-top-color: transparent;
-  display: inline-block;
+const opposite = {
+  left: 'right',
+  right: 'left',
+  top: 'bottom',
+  bottom: 'top'
+}
+const border = (width, color, dir, isActive) => ({
+  border: '0 solid transparent',
+  [camelCase(`border-${dir}`)]: `${width}px solid ${isActive ? color : 'transparent'}`,
+  [camelCase(`border-${opposite[dir]}`)]: `${width}px solid transparent`,
+});
+
+export const tab = ({theme, direction='bottom', isActive}) => css`
+  ${border(3, theme.colors.primary500, direction, isActive)}
+  display: ${direction === 'left' || direction === 'right' ? 'block' : 'inline-block'};
   padding: 10px 10px;
 `;
 
