@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 import camelCase from 'lodash/camelCase';
-// import { focusStyle } from '../../style/shared';
+import { focusStyle } from '../../style/shared';
 
 const opposite = {
   left: 'right',
@@ -18,6 +18,14 @@ export const tab = ({theme, direction='bottom', isActive}) => css`
   ${border(3, theme.colors.primary500, direction, isActive)}
   display: ${direction === 'left' || direction === 'right' ? 'block' : 'inline-block'};
   padding: 10px 10px;
+  cursor: pointer;
+  &:hover, &:focus {
+    outline: none;
+    background: rgba(0,0,0,.05);
+  }
+  ::-moz-focus-inner {
+    border-style: none;
+  }
 `;
 
 export const tabList = ({theme}) => css`

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { MdLock, MdLockOpen, MdChevronRight, MdChevronLeft, MdFirstPage, MdMoreVert, MdFilterList } from "react-icons/md";
-import { TextButton, Skeleton } from '../index';
+import { Button, Skeleton } from '../index';
 import { isEmpty } from '../../utils/util';
 import styles from './styles';
 
@@ -37,9 +37,9 @@ export const Th = ({ children, width, toggle, locked, ...rest }) => (
       <div style={{flex: '1 1 auto'}}>
         {children}
       </div>
-      {toggle && <TextButton onClick={toggle} style={{ display: 'flex', marginLeft: 5 }}>
+      {toggle && <Button appearance="text" onClick={toggle} style={{ display: 'flex', marginLeft: 5 }}>
         {locked ? <MdLock /> : <MdLockOpen />}
-      </TextButton>}
+      </Button>}
     </div>
   </th>
 );
@@ -95,12 +95,12 @@ export class DataTable extends Component {
             </table>
           </div>
           <div css={styles.footer()}>
-            {page > 2 && <TextButton css={styles.footerItem()} direction="right" tip="first" onClick={first}>
+            {page > 2 && <Button appearance="text" css={styles.footerItem()} direction="right" tip="first" onClick={first}>
               <MdFirstPage />
-            </TextButton>}
-            {page > 1 && <TextButton css={styles.footerItem()} direction="right" tip="previous" onClick={prev}>
+            </Button>}
+            {page > 1 && <Button appearance="text" css={styles.footerItem()} direction="right" tip="previous" onClick={prev}>
               <MdChevronLeft />
-            </TextButton>}
+            </Button>}
             <span css={styles.footerText()}>
               <FormattedMessage
                 id='pagination.pageXofY'
@@ -108,12 +108,12 @@ export class DataTable extends Component {
                 values={{ current: <FormattedNumber value={page} />, total: <FormattedNumber value={totalPages} /> }}
               />
             </span>
-            {page !== totalPages && <TextButton css={styles.footerItem()} direction="left" tip="next" onClick={next}>
+            {page !== totalPages && <Button appearance="text" css={styles.footerItem()} direction="left" tip="next" onClick={next}>
               <MdChevronRight />
-            </TextButton>}
-            <TextButton css={styles.footerItem()} direction="left" tip="options">
+            </Button>}
+            <Button appearance="text" css={styles.footerItem()} direction="left" tip="options">
               <MdMoreVert />
-            </TextButton>
+            </Button>
           </div>
         </div>
       </React.Fragment>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextButton, Row, Col, DataTable, Th, Td, TBody } from '../../../../components';
+import { Button, Row, Col, DataTable, Th, Td, TBody } from '../../../../components';
 import { MdFilterList } from "react-icons/md";
 import get from 'lodash/get';
 import { TaxonFilterPopover } from '../../filters/TaxonFilter4/TaxonFilter';
@@ -39,9 +39,9 @@ export const TablePresentation = ({ first, prev, next, size, from, result, loadi
         <Col grow={false}>scientificName</Col>
         <Col>
           <TaxonFilterPopover modal>
-            <TextButton style={{ display: 'flex' }}>
+            <Button appearance="text" style={{ display: 'flex' }}>
               <MdFilterList />
-            </TextButton>
+            </Button>
           </TaxonFilterPopover>
         </Col>
       </Row>

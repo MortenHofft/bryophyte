@@ -2,12 +2,12 @@
 import { jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext, useEffect, useState, useCallback } from 'react';
-import { useDialogState, Dialog, DialogDisclosure } from "reakit/Dialog";
 import { MdInfo, MdClose, MdChevronLeft, MdChevronRight } from 'react-icons/md'
 // import PropTypes from 'prop-types';
 import { keyCodes } from '../../utils/util';
 import { ZoomableImage, Button, Row, Col, Tabs } from '../index';
 import { detailPage, detailHeader, detailPrev, detailNext, detailHeaderDescription, detailMainWrapper, detailMain, detailDrawerBar, detailDrawerContent } from './styles';
+import { getThumbnail } from './Gallery';
 
 const { TabList, Tab, TabPanel } = Tabs;
 
@@ -38,7 +38,7 @@ export const GalleryDetails = ({
     return function cleanup() {
       if (document) document.removeEventListener("keydown", handleKeypress, false);
     }
-  }, []);
+  }, [next, previous]);
 
   return <Tabs activeId={activeId} onChange={id => setTab(id === activeId ? undefined : id)}>
     <Row as="section" direction="column" wrap="nowrap" {...props} css={detailPage({ theme })}>
@@ -58,7 +58,7 @@ export const GalleryDetails = ({
       <Row css={detailMainWrapper} wrap="nowrap">
         <Col css={detailMain} shrink={true} basis="100%">
           <div css={detailPrev} onClick={() => previous()}><MdChevronLeft /></div>
-          {item && <ZoomableImage src={imageSrc(item)} />}
+          {item && <ZoomableImage src={imageSrc(item)} thumbnail={getThumbnail(imageSrc(item))}/>}
           <div css={detailNext} onClick={() => next()}><MdChevronRight /></div>
         </Col>
         {details && <>

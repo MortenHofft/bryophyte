@@ -33,9 +33,13 @@ class Gallery extends Component {
 					// extract first image in occurrence
 					response.data.hits.hits.forEach(occ => {
 						occ._source._galleryImages = occ._source.multimediaItems.filter(img => img.type === 'StillImage');
-						console.log(occ._source._galleryImages);
 					});
-					this.setState({ loading: false, error: false, data: response.data });
+					if (this.state.from > 0) {
+						response.data.hits.hits = [...this.state.data.hits.hits, ...response.data.hits.hits];
+						this.setState({ loading: false, error: false, data: response.data });
+					} else {
+						this.setState({ loading: false, error: false, data: response.data });
+					}
 				}
       })
       .catch(err => {
@@ -51,9 +55,13 @@ class Gallery extends Component {
     this.loadData();
 	}
 
+	componentWillUnmount() {
+		this._isMount = false;
+	}
+
 	componentDidUpdate(prevProps) {
     if (prevProps.filterHash !== this.props.filterHash) {
-			this.setState({from: 0}, this.loadData);
+			this.setState({from: 0, data: {}}, this.loadData);
     }
   }
 	

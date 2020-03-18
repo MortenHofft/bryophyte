@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import { css, jsx } from '@emotion/core';
+import { jsx } from '@emotion/core';
 import React, { useState, useContext } from "react";
 import PropTypes from 'prop-types';
 import Popover from '../../../../components/Popover/Popover';
-import { Button } from '../../../../components/Button';
+import { Button, FilterButton } from '../../../../components';
 import nanoid from 'nanoid';
 import FilterContext from '../state/FilterContext';
 import get from 'lodash/get';
@@ -132,6 +132,7 @@ export const TaxonFilterPopover = ({ placement, modal, children, ...props }) => 
 export const TaxonFilter = ({ placement, ...props }) => {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
+  const filterName = 'taxonKey';
 
   return (
     <Popover
@@ -139,11 +140,11 @@ export const TaxonFilter = ({ placement, ...props }) => {
       style={{ width: '22em', maxWidth: '100%' }}
       aria-label={`Filter on scientific name`}
       placement={placement}
-      trigger={<FilterButton {...props} filterName="taxonKey" filter={currentFilterContext.filter}></FilterButton>}
+      trigger={<Trigger {...props} filterName={filterName} onClear={()=>currentFilterContext.setField(filterName, [])} filter={currentFilterContext.filter}></Trigger>}
     >
       {({ popover, focusRef }) => {
         return <PopupContent
-          filterName="taxonKey"
+          filterName={filterName}
           onApply={filter => { currentFilterContext.setFilter(filter); popover.hide() }}
           onCancel={() => { popover.hide(); }}
           focusRef={focusRef}
@@ -159,18 +160,20 @@ TaxonFilter.propTypes = {
   placement: PropTypes.string
 };
 
-const FilterButton = React.forwardRef(({ filter, filterName, ...props }, ref) => {
+const Trigger = React.forwardRef(({ filter, onClear, filterName, ...props }, ref) => {
   const appliedFilters = get(filter, `must.${filterName}`, []);
   if (appliedFilters.length === 1) {
     const selected = filter.must[filterName][0];
-    return <Button {...props} ref={ref}>
+    return <FilterButton {...props} ref={ref} isActive onClearRequest={onClear}>
       <CanonicalName id={selected} />
-    </Button>
+    </FilterButton>
   }
   if (appliedFilters.length > 1) {
-    return <Button {...props} ref={ref}>{appliedFilters.length} scientific names</Button>
+    return <FilterButton isActive {...props} ref={ref} onClearRequest={onClear}>
+      {appliedFilters.length} scientific names
+    </FilterButton>
   }
-  return <Button appearance="primaryOutline" {...props} ref={ref}>Scientific name</Button>
+  return <FilterButton {...props} ref={ref}>Scientific name</FilterButton>
 });
 
 FilterButton.displayName = 'FilterButton';

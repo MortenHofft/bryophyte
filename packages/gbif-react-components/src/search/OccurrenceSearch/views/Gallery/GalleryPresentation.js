@@ -1,22 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
+import get from 'lodash/get';
 import { Gallery, GalleryCaption } from '../../../../components';
 
-const mockData = [
-  {
-    src: `https://via.placeholder.com/${100 + 50 * Math.floor(Math.random() * 10)}x150`,
-    scientificName: 'Puma concolor Linneaus',
-    description: 'Observed in Denmark 19 Januar 2017'
-  },
-  {
-    src: `https://via.placeholder.com/${100 + 50 * Math.floor(Math.random() * 10)}x150`,
-    scientificName: 'Flabellina',
-    description: 'Catched in Spain 25 Febrary 2019'
-  }
-];
-
 export const GalleryPresentation = ({ first, prev, next, size, from, result, loading, error }) => {
-  const total = result.hits.total;
-  if (!result.hits.hits) return <div>no content</div>
+  const total = get(result, 'hits.total', 0);
+  const hits = get(result, 'hits.hits');
+  if (!hits) return <div>no content</div>
+  const itemsLeft = total ? total - from : 20;
+  const loaderCount = Math.min(Math.max(itemsLeft, 0), size);
+
   return <Gallery
     caption={({ item }) => <GalleryCaption>
       {item._source.gbifClassification.usage.name}
@@ -25,8 +17,9 @@ export const GalleryPresentation = ({ first, prev, next, size, from, result, loa
     subtitle={item => item.description}
     details={item => <pre>{JSON.stringify(item, null, 2)}</pre>}
     loading={loading || error}
-    items={result.hits.hits}
-    // loadMore={() => setItems(items)}
+    items={hits}
+    loadMore={from + size < total ? () => next() : null}
+    size={loaderCount}
     imageSrc={item => item._source._galleryImages[0].identifier}
   />
 }

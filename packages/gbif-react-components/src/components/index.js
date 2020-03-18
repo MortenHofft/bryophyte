@@ -1,5 +1,5 @@
 export { default as Box } from './Box/Box';
-export * from './Button';
+export { Button, ButtonGroup, FilterButton } from './Button';
 export * from './Switch';
 export * from './Checkbox';
 export { Input } from './Input';
@@ -14,4 +14,5 @@ export { Skeleton } from './Skeleton/Skeleton';
 export { Root } from './Root/Root';
 export { Gallery, GalleryCaption } from './Gallery/Gallery';
 export { ZoomableImage } from './ZoomableImage/ZoomableImage';
+export { Accordion } from './Accordion/Accordion';
 // -- Add imports above this line (required by plopfile.js) --

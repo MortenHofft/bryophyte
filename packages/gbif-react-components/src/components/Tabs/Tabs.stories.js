@@ -14,13 +14,13 @@ export default {
 };
 
 export const Example = () => <>
-  <Tabs defaultActiveId="tab3">
+  <Tabs defaultActiveId="table">
     <TabList aria-labelledby="My tabs">
       <Tab tabId="table">Table</Tab>
       <Tab tabId="map">Map</Tab>
       <Tab tabId="gallery">Gallery</Tab>
     </TabList>
-    <TabPanel tabId="table">Tab content 1</TabPanel>
+    <TabPanel tabId="table">This component still needs accesability considerations. There seem to be great disagreement on the most friendly implementation of tabs</TabPanel>
     <TabPanel tabId="map">Tab content 2</TabPanel>
     <TabPanel tabId="gallery">Tab content 3</TabPanel>
   </Tabs>

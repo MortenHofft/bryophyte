@@ -58,6 +58,7 @@ export const Tab = ({
     'onClick': () => tabContext.onChange(tabId)
   }
   return <Box as={'li'}
+    tabIndex="0"
     css={styles.tab({ theme, isActive, direction })}
     {...tabProps}
     {...props}

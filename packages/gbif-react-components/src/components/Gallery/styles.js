@@ -1,5 +1,5 @@
 import { css } from '@emotion/core';
-// import { focusStyle } from '../../style/shared';
+import { skeletonLoading } from '../../style/shared';
 
 export const gallery = props => css`
   margin: 4px 4px 10px 4px;
@@ -44,6 +44,7 @@ export const caption = props => css`
 export const more = props => css`
   flex: 100 1 auto;
   display: flex;
+  height: ${props.height || 150}px;
   align-items: center;
   color: #888;
   min-width: 100px;
@@ -84,6 +85,7 @@ export const detailDrawerBar = props => css`
 export const detailMainWrapper = props => css`
   flex: 1 1 auto;
   max-width: 100%;
+  overflow: auto;
 `;
 
 export const detailMain = props => css`
@@ -102,6 +104,7 @@ export const detailHeaderDescription = props => css`
 `;
 
 export const detailDrawerContent = props => css`
+  overflow: auto;
   >div {
     width: 300px;
   }
@@ -135,6 +138,14 @@ export const detailNext = props => css`
   right: 0;
 `;
 
+export const skeletonTile = props => css`
+  height: ${props.height}px;
+  width: ${props.height*1.2}px;
+  flex: 1 1 auto;
+  margin: 6px;
+  animation: ${skeletonLoading} 3s linear infinite;
+`;
+
 export const img = props => css``;
 
 export default {
@@ -142,5 +153,6 @@ export default {
   galleryTile,
   more,
   caption,
-  img
+  img,
+  skeletonTile
 }

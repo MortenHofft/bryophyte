@@ -114,7 +114,7 @@ export const loading = (theme) => css`
   &:after {
     animation: ${spinAround} 500ms infinite linear;
     border: 2px solid #dbdbdb;
-    border-radius: 290486px;
+    /* border-radius: 290486px; */
     border-right-color: transparent;
     border-top-color: transparent;
     content: "";
@@ -129,6 +129,25 @@ export const loading = (theme) => css`
   pointer-events: none;
 `;
 
+export const group = (theme) => css`
+  display: flex;
+  > button {
+    border-radius: 0;
+    margin: 0;
+  }
+  >button:first-of-type:not(:last-of-type) {
+    border-right-color: rgba(255,255,255,.2);
+  }
+  >button:first-of-type {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  >button:last-of-type {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+`;
+
 export default {
   button,
   primary,
@@ -139,5 +158,6 @@ export default {
   link,
   loading,
   block,
-  text
+  text,
+  group
 };

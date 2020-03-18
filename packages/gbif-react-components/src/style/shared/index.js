@@ -1,4 +1,4 @@
-import { css } from '@emotion/core';
+import { css, keyframes } from '@emotion/core';
 
 export const placeholder = props => css`
   &::placeholder {
@@ -74,5 +74,20 @@ export const tooltip = props => css`
       top: 120%;
       transform: translateX(50%);
     }
+  }
+`;
+
+export const skeletonLoading = keyframes`
+  from {
+    background-color: #eee;
+  }
+  50% {
+    background-color: #eee;
+  }
+  75% {
+    background-color: #dfdfdf;
+  }
+  to {
+    background-color: #eee;
   }
 `;
