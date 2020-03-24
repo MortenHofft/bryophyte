@@ -42,7 +42,6 @@ export const GalleryTileSkeleton = ({ height=150, ...props }) => {
     title="View details"
     >
     <img src={backgroundImage}
-      css={styles.img({ theme })}
       width={height}
       onLoad={onLoad}
       alt="Occurrence evidence"

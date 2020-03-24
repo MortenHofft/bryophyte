@@ -28,5 +28,6 @@ export const oneOfMany = options => (props, propName, componentName) => {
 
 export const keyCodes = {
   LEFT_ARROW: 37,
-  RIGHT_ARROW: 39
+  RIGHT_ARROW: 39,
+  ENTER: 13,
 };

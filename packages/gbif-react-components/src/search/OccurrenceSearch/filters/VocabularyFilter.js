@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import PropTypes from 'prop-types';
 import Popover from '../../../components/Popover/Popover';
-import { Button } from '../../../components/Button';
+import { Button, FilterButton } from '../../../components/Button';
 import nanoid from 'nanoid';
 import FilterContext from './state/FilterContext';
 import keyBy from 'lodash/keyBy';
@@ -30,7 +30,7 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary,
         <form id={formId} onSubmit={e => e.preventDefault()} >
           {vocabulary && vocabulary.concepts.map((concept, index) => {
             return <Option
-              ref={index === 0 ? focusRef : null}
+              // innerRef={index === 0 ? focusRef : null}
               key={concept.name}
               helpVisible={helpVisible}
               helpText={concept.definition}
@@ -59,7 +59,15 @@ PopupContent.propTypes = {
   filterName: PropTypes.string
 };
 
-export const VocabularyFilter = ({ vocabularyName = 'BasisOfRecord', placement, ...props }) => {
+export const VocabularyFilter = ({ vocabularyName = 'BasisOfRecord', ...props }) => {
+  const currentFilterContext = useContext(FilterContext);
+
+  return <VocabularyFilterPopover modal vocabularyName={vocabularyName}>
+    {({vocabulary}) => <Trigger {...props} vocabulary={vocabulary} onClear={()=>currentFilterContext.setField(vocabularyName, [])} filter={currentFilterContext.filter}></Trigger>}
+  </VocabularyFilterPopover>
+}
+
+export const VocabularyFilterPopover = ({ vocabularyName = 'BasisOfRecord', children, modal, placement, ...props }) => {
   const currentFilterContext = useContext(FilterContext);
   const [vocabulary, setVocabulary] = useState();
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
@@ -72,7 +80,8 @@ export const VocabularyFilter = ({ vocabularyName = 'BasisOfRecord', placement, 
       style={{ width: '22em', maxWidth: '100%' }}
       aria-label={`Filter on ${vocabularyName}`}
       placement={placement}
-      trigger={<FilterButton {...props} vocabulary={vocabulary} filter={currentFilterContext.filter}></FilterButton>}
+      modal={modal}
+      trigger={typeof children === 'function' ? children({vocabulary}) : children}
     >
       {({ popover, focusRef }) => {
         return (vocabulary && <PopupContent
@@ -93,22 +102,22 @@ VocabularyFilter.propTypes = {
   placement: PropTypes.string
 };
 
-const FilterButton = React.forwardRef(({ filter, vocabulary, ...props }, ref) => {
+const Trigger = React.forwardRef(({ filter, onClear, vocabulary, ...props }, ref) => {
   if (!vocabulary) return <Button appearance="primaryOutline" ref={ref} loading={true}>Loading</Button>
 
   const appliedFiltersSet = new Set(get(filter, `must.${vocabulary.name}`, []));
   if (appliedFiltersSet.size === 1) {
     const selected = keyBy(vocabulary.concepts, 'name')[filter.must[vocabulary.name][0]].label;
-    return <Button {...props} ref={ref}>{selected}</Button>
+    return <FilterButton isActive {...props} ref={ref} onClearRequest={onClear}>{selected}</FilterButton>
   }
   if (appliedFiltersSet.size > 1) {
-    return <Button {...props} ref={ref} loading={!vocabulary}>{appliedFiltersSet.size} {vocabulary.label}s</Button>
+    return <FilterButton isActive onClearRequest={onClear} {...props} ref={ref}>{appliedFiltersSet.size} {vocabulary.label}s</FilterButton>
   }
-  return <Button appearance="primaryOutline" {...props} ref={ref} loading={!vocabulary}>{vocabulary.label}</Button>
+  return <FilterButton {...props} ref={ref}>{vocabulary.label}</FilterButton>
 });
 
-FilterButton.displayName = 'FilterButton';
-FilterButton.propTypes = {
+Trigger.displayName = 'FilterButton';
+Trigger.propTypes = {
   filter: PropTypes.object,
   vocabulary: PropTypes.object
 };

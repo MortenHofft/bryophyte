@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import { text, boolean, select } from '@storybook/addon-knobs';
 import { DataTable, Th, Td, TBody } from './DataTable';
 import { Row, Col } from '../index';
-import { TextButton, Button, Popover } from '../index';
+import { Button, Popover } from '../index';
 import { MdFilterList } from "react-icons/md";
 import readme from './README.md';
 import { StyledProse } from '../../typography/StyledProse';
@@ -31,7 +31,7 @@ export const Demo = () => {
         (field, i) => {
           if (i === 0) {
             return <Td key={field}>
-              <TextButton onClick={() => console.log(row)}>{field}_{row}</TextButton>
+              <Button appearance="text" onClick={() => console.log(row)}>{field}_{row}</Button>
             </Td>
           } else {
             return <Td key={field}>{field}_{row}</Td>;
@@ -49,9 +49,9 @@ export const Demo = () => {
         <Col grow={false}>scientificName</Col>
         <Col>
           <TaxonFilterPopover modal>
-            <TextButton style={{ display: 'flex' }}>
+            <Button appearance="text" style={{ display: 'flex' }}>
               <MdFilterList />
-            </TextButton>
+            </Button>
           </TaxonFilterPopover>
           {/* <Popover
             aria-label="Location filter"

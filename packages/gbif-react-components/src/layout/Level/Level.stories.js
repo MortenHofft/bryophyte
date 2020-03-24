@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { text, boolean } from '@storybook/addon-knobs';
 import React from 'react';
 import Level from './Level';
-import Button from '../../components/Button/Button';
+import { Button } from '../../components';
 import { MdApps } from "react-icons/md";
 
 export default {

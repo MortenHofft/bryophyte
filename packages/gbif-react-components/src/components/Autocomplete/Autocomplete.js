@@ -2,7 +2,7 @@
 import { jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext, useEffect } from 'react';
-import Downshift from 'downshift'
+import Downshift from 'downshift';
 import { useDebounce } from "use-debounce"; // example here https://codesandbox.io/s/rr40wnropq
 import PropTypes from 'prop-types';
 import Box from '../Box/Box';
@@ -45,6 +45,7 @@ export const Autocomplete = React.forwardRef(({
         onSuggestionSelected({item: selection, value: itemToString(selection)});
       }
     }
+    defaultHighlightedIndex={0}
     itemToString={itemToString}
   >
     {({

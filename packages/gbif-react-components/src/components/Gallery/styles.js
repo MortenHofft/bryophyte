@@ -146,13 +146,10 @@ export const skeletonTile = props => css`
   animation: ${skeletonLoading} 3s linear infinite;
 `;
 
-export const img = props => css``;
-
 export default {
   gallery,
   galleryTile,
   more,
   caption,
-  img,
   skeletonTile
 }

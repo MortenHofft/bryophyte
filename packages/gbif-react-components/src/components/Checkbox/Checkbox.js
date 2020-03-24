@@ -11,10 +11,10 @@ const Checkbox = React.forwardRef(({
   style = {},
   ...props
 }, ref) => {
-  return <Box as={Span} style={style} className={className} css={checkbox}>
+  return <Span style={style} className={className} css={checkbox}>
     <input type="checkbox" ref={ref} {...props} />
     <span></span>
-  </Box>
+  </Span>
 });
 
 Checkbox.displayName = 'Checkbox'

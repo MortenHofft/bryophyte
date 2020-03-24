@@ -1,9 +1,9 @@
 import axios from '../api/axios';
 import formatFactory from './formatFactory';
 import startCase from 'lodash/startCase';
+import isUndefined from 'lodash/isUndefined';
 
 // TODO move endpoints to config
-
 let endpoints = {
   dataset: '//api.gbif.org/v1/dataset',
   publisher: '//api.gbif.org/v1/dataset',
@@ -60,9 +60,9 @@ let displayName = [
     format: id => {
       if (typeof id === 'object') {
         let title;
-        if (_.isUndefined(id.gte)) {
+        if (isUndefined(id.gte)) {
           title = `before ${id.lt}`;  
-        } else if(_.isUndefined(id.lt)) {
+        } else if(isUndefined(id.lt)) {
           title = `after ${id.gte}`;  
         } else if(id.gte === id.lt) {
           title = id.gte;

@@ -3,6 +3,7 @@ import { Button, Row, Col, DataTable, Th, Td, TBody } from '../../../../componen
 import { MdFilterList } from "react-icons/md";
 import get from 'lodash/get';
 import { TaxonFilterPopover } from '../../filters/TaxonFilter4/TaxonFilter';
+import { VocabularyFilterPopover } from '../../filters/VocabularyFilter';
 
 const getRows = ({ result }) => {
   const hits = result.hits.hits;
@@ -45,13 +46,21 @@ export const TablePresentation = ({ first, prev, next, size, from, result, loadi
           </TaxonFilterPopover>
         </Col>
       </Row>
-
     </Th>,
     <Th key='year'>
       year
     </Th>,
     <Th key='basisOfRecord' width='wide'>
-      basisOfRecord
+      <Row>
+        <Col grow={false}>Basis of record</Col>
+        <Col>
+          <VocabularyFilterPopover modal>
+            <Button appearance="text" style={{ display: 'flex' }}>
+              <MdFilterList />
+            </Button>
+          </VocabularyFilterPopover>
+        </Col>
+      </Row>
     </Th>,
     <Th key='datasetTitle' width='wide'>
       datasetTitle

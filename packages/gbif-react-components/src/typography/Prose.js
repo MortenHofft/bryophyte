@@ -20,9 +20,6 @@ export const ol = ({ theme }) => css`
     counter-reset: listitem;
     list-style: none; 
   }
-  ol:not(:first-child) {
-    margin-top: 8px;
-  }
   ol>li {
     position: relative;
     margin: 4px 0;
@@ -108,6 +105,9 @@ export const prose = ({ theme }) => css`
     ${h6(theme)};
   }
   ${ol(theme)};
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
 

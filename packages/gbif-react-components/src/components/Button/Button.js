@@ -50,16 +50,17 @@ export const FilterButton = React.forwardRef(({
   isActive,
   onClearRequest=()=>{},
   onClick,
+  loading,
   children,
   ...props
 }, ref) => {
   if (!isActive) {
     return <ButtonGroup {...props}>
-      <Button ref={ref} appearance="primaryOutline" onClick={onClick}>{children}</Button>
+      <Button ref={ref} loading={loading} appearance="primaryOutline" onClick={onClick}>{children}</Button>
     </ButtonGroup>
   }
   return <ButtonGroup {...props}>
-    <Button appearance="primary" ref={ref} onClick={onClick}>{children}</Button>
+    <Button appearance="primary" ref={ref} onClick={onClick} loading={loading}>{children}</Button>
     <Button appearance="primary" onClick={onClearRequest}>
       <MdClose />
     </Button>

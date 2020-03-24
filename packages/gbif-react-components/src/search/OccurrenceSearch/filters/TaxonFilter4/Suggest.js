@@ -85,7 +85,8 @@ class Suggest extends React.Component {
     const inputProps = {
       placeholder: 'Search scientific names',
       value,
-      onChange: this.onChange
+      onChange: this.onChange,
+      onKeyPress: this.props.onKeyPress
     };
 
     // Finally, render it!

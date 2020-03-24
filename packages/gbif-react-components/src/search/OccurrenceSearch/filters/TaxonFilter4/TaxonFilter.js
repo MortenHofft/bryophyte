@@ -1,32 +1,25 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import PropTypes from 'prop-types';
 import Popover from '../../../../components/Popover/Popover';
-import { Button, FilterButton } from '../../../../components';
+import { TriggerButton } from '../TriggerButton';
 import nanoid from 'nanoid';
 import FilterContext from '../state/FilterContext';
 import get from 'lodash/get';
 import union from 'lodash/union';
-import formatters from '../../displayNames/formatters';
+import displayValue from '../../displayNames/displayValue';
+import { keyCodes } from '../../../../utils/util';
 
 import { Option, Filter, SummaryBar, FilterBody, Footer } from '../../../../widgets/Filter';
 import Suggest from './Suggest';
-import axios from '../../../../search/OccurrenceSearch/api/axios';
-import ThemeContext from '../../../../style/themes/ThemeContext';
 
-const ScientificName = formatters('scientificName').component;
-const CanonicalName = formatters('canonicalName').component;
+const ScientificName = displayValue('scientificName').component;
 
-function getData(q, options) {
-  return axios.get(`//api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&limit=10&q=${q}`, options);
-}
-
-function PopupContent({ onApply, onCancel, onFilterChange, focusRef, filterName, initFilter }) {
+export const PopupContent = ({ hide, onApply, onCancel, onFilterChange, focusRef, filterName, initFilter }) => {
   const [id] = React.useState(nanoid);
   const initialOptions = get(initFilter, `must.${filterName}`, []);
   const [options, setOptions] = useState(initialOptions);
-  const theme = useContext(ThemeContext);
 
   return <Filter
     onApply={onApply}
@@ -38,16 +31,19 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, filterName,
     formId={id}
     defaultFilter={initFilter}
   >
-    {({ filter, toggle, checkedMap, selectedItems, formId, summaryProps, footerProps }) => {
+    {({ filter, toggle, checkedMap, formId, summaryProps, footerProps }) => {
       return <>
-        <Suggest focusRef={focusRef} onSuggestionSelected={({ item }) => {
+        <Suggest 
+          focusRef={focusRef} 
+          onKeyPress={e => e.which === keyCodes.ENTER ? onApply(filter) : null}
+          onSuggestionSelected={({ item }) => {
           const allOptions = union(options, [item.key]);
           setOptions(allOptions);
           toggle(filterName, item.key);
         }} />
         {options.length > 0 && <>
           <SummaryBar {...summaryProps} style={{ marginTop: 0 }} />
-          <FilterBody>
+          <FilterBody onKeyPress={e => e.which === keyCodes.ENTER ? onApply(filter) : null}>
             <form id={formId} onSubmit={e => e.preventDefault()} >
               {options.map((taxonKey) => {
                 return <Option
@@ -61,50 +57,82 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, filterName,
             </form>
           </FilterBody>
           <Footer {...footerProps}
-            onApply={() => onApply(filter)}
-            onCancel={() => onCancel(filter)}
+            onApply={() => onApply({filter, hide})}
+            onCancel={() => onCancel({filter, hide})}
           />
         </>}
       </>
     }
     }
   </Filter>
-}
+};
 
 PopupContent.propTypes = {
   onApply: PropTypes.func,
   onCancel: PropTypes.func,
   onFilterChange: PropTypes.func,
+  hide: PropTypes.func,
   focusRef: PropTypes.any,
   vocabulary: PropTypes.object,
   initFilter: PropTypes.object,
   filterName: PropTypes.string
 };
 
-export const TaxonomySearchBar = ({ checkedMap, filterName, toggle, ...props }) => {
-  const theme = useContext(ThemeContext);
-  return <FilterSuggest
-    {...props}
-    suggest={getData}
-    keyBy="key"
-    itemToString={item => item.scientificName}
-    selectedSet={checkedMap}
-    itemRenderer={({ item, isHighlighted, selected }) => <div css={filterSuggestOption(theme, { isHighlighted, selected })}>
-      <div>
-        {item.scientificName}
-      </div>
-      <div className="gbif-help-text">
-        <Classification taxon={item} />
-      </div>
-    </div>
-    }
-    onSelect={item => toggle(filterName, item.key)}
+export const TaxonFilterContent = ({ placement, modal, children }) => {
+  const currentFilterContext = useContext(FilterContext);
+  const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
+
+  useEffect(() => {
+    setFilter(currentFilterContext.filter);
+  }, [currentFilterContext.filter]);
+
+  const onApply = useCallback(({filter, hide}) => {
+    currentFilterContext.setFilter(filter);
+    hide();
+  }, [currentFilterContext]);
+
+  const onCancel = useCallback(({hide}) => {
+    hide();
+  }, []);
+
+  const onFilterChange = useCallback(filter => {
+    setFilter(filter);
+  }, []);
+
+  return <PopupContent
+    filterName="taxonKey"
+    // onApply={filter => { currentFilterContext.setFilter(filter) }}
+    // onCancel={emptyFunc}
+    // onFilterChange={emptyFunc}
+    // initFilter={currentFilterContext.filter}
+    hide={() => console.log('hide')}
+    onApply={onApply}
+    onCancel={onCancel}
+    onFilterChange={onFilterChange}
+    initFilter={currentFilterContext.filter}
   />
 }
 
-export const TaxonFilterPopover = ({ placement, modal, children, ...props }) => {
+export const TaxonFilterPopover = ({ placement, modal, children }) => {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
+
+  useEffect(() => {
+    setFilter(currentFilterContext.filter);
+  }, [currentFilterContext.filter]);
+
+  const onApply = useCallback(({filter, hide}) => {
+    currentFilterContext.setFilter(filter);
+    hide();
+  }, [currentFilterContext]);
+
+  const onCancel = useCallback(({hide}) => {
+    hide();
+  }, []);
+
+  const onFilterChange = useCallback(filter => {
+    setFilter(filter);
+  }, []);
 
   return (
     <Popover
@@ -115,69 +143,32 @@ export const TaxonFilterPopover = ({ placement, modal, children, ...props }) => 
       trigger={children}
       modal={modal}
     >
-      {({ popover, focusRef }) => {
+      {({ hide, focusRef }) => {
         return <PopupContent
           filterName="taxonKey"
-          onApply={filter => { currentFilterContext.setFilter(filter); popover.hide() }}
-          onCancel={() => { popover.hide(); }}
-          focusRef={focusRef}
-          onFilterChange={filter => setFilter(filter)}
+          // onApply={filter => { currentFilterContext.setFilter(filter) }}
+          // onCancel={emptyFunc}
+          // onFilterChange={emptyFunc}
+          // initFilter={currentFilterContext.filter}
+          hide={hide}
+          onApply={onApply}
+          onCancel={onCancel}
+          onFilterChange={onFilterChange}
           initFilter={currentFilterContext.filter}
+          focusRef={focusRef}
         />
       }}
     </Popover>
   );
 }
 
-export const TaxonFilter = ({ placement, ...props }) => {
+const emptyFunc = () => {};
+
+export const TaxonFilter = ({ ...props }) => {
   const currentFilterContext = useContext(FilterContext);
-  const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
   const filterName = 'taxonKey';
 
-  return (
-    <Popover
-      onClickOutside={popover => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
-      style={{ width: '22em', maxWidth: '100%' }}
-      aria-label={`Filter on scientific name`}
-      placement={placement}
-      trigger={<Trigger {...props} filterName={filterName} onClear={()=>currentFilterContext.setField(filterName, [])} filter={currentFilterContext.filter}></Trigger>}
-    >
-      {({ popover, focusRef }) => {
-        return <PopupContent
-          filterName={filterName}
-          onApply={filter => { currentFilterContext.setFilter(filter); popover.hide() }}
-          onCancel={() => { popover.hide(); }}
-          focusRef={focusRef}
-          onFilterChange={filter => setFilter(filter)}
-          initFilter={currentFilterContext.filter}
-        />
-      }}
-    </Popover>
-  );
+  return <TaxonFilterPopover modal>
+    <TriggerButton {...props} filterName={filterName} displayValueAs="canonicalName" options={get(currentFilterContext.filter, `must.${filterName}`)} />
+  </TaxonFilterPopover>
 }
-
-TaxonFilter.propTypes = {
-  placement: PropTypes.string
-};
-
-const Trigger = React.forwardRef(({ filter, onClear, filterName, ...props }, ref) => {
-  const appliedFilters = get(filter, `must.${filterName}`, []);
-  if (appliedFilters.length === 1) {
-    const selected = filter.must[filterName][0];
-    return <FilterButton {...props} ref={ref} isActive onClearRequest={onClear}>
-      <CanonicalName id={selected} />
-    </FilterButton>
-  }
-  if (appliedFilters.length > 1) {
-    return <FilterButton isActive {...props} ref={ref} onClearRequest={onClear}>
-      {appliedFilters.length} scientific names
-    </FilterButton>
-  }
-  return <FilterButton {...props} ref={ref}>Scientific name</FilterButton>
-});
-
-FilterButton.displayName = 'FilterButton';
-FilterButton.propTypes = {
-  filter: PropTypes.object,
-  filterName: PropTypes.string
-};

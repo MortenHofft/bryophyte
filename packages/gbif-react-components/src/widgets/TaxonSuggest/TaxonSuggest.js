@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { css, cx } from 'emotion';
-import formatters from '../../search/OccurrenceSearch/displayNames/formatters';
+import displayValue from '../../search/OccurrenceSearch/displayNames/displayValue';
 import { useCombobox } from "downshift"; // example usage here https://codesandbox.io/s/usecombobox-usage-evufg
 import { useDebounce } from "use-debounce"; // example here https://codesandbox.io/s/rr40wnropq
 import axios from '../../search/OccurrenceSearch/api/axios';
 
 function getData(q, options) {
-  return axios.get(`http://api.gbif.org/v1/species/suggest?q=${q}`, options);
+  return axios.get(`http://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&limit=10&q=${q}`, options);
 }
 
 function TaxonSuggest() {

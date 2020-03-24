@@ -1,7 +1,7 @@
-import { css, keyframes } from '@emotion/core';
-import { helper } from '../../utils/helper';
+import { css } from '@emotion/core';
+// import { helper } from '../../utils/helper';
 
-export const row = ({theme, ...props}) => css`
+export const row = props => css`
   display: flex;
   flex-direction: ${props.direction || null};
   flex-wrap: ${props.wrap ? props.wrap : 'wrap'};
@@ -20,7 +20,7 @@ const getFlexSize = (size, breakpoint) => css`
   }
 `;
 
-export const col = ({theme, shrink, grow, basis, xs, ...props}) => css`
+export const col = ({shrink, grow, basis, xs, ...props}) => css`
   flex-grow: ${asFlexValue(grow)};
   flex-shrink: ${asFlexValue(shrink)};
   flex-basis: ${basis ? typeof basis === 'number' ? basis + '%' : basis : 'auto'};

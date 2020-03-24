@@ -14,3 +14,5 @@ Describe gbif-react-components here.
 
 [coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
 [coveralls]: https://coveralls.io/github/user/repo
+
+Do a prod build `npm run build`;

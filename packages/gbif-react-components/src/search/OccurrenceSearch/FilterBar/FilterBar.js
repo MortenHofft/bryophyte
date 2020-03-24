@@ -4,7 +4,7 @@ import withContext from '../state/withContext';
 import React, { useContext } from 'react';
 import ThemeContext from 'style/themes/ThemeContext';
 import { VocabularyFilter } from '../filters/VocabularyFilter';
-import { TaxonFilter as TaxonFilter4 } from '../filters/TaxonFilter4/TaxonFilter';
+// import { TaxonFilter as TaxonFilter4 } from '../filters/TaxonFilter4/TaxonFilter';
 
 const FilterBar = ({
   className = '',
@@ -17,8 +17,9 @@ const FilterBar = ({
   const elementName = 'filterBar';
   return <div className={`${className} ${prefix}-${elementName}`}
     css={css`${style(theme)}`} {...props}>
-    <div><TaxonFilter4 css={css`margin-right: 4px;`} /></div>
+    {/* <div><TaxonFilter4 css={css`margin-right: 4px;`} /></div> */}
     <div><VocabularyFilter css={css`margin-right: 4px;`} /></div>
+    <div><VocabularyFilter vocabularyName="Country" css={css`margin-right: 4px;`} /></div>
   </div>
 }
 

@@ -12,7 +12,7 @@ import {
 import Switch from '../Switch/Switch';
 import Box from '../Box/Box';
 
-export const Menu = ({ trigger, placement, items, ...props }) => {
+export const Menu = React.memo(({ trigger, placement, items, ...props }) => {
   const theme = useContext(ThemeContext);
   const menu = useMenuState({ placement: placement || 'bottom-end' });
   return (
@@ -31,7 +31,7 @@ export const Menu = ({ trigger, placement, items, ...props }) => {
       </BaseMenu>
     </>
   );
-}
+});
 
 export const MenuToggle = React.forwardRef(({
   children,

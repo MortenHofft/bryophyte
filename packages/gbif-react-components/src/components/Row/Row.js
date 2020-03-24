@@ -26,9 +26,7 @@ const GetComponent = rowComponentStyle => React.forwardRef(({
   xl,
   ...props
 }, ref) => {
-  const theme = useContext(ThemeContext);
-  return <Box as={As} ref={ref} style={style} className={className} {...props} css={rowComponentStyle({
-    theme,
+  return <As ref={ref} style={style} className={className} {...props} css={rowComponentStyle({
     wrap,
     direction,
     alignItems,

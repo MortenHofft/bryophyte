@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-// TODO move styling to jss
+// TODO move styling to emotion to theme
 
 export default getData =>
   class Format extends Component {

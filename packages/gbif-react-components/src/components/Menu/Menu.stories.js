@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, MenuAction, MenuToggle } from './Menu';
-import Button from '../Button/Button';
+import { Button } from '../index';
 
 export default {
   title: 'Components/Menu',
