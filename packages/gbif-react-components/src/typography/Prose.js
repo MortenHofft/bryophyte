@@ -2,15 +2,14 @@
 import { css, jsx } from '@emotion/core';
 import ThemeContext from '../style/themes/ThemeContext';
 import React, { useContext } from 'react';
-import Box from '../components/Box/Box';
 
 export const Prose = React.forwardRef(({
   as: Div = 'div',
   ...props
 }, ref) => {
   const theme = useContext(ThemeContext);
-  return <Box as={Div} {...props} css={prose({ theme })}>
-  </Box>
+  return <Div {...props} css={prose({ theme })}>
+  </Div>
 });
 
 export const test = ({ theme }) => css``;

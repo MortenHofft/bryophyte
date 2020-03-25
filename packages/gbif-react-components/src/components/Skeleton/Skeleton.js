@@ -4,7 +4,6 @@ import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 // import { oneOfMany } from '../../utils/util';
-import Box from '../Box/Box';
 import styles from './styles';
 
 export const Skeleton = ({
@@ -20,7 +19,7 @@ export const Skeleton = ({
   } else {
     w = width;
   }
-  return <Box css={styles.skeleton({theme, width: w})} {...props} />
+  return <div css={styles.skeleton({theme, width: w})} {...props} />
 };
 
 Skeleton.displayName = 'Skeleton';

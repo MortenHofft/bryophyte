@@ -13,7 +13,7 @@ import {
   PopoverArrow,
   PopoverBackdrop
 } from "reakit/Popover";
-import { Root } from '../index';
+import { Root } from '../Root/Root';
 
 const Popover = ({ trigger, placement, visible, modal, onClickOutside, children, ...props }) => {
   const theme = useContext(ThemeContext);

@@ -1,7 +1,7 @@
 import React from 'react';
 // import { text, boolean, select } from '@storybook/addon-knobs';
 import { Autocomplete } from './Autocomplete';
-import Example from './Example';
+import { Example } from './Example';
 import readme from './README.md';
 import { StyledProse } from '../../typography/StyledProse';
 

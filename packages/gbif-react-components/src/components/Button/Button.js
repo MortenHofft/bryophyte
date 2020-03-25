@@ -3,7 +3,6 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import Box from '../Box/Box';
 import { Button as ButtonA11y } from "reakit/Button";
 import styles from './Button.styles';
 import { getClasses } from '../../utils/util';
@@ -21,7 +20,7 @@ export const Button = React.forwardRef(({
   // const appliedTheme = isEmpty(theme) ? standardTheme : theme;
   const appliedTheme = theme;
   const { classesToApply, humanClasses } = getClasses(appliedTheme, 'button', classes);
-  return <Box as={ButtonA11y} ref={ref} className={`${humanClasses} ${className}`} css={css`
+  return <ButtonA11y ref={ref} className={`${humanClasses} ${className}`} css={css`
         ${styles.button(appliedTheme)}
         ${classesToApply.map(x => styles[x](appliedTheme))};
       `} {...props} />
@@ -41,7 +40,7 @@ export const ButtonGroup = ({
   ...props
 }) => {
   const theme = useContext(ThemeContext);
-  return <Box css={styles.group({theme})} {...props} />
+  return <div css={styles.group({theme})} {...props} />
 };
 
 ButtonGroup.displayName = 'ButtonGroup'

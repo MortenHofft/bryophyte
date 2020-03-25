@@ -3,15 +3,15 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import Box from '../Box/Box';
 
-const Checkbox = React.forwardRef(({
+export const Checkbox = React.forwardRef(({
   as: Span = 'span',
   className = '',
   style = {},
   ...props
 }, ref) => {
-  return <Span style={style} className={className} css={checkbox}>
+  const theme = useContext(ThemeContext);
+  return <Span style={style} className={className} css={checkbox({theme})}>
     <input type="checkbox" ref={ref} {...props} />
     <span></span>
   </Span>
@@ -23,9 +23,7 @@ Checkbox.propTypes = {
   as: PropTypes.oneOf(['span', 'div'])
 }
 
-export default Checkbox;
-
-const checkbox = css`
+const checkbox = props => css`
   position: relative;
   top: -0.09em;
   display: inline-block;

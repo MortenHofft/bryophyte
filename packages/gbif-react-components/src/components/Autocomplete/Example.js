@@ -32,7 +32,7 @@ const renderSuggestion = suggestion => (
   </div >
 );
 
-class Example extends React.Component {
+export class Example extends React.Component {
   constructor() {
     super();
 
@@ -106,9 +106,6 @@ class Example extends React.Component {
     );
   }
 }
-
-export default Example;
-
 
 export const Classification = ({ taxon, ...props }) => {
   const ranks = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];

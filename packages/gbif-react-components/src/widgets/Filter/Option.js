@@ -5,30 +5,31 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Checkbox } from '../../components';
 
-const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible, ...props }, ref) => {
+export const Option = React.forwardRef(({ label, checked, onChange, helpText, helpVisible, ...props }, ref) => {
   const theme = {};//useContext(ThemeContext);
-  // return <label css={optionClass(theme)} style={{display: 'flex', wrap: 'nowrap'}}>
-  //   <div>
-  //     <Checkbox ref={ref} checked={checked} onChange={onChange} style={{flex: '0 0 auto'}}/>
-  //   </div>
-  //   <div style={{flex: '1 1 auto'}}>
-  //     <div>{label}</div>
-  //     {helpVisible && helpText && <div style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
-  //       {helpText}
-  //     </div>}
-  //   </div>
-  // </label>
-  return <Row as="label" {...props} css={optionClass(theme)} halfGutter={4} wrap="nowrap">
-    <Col grow={false} shrink={false}>
-      <Checkbox ref={ref} checked={checked} onChange={onChange} />
-    </Col>
-    <Col>
+  return <label css={optionClass(theme)} style={{display: 'flex', wrap: 'nowrap'}}>
+    <div>
+      <Checkbox ref={ref} checked={checked} onChange={onChange} style={{flex: '0 0 auto'}}/>
+    </div>
+    <div style={{flex: '1 1 auto', marginLeft: 10}}>
       <div>{label}</div>
       {helpVisible && helpText && <div style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
         {helpText}
       </div>}
-    </Col>
-  </Row>
+    </div>
+  </label>
+  
+  // return <Row as="label" {...props} css={optionClass(theme)} halfGutter={4} wrap="nowrap">
+  //   <Col grow={false} shrink={false}>
+  //     <Checkbox ref={ref} checked={checked} onChange={onChange} />
+  //   </Col>
+  //   <Col>
+  //     <div>{label}</div>
+  //     {helpVisible && helpText && <div style={{ marginTop: 4, fontSize: '0.85em', color: '#aaa' }}>
+  //       {helpText}
+  //     </div>}
+  //   </Col>
+  // </Row>
 });
 
 Option.propTypes = {
@@ -49,5 +50,4 @@ const optionClass = theme => css`
   }
 `;
 
-export default Option;
 

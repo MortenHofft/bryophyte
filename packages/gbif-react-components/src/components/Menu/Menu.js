@@ -10,7 +10,6 @@ import {
 } from "reakit/Menu";
 
 import Switch from '../Switch/Switch';
-import Box from '../Box/Box';
 
 export const Menu = React.memo(({ trigger, placement, items, ...props }) => {
   const theme = useContext(ThemeContext);
@@ -55,9 +54,9 @@ export const MenuAction = React.forwardRef(({
 }, ref) => {
   const theme = useContext(ThemeContext);
   return (
-    <Box as="button" ref={ref} css={menuAction(theme)} {...props}>
+    <button ref={ref} css={menuAction(theme)} {...props}>
       <span>{children}</span>
-    </Box>
+    </button>
   )
 });
 

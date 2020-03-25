@@ -3,7 +3,6 @@ import { css, jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import Box from '../Box/Box';
 
 const Switch = React.forwardRef(({
   as: Span = 'span',
@@ -12,10 +11,10 @@ const Switch = React.forwardRef(({
   ...props
 }, ref) => {
   const theme = useContext(ThemeContext);
-  return <Box as={Span} style={style} className={className} css={switchClass(theme)}>
+  return <Span style={style} className={className} css={switchClass(theme)}>
     <input type="checkbox" ref={ref} {...props} ></input>
     <span></span>
-  </Box>
+  </Span>
 });
 
 Switch.displayName = 'Switch';

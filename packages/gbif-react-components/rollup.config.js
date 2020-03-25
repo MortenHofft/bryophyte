@@ -6,8 +6,9 @@ import external from "rollup-plugin-peer-deps-external";
 import replace from 'rollup-plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import filesize from 'rollup-plugin-filesize';
-import regeneratorRuntime from 'regenerator-runtime';
 import pkg from './package.json';
+// eslint-disable-next-line no-unused-vars
+import regeneratorRuntime from 'regenerator-runtime'; // set globals that are required
 
 const GLOBALS = {
 	react: 'React',
@@ -28,8 +29,7 @@ export default [
 		},
 		external: [
 			'react',
-			'react-dom',
-			'prop-types',
+			'react-dom'
 		],
 		plugins: [
 			resolve({
@@ -39,7 +39,9 @@ export default [
 			}), // so Rollup can find `dependencies`
 			babel({
 				exclude: 'node_modules/**',
-				plugins: ['transform-react-remove-prop-types', '@babel/plugin-transform-runtime'],
+				plugins: [
+					['transform-react-remove-prop-types', { removeImport: true }], 
+					'@babel/plugin-transform-runtime'],
 				runtimeHelpers: true
 			}),
 			commonjs({
@@ -85,7 +87,7 @@ export default [
 			}),
 			babel({
 				exclude: 'node_modules/**',
-				plugins: ['@babel/plugin-transform-runtime'],
+				plugins: ['transform-react-remove-prop-types', '@babel/plugin-transform-runtime'],
 				runtimeHelpers: true,
 			}),
 			localResolve(),

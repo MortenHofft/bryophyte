@@ -4,7 +4,6 @@ import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { createPopper } from '@popperjs/core';
-import Box from '../Box/Box';
 import styles from './styles';
 
 export class Popper extends React.Component {

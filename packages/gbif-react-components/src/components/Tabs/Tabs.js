@@ -5,7 +5,6 @@ import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { oneOfMany } from '../../utils/util';
-import { Box } from '../index';
 import styles from './styles';
 import { uncontrollable } from 'uncontrollable';
 
@@ -34,7 +33,7 @@ export const TabList = ({
   ...props
 }) => {
   const theme = useContext(ThemeContext);
-  return <Box as="ul"
+  return <ul
     css={styles.tabList({ theme })}
     {...props} />
 };
@@ -58,7 +57,7 @@ export const Tab = ({
     'id': `${tabId}_tab`,
     'onClick': () => tabContext.onChange(tabId)
   }
-  return <Box as={'li'}
+  return <li
     tabIndex="0"
     css={styles.tab({ theme, isActive, direction })}
     {...tabProps}
@@ -82,7 +81,7 @@ export const TabPanel = ({
   const tabContext = useContext(TabsContext);
   const isActive = tabContext.activeId === tabId;
   if (lazy && !isActive) return null;
-  return <Box
+  return <div
     id={`${tabId}_panel`}
     aria-labelledby={`${tabId}_tab`}
     // css={styles.tabs({theme})}

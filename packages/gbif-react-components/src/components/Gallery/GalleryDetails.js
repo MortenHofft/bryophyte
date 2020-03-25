@@ -5,11 +5,16 @@ import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { MdInfo, MdClose, MdChevronLeft, MdChevronRight } from 'react-icons/md'
 // import PropTypes from 'prop-types';
 import { keyCodes } from '../../utils/util';
-import { ZoomableImage, Button, Row, Col, Tabs } from '../index';
+import { Row, Col } from '../Row/Row';
+import { ZoomableImage } from '../ZoomableImage/ZoomableImage';
+import { Button } from '../Button/Button';
+import { Root } from '../Root/Root';
+import { Tabs } from '../Tabs/Tabs';
 import { detailPage, detailHeader, detailPrev, detailNext, detailHeaderDescription, detailMainWrapper, detailMain, detailDrawerBar, detailDrawerContent } from './styles';
-import { getThumbnail } from './Gallery';
 
 const { TabList, Tab, TabPanel } = Tabs;
+
+export const getThumbnail = src => `//api.gbif.org/v1/image/unsafe/x150/${encodeURIComponent(src)}`;
 
 export const GalleryDetails = ({
   closeRequest,
@@ -40,44 +45,46 @@ export const GalleryDetails = ({
     }
   }, [next, previous]);
 
-  return <Tabs activeId={activeId} onChange={id => setTab(id === activeId ? undefined : id)}>
-    <Row as="section" direction="column" wrap="nowrap" {...props} css={detailPage({ theme })}>
-      <Row css={detailHeader} alignItems="center">
-        <Col>
-          {item && <h2>{title}</h2>}
-          {subtitle && <div css={detailHeaderDescription}>
-            {subtitle}
-          </div>}
-        </Col>
-        <Col grow={false}>
-          <Button appearance="text" onClick={closeRequest}>
-            <MdClose />
-          </Button>
-        </Col>
-      </Row>
-      <Row css={detailMainWrapper} wrap="nowrap">
-        <Col css={detailMain} shrink={true} basis="100%">
-          <div css={detailPrev} onClick={() => previous()}><MdChevronLeft /></div>
-          {item && <ZoomableImage src={imageSrc(item)} thumbnail={getThumbnail(imageSrc(item))}/>}
-          <div css={detailNext} onClick={() => next()}><MdChevronRight /></div>
-        </Col>
-        {details && <>
-          <Col shrink={false} grow={false} css={detailDrawerBar}>
-            <TabList aria-label="Details">
-              <Tab tabId="details" direction="left">
-                <MdInfo />
-              </Tab>
-            </TabList>
+  return <Root>
+    <Tabs activeId={activeId} onChange={id => setTab(id === activeId ? undefined : id)}>
+      <Row as="section" direction="column" wrap="nowrap" {...props} css={detailPage({ theme })}>
+        <Row css={detailHeader} alignItems="center">
+          <Col>
+            {item && <h2>{title}</h2>}
+            {subtitle && <div css={detailHeaderDescription}>
+              {subtitle}
+            </div>}
           </Col>
-          <Col shrink={false} grow={false} css={detailDrawerContent}>
-            <TabPanel tabId='details'>
-              {details(item)}
-            </TabPanel>
+          <Col grow={false}>
+            <Button appearance="text" onClick={closeRequest}>
+              <MdClose />
+            </Button>
           </Col>
-        </>}
+        </Row>
+        <Row css={detailMainWrapper} wrap="nowrap">
+          <Col css={detailMain} shrink={true} basis="100%">
+            <div css={detailPrev} onClick={() => previous()}><MdChevronLeft /></div>
+            {item && <ZoomableImage src={imageSrc(item)} thumbnail={getThumbnail(imageSrc(item))}/>}
+            <div css={detailNext} onClick={() => next()}><MdChevronRight /></div>
+          </Col>
+          {details && <>
+            <Col shrink={false} grow={false} css={detailDrawerBar}>
+              <TabList aria-label="Details">
+                <Tab tabId="details" direction="left">
+                  <MdInfo />
+                </Tab>
+              </TabList>
+            </Col>
+            <Col shrink={false} grow={false} css={detailDrawerContent}>
+              <TabPanel tabId='details'>
+                {details(item)}
+              </TabPanel>
+            </Col>
+          </>}
+        </Row>
       </Row>
-    </Row>
-  </Tabs>
+    </Tabs>
+  </Root>
 };
 
 GalleryDetails.displayName = 'Gallery';

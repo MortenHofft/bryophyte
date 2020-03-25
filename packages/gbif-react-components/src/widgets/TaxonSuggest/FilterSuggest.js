@@ -7,7 +7,7 @@ import { useDebounce } from "use-debounce"; // example here https://codesandbox.
 import axios from '../../search/OccurrenceSearch/api/axios';
 import { focusStyle } from '../../style/shared';
 import { StripeLoader } from '../../components/Loaders';
-import { Input } from '../../components/Input';
+import { Input } from '../../components/Input/Input';
 import { FilterBody } from '../Filter';
 
 export const FilterSuggest2 = ({ onSelect }) => {

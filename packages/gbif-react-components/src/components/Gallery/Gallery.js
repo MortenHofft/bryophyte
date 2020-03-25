@@ -2,14 +2,12 @@
 import { jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
-import { useDialogState, Dialog, DialogDisclosure } from "reakit/Dialog";
+import { useDialogState, Dialog } from "reakit/Dialog";
 // import PropTypes from 'prop-types';
 // import { oneOfMany } from '../../utils/util';
-import { Box, Button } from '../index';
+import { Button } from '../Button/Button';
 import styles from './styles';
-import { GalleryDetails } from './GalleryDetails';
-
-export const getThumbnail = src => `//api.gbif.org/v1/image/unsafe/x150/${encodeURIComponent(src)}`;
+import { GalleryDetails, getThumbnail } from './GalleryDetails';
 
 export const GalleryTileSkeleton = ({ height=150, ...props }) => {
   return <div css={styles.skeletonTile({height})} {...props}></div>
@@ -98,7 +96,7 @@ export const Gallery = ({
         previous={prev}
         />}
     </Dialog>}
-    <Box css={styles.gallery({ theme })} {...props}>
+    <div css={styles.gallery({ theme })} {...props}>
       {items.map((e, i) => {
         return <GalleryTile key={i} 
           src={imageSrc(e)} 
@@ -110,7 +108,7 @@ export const Gallery = ({
       <div css={styles.more({ theme, height: 150 })}>
         {loadMore && !loading && <Button appearance="outline" onClick={loadMore}>Load more</Button>}
       </div>
-    </Box>
+    </div>
   </>
 };
 

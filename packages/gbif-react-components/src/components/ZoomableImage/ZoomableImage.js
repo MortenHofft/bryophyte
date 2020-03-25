@@ -2,11 +2,11 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
 import ThemeContext from '../../style/themes/ThemeContext';
-import React, { useContext, useRef, useState, useCallback, useEffect } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { MdFullscreen, MdFullscreenExit } from 'react-icons/md';
 import PropTypes from 'prop-types';
 // import { oneOfMany } from '../../utils/util';
-import {Box, Button} from '../index';
+import { Button } from '../Button/Button';
 import styles from './styles';
 
 export const ZoomableImage = React.forwardRef(({
@@ -30,7 +30,7 @@ export const ZoomableImage = React.forwardRef(({
     }
   },[src, thumbnail]);
 
-  return <Box ref={wrapperRef} css={styles.zoomableImage({ theme })} {...props}>
+  return <div ref={wrapperRef} css={styles.zoomableImage({ theme })} {...props}>
     <div css={styles.image({theme, src: imageSrc, blur: imageSrc === thumbnail})}></div>
     <div css={styles.toolBar({ theme, src })}>
       <Button appearance="text" ref={ref} onClick={() => {
@@ -41,7 +41,7 @@ export const ZoomableImage = React.forwardRef(({
         {isFullscreen ? <MdFullscreenExit /> : <MdFullscreen />}
       </Button>
     </div>
-  </Box>
+  </div>
 });
 
 ZoomableImage.displayName = 'ZoomableImage';

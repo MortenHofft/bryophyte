@@ -2,13 +2,12 @@
 import { css, jsx } from '@emotion/core';
 import React, { useContext } from 'react';
 import ThemeContext from '../../style/themes/ThemeContext';
-import Box from '../Box/Box';
 
 const TextButton = React.forwardRef(({
   ...props
 }, ref) => {
   const theme = useContext(ThemeContext);
-  return <Box as={'button'} {...props} css={css`
+  return <button {...props} css={css`
     border: none;
     background: none;
     outline: none;
