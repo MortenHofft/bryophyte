@@ -2,22 +2,19 @@
 import { jsx } from '@emotion/core';
 import React, { useState, useContext, useEffect, useCallback } from "react";
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import Popover from '../../../../components/Popover/Popover';
 import { TriggerButton } from '../TriggerButton';
 import nanoid from 'nanoid';
 import FilterContext from '../state/FilterContext';
 import get from 'lodash/get';
 import union from 'lodash/union';
-import displayValue from '../../displayNames/displayValue';
 import { keyCodes } from '../../../../utils/util';
 
 import { Option, Filter, SummaryBar, FilterBody, Footer } from '../../../../widgets/Filter';
 import Suggest from '../suggest/Suggest';
-import { suggestConfigs } from '../suggest/suggestConfigs';
 
-const ScientificName = displayValue('scientificName').component;
-
-export const PopupContent = ({ hide, onApply, onCancel, onFilterChange, focusRef, filterName, initFilter }) => {
+export const PopupContent = ({ hide, DisplayName, suggestConfig, onApply, onCancel, onFilterChange, focusRef, filterName, initFilter }) => {
   const [id] = React.useState(nanoid);
   const initialOptions = get(initFilter, `must.${filterName}`, []);
   const [options, setOptions] = useState(initialOptions);
@@ -25,7 +22,10 @@ export const PopupContent = ({ hide, onApply, onCancel, onFilterChange, focusRef
   return <Filter
     onApply={onApply}
     onCancel={onCancel}
-    title="Scientific name"
+    title={<FormattedMessage
+      id={`filterName.${filterName}`}
+      defaultMessage={'Loading'}
+    />} //this should be formated or be provided as such
     aboutText="some help text"
     onFilterChange={onFilterChange}
     filterName={filterName}
@@ -35,7 +35,7 @@ export const PopupContent = ({ hide, onApply, onCancel, onFilterChange, focusRef
     {({ filter, toggle, checkedMap, formId, summaryProps, footerProps }) => {
       return <>
         <Suggest 
-          {...suggestConfigs.scientificName}
+          {...suggestConfig}
           focusRef={focusRef} 
           onKeyPress={e => e.which === keyCodes.ENTER ? onApply(filter) : null}
           onSuggestionSelected={({ item }) => {
@@ -47,13 +47,13 @@ export const PopupContent = ({ hide, onApply, onCancel, onFilterChange, focusRef
           <SummaryBar {...summaryProps} style={{ marginTop: 0 }} />
           <FilterBody onKeyPress={e => e.which === keyCodes.ENTER ? onApply(filter) : null}>
             <form id={formId} onSubmit={e => e.preventDefault()} >
-              {options.map((taxonKey) => {
+              {options.map((key) => {
                 return <Option
-                  key={taxonKey}
+                  key={key}
                   helpVisible={true}
-                  label={<ScientificName id={taxonKey} />}
-                  checked={checkedMap.has(taxonKey)}
-                  onChange={() => toggle(filterName, taxonKey)}
+                  label={<DisplayName id={key} />}
+                  checked={checkedMap.has(key)}
+                  onChange={() => toggle(filterName, key)}
                 />
               })}
             </form>
@@ -80,38 +80,7 @@ PopupContent.propTypes = {
   filterName: PropTypes.string
 };
 
-export const TaxonFilterContent = ({ placement, modal, children }) => {
-  const currentFilterContext = useContext(FilterContext);
-  const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
-
-  useEffect(() => {
-    setFilter(currentFilterContext.filter);
-  }, [currentFilterContext.filter]);
-
-  const onApply = useCallback(({filter, hide}) => {
-    currentFilterContext.setFilter(filter);
-    hide();
-  }, [currentFilterContext]);
-
-  const onCancel = useCallback(({hide}) => {
-    hide();
-  }, []);
-
-  const onFilterChange = useCallback(filter => {
-    setFilter(filter);
-  }, []);
-
-  return <PopupContent
-    filterName="taxonKey"
-    hide={() => console.log('hide')}
-    onApply={onApply}
-    onCancel={onCancel}
-    onFilterChange={onFilterChange}
-    initFilter={currentFilterContext.filter}
-  />
-}
-
-export const TaxonFilterPopover = ({ placement, modal, children }) => {
+export function SuggestFilterPopover({ filterName, DisplayName, placement, modal, suggestConfig, children }) {
   const currentFilterContext = useContext(FilterContext);
   const [tmpFilter, setFilter] = useState(currentFilterContext.filter);
 
@@ -136,19 +105,17 @@ export const TaxonFilterPopover = ({ placement, modal, children }) => {
     <Popover
       onClickOutside={popover => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
       style={{ width: '22em', maxWidth: '100%' }}
-      aria-label={`Filter on scientific name`}
+      aria-label={`Filter on scientific name`} //todo, this should either point to a tag or be dynamic
       placement={placement}
       trigger={children}
       modal={modal}
     >
       {({ hide, focusRef }) => {
         return <PopupContent
-          filterName="taxonKey"
-          // onApply={filter => { currentFilterContext.setFilter(filter) }}
-          // onCancel={emptyFunc}
-          // onFilterChange={emptyFunc}
-          // initFilter={currentFilterContext.filter}
+          filterName={filterName}
           hide={hide}
+          DisplayName={DisplayName}
+          suggestConfig={suggestConfig}
           onApply={onApply}
           onCancel={onCancel}
           onFilterChange={onFilterChange}
@@ -160,11 +127,9 @@ export const TaxonFilterPopover = ({ placement, modal, children }) => {
   );
 }
 
-export const TaxonFilter = ({ ...props }) => {
+export function SuggestFilterButton({ filterName, DisplayName, displayValueAs, suggestConfig, ...props }) {
   const currentFilterContext = useContext(FilterContext);
-  const filterName = 'taxonKey';
-
-  return <TaxonFilterPopover modal>
-    <TriggerButton {...props} filterName={filterName} displayValueAs="canonicalName" options={get(currentFilterContext.filter, `must.${filterName}`)} />
-  </TaxonFilterPopover>
+  return <SuggestFilterPopover filterName={filterName} DisplayName={DisplayName} suggestConfig={suggestConfig} modal>
+    <TriggerButton {...props} filterName={filterName} displayValueAs={displayValueAs} options={get(currentFilterContext.filter, `must.${filterName}`, [])} />
+  </SuggestFilterPopover>
 }

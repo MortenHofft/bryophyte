@@ -36,6 +36,11 @@ const filters = {
     type: 'TERMS',
     getValues: values => values,
     fieldName: 'gbifClassification.taxonKey'
+  },
+  Country: {
+    type: 'TERMS',
+    getValues: values => values.map(e => e.toUpperCase()),
+    fieldName: 'countryCode'
   }
   // not here, and it will be assumed to be a 1 to 1 mapping to a terms filter
 }

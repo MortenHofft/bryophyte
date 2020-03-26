@@ -4,20 +4,21 @@ import { helper } from '../../utils/helper';
 export const button = theme => css`
   ${helper.noUserSelect}
   appearance: none;
-
+  
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
   
   text-align: center;
-  white-space: nowrap;
 
   border: 1px solid transparent;
   border-radius: 4px;
   box-shadow: none;
 
   font-size: 1em;
-  height: ${theme.dense ? 1.5 : 2.2}em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
   line-height: calc(1.5em - 6px);
   position: relative;
   margin: 0;
@@ -114,7 +115,7 @@ export const loading = (theme) => css`
   &:after {
     animation: ${spinAround} 500ms infinite linear;
     border: 2px solid #dbdbdb;
-    /* border-radius: 290486px; */
+    border-radius: 0.5em;
     border-right-color: transparent;
     border-top-color: transparent;
     content: "";
@@ -131,6 +132,7 @@ export const loading = (theme) => css`
 
 export const group = (theme) => css`
   display: flex;
+  width: fit-content;
   > button {
     border-radius: 0;
     margin: 0;
@@ -141,6 +143,7 @@ export const group = (theme) => css`
   >button:first-of-type {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+    flex: 1 1 auto;
   }
   >button:last-of-type {
     border-top-right-radius: 4px;

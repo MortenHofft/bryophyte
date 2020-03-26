@@ -8,11 +8,19 @@ import styles from './Button.styles';
 import { getClasses } from '../../utils/util';
 import { MdClose } from 'react-icons/md';
 
+const truncateStyle = {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap'
+};
+
 export const Button = React.forwardRef(({
   className = '',
   loading = false,
   block = false,
   appearance = 'primary',
+  children,
+  truncate,
   ...props
 }, ref) => {
   const classes = {appearance, loading, block};
@@ -23,7 +31,7 @@ export const Button = React.forwardRef(({
   return <ButtonA11y ref={ref} className={`${humanClasses} ${className}`} css={css`
         ${styles.button(appliedTheme)}
         ${classesToApply.map(x => styles[x](appliedTheme))};
-      `} {...props} />
+`} {...props}><span style={truncate ? truncateStyle: {}}>{children}</span></ButtonA11y>
 });
 
 Button.displayName = 'Button'

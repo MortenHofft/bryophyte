@@ -19,7 +19,7 @@ const Popover = ({ trigger, placement, visible, modal, onClickOutside, children,
   const theme = useContext(ThemeContext);
   const popover = usePopoverState({modal: modal || false, placement: placement || "bottom-start", visible: visible });
   const ref = React.useRef();
-  console.log('re-render popover component');
+
   React.useEffect(() => {
     if (popover.visible) {
       if (ref && ref.current) {

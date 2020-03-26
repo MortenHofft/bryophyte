@@ -1,36 +1,5 @@
-/** @jsx jsx */
-import { css, jsx } from '@emotion/core';
 import React from "react";
 import { Autocomplete } from '../../../../components/Autocomplete/Autocomplete';
-import axios from '../../../OccurrenceSearch/api/axios';
-
-async function getData(q) {
-  const suggestions = (await axios.get(`http://api.gbif.org/v1/species/suggest?limit=8&q=${q}`)).data;
-  return suggestions;
-}
-
-// Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = async value => {
-  const results = await getData(value);
-  return results;
-};
-
-// When suggestion is clicked, Autosuggest needs to populate the input
-// based on the clicked suggestion. Teach Autosuggest how to calculate the
-// input value for every given suggestion.
-const getSuggestionValue = suggestion => suggestion.scientificName;
-
-// Use your imagination to render suggestions.
-const renderSuggestion = suggestion => (
-  <div style={{maxWidth: '100%'}}>
-    <div style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis', width: '100%', overflow: 'hidden' }}>
-      {suggestion.scientificName}
-    </div>
-    <div style={{color: '#aaa', fontSize: '0.85em'}}>
-      <Classification taxon={suggestion} />
-    </div>
-  </div >
-);
 
 class Suggest extends React.Component {
   constructor() {
@@ -59,7 +28,7 @@ class Suggest extends React.Component {
     this.setState({
       loading: true
     });
-    const suggestions = await getSuggestions(value);
+    const suggestions = await this.props.getSuggestions({q: value});
     this.setState({
       suggestions: suggestions,
       loading: false
@@ -79,11 +48,12 @@ class Suggest extends React.Component {
   };
 
   render() {
-    const { value, suggestions, loading, item } = this.state;
+    const { value, suggestions, loading } = this.state;
+    const { render, getValue, placeholder } = this.props;
 
     // Autosuggest will pass through all these props to the input.
     const inputProps = {
-      placeholder: 'Search scientific names',
+      placeholder: placeholder || 'Search',
       value,
       onChange: this.onChange,
       onKeyPress: this.props.onKeyPress
@@ -97,8 +67,8 @@ class Suggest extends React.Component {
           suggestions={suggestions}
           onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
           onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-          getSuggestionValue={getSuggestionValue}
-          renderSuggestion={renderSuggestion}
+          getSuggestionValue={getValue}
+          renderSuggestion={render}
           inputProps={inputProps}
           onSuggestionSelected={this.onSuggestionSelected}
           isLoading={loading}
@@ -110,27 +80,3 @@ class Suggest extends React.Component {
 }
 
 export default Suggest;
-
-
-export const Classification = ({ taxon, ...props }) => {
-  const ranks = ['kingdom', 'phylum', 'class', 'order', 'family', 'genus', 'species'];
-  return <span css={taxClass}>
-    {ranks.map(rank => {
-      return taxon.rank !== rank.toUpperCase() && taxon[rank] ? <span key={rank}>{taxon[rank]}</span> : null;
-    })}
-  </span>
-}
-
-export const taxClass = css`
-  &>span:after {
-    font-style: normal;
-    content: ' ❯ ';
-    font-size: 80%;
-    color: #ccc;
-    display: inline-block;
-    padding: 0 3px;
-  }
-  &>span:last-of-type:after {
-    display: none;
-  }
-`;

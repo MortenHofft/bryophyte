@@ -18,7 +18,7 @@ let displayName = [
     }
   },
   {
-    name: 'datasetKey',
+    name: 'datasetTitle',
     format: id => axios
         .get(endpoints.dataset + '/' + id)
         .then(result => ({title: result.data.title}))

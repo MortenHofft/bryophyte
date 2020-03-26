@@ -5,5 +5,7 @@ export const en = {
   options: 'Options',
   'pagination.pageXofY': 'Page {current} of {total}',
   'filterName.taxonKey': 'Scientific name',
-  'filterCount.taxonKey': '{num, plural, one {Scientific name} other {# Scientific names}}'
+  'filterCount.taxonKey': '{num, plural, one {Scientific name} other {# scientific names}}',
+  'filterName.datasetKey': 'Dataset',
+  'filterCount.datasetKey': '{num, plural, one {Dataset} other {# datasets}}'
 }

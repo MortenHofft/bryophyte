@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import PropTypes from 'prop-types';
 import Popover from '../../../components/Popover/Popover';
 import { Button, FilterButton } from '../../../components/Button';
@@ -10,7 +10,7 @@ import get from 'lodash/get';
 import { getVocabulary } from './getVocabulary';
 import { Option, Filter, FilterBody, SummaryBar, Footer } from '../../../widgets/Filter';
 
-function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary, filterName, initFilter }) {
+function PopupContent({ hide, onApply, onCancel, onFilterChange, focusRef, vocabulary, filterName, initFilter }) {
   const [id] = React.useState(nanoid);
 
   return <Filter
@@ -30,7 +30,7 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary,
         <form id={formId} onSubmit={e => e.preventDefault()} >
           {vocabulary && vocabulary.concepts.map((concept, index) => {
             return <Option
-              // innerRef={index === 0 ? focusRef : null}
+              innerRef={index === 0 ? focusRef : null}
               key={concept.name}
               helpVisible={helpVisible}
               helpText={concept.definition}
@@ -42,8 +42,8 @@ function PopupContent({ onApply, onCancel, onFilterChange, focusRef, vocabulary,
         </form>
       </FilterBody>
       <Footer {...footerProps} 
-        onApply={() => onApply(filter)}
-        onCancel={() => onCancel(filter)}
+        onApply={() => onApply({filter, hide})}
+        onCancel={() => onCancel({filter, hide})}
       />
     </>}
   </Filter>
@@ -53,6 +53,7 @@ PopupContent.propTypes = {
   onApply: PropTypes.func,
   onCancel: PropTypes.func,
   onFilterChange: PropTypes.func,
+  hide: PropTypes.func,
   focusRef: PropTypes.any,
   vocabulary: PropTypes.object,
   initFilter: PropTypes.object,
@@ -74,6 +75,24 @@ export const VocabularyFilterPopover = ({ vocabularyName = 'BasisOfRecord', chil
 
   getVocabulary(vocabularyName, 'eng').then(v => setVocabulary(v)).catch(err => console.error(err));
 
+  useEffect(() => {
+    setFilter(currentFilterContext.filter);
+  }, [currentFilterContext.filter]);
+
+  const onApply = useCallback(({filter, hide}) => {
+    currentFilterContext.setFilter(filter);
+    hide();
+  }, [currentFilterContext]);
+
+  const onCancel = useCallback(({hide}) => {
+    hide();
+  }, []);
+
+  const onFilterChange = useCallback(filter => {
+    setFilter(filter);
+  }, []);
+
+
   return (
     <Popover
       onClickOutside={popover => { currentFilterContext.setFilter(tmpFilter); popover.hide() }}
@@ -83,15 +102,16 @@ export const VocabularyFilterPopover = ({ vocabularyName = 'BasisOfRecord', chil
       modal={modal}
       trigger={typeof children === 'function' ? children({vocabulary}) : children}
     >
-      {({ popover, focusRef }) => {
+      {({ hide, focusRef }) => {
         return (vocabulary && <PopupContent
           filterName={vocabularyName}
           vocabulary={vocabulary}
-          onApply={filter => { currentFilterContext.setFilter(filter); popover.hide() }}
-          onCancel={() => { popover.hide(); }}
-          focusRef={focusRef}
-          onFilterChange={filter => setFilter(filter)}
+          hide={hide}
+          onApply={onApply}
+          onCancel={onCancel}
+          onFilterChange={onFilterChange}
           initFilter={currentFilterContext.filter}
+          focusRef={focusRef}
         />)
       }}
     </Popover>
@@ -119,5 +139,6 @@ const Trigger = React.forwardRef(({ filter, onClear, vocabulary, ...props }, ref
 Trigger.displayName = 'FilterButton';
 Trigger.propTypes = {
   filter: PropTypes.object,
-  vocabulary: PropTypes.object
+  vocabulary: PropTypes.object,
+  onClear: PropTypes.func,
 };
